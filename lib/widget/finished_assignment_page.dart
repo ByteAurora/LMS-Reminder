@@ -14,7 +14,7 @@ class _FinishedAssignmentPage extends State<FinishedAssignmentPage> {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text('완료 과제'),
+        child: Text('제출한 과제 목록 표시'),
       ),
     );
   }

@@ -14,7 +14,7 @@ class _UnfinishedAssignmentPage extends State<UnfinishedAssignmentPage> {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text('미완료 과제'),
+        child: Text('미제출한 과제 목록 표시'),
       ),
     );
   }

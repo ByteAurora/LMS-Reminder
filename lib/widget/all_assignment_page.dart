@@ -14,7 +14,7 @@ class _AllAssignmentPage extends State<AllAssignmentPage> {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text('모든 과제'),
+        child: Text('모든 과제 목록 표시'),
       ),
     );
   }
