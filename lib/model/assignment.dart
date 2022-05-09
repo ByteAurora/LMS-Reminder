@@ -15,6 +15,9 @@ class Assignment {
   /// 남은 기한.
   String? _leftTime;
 
+  /// 과제 URL.
+  String? _url;
+
   String get title => _title!;
 
   set title(String value) {
@@ -43,5 +46,16 @@ class Assignment {
 
   set submitState(bool value) {
     _submitState = value;
+  }
+
+  String get url => _url!;
+
+  set url(String value) {
+    _url = value;
+  }
+
+  /// URL로부터 과제 정보 갱신.
+  bool update() {
+    return true;
   }
 }
