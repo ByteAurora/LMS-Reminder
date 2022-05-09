@@ -9,14 +9,22 @@ import 'package:lms_reminder/model/course.dart';
 Future<void> main() async {
   // 테스트할 강의목록 영역 html 경로
   String filePath =
-      'D:\\lms_reminder\\others\\LMS page html sample\\LMS 메인화면 - 강의목록 영역.html';
+      'D:\\lms_reminder\\others\\LMS page html sample\\LMS 메인화면 - full html code.html';
 
   String htmlContents = await File(filePath).readAsString();
 
   html_dom.Document document = html_parser.parse(htmlContents);
+  document
+      .getElementById('region-main')!
+      .getElementsByTagName('div')[0]
+      .getElementsByClassName('progress_courses')[0]
+      .getElementsByClassName('course_lists')[0]
+      .getElementsByClassName('my-course-lists coursemos-layout-0')[0]
+      .getElementsByClassName('course_label_re_02')
+      .forEach((element) {
 
-  document.getElementsByClassName('course_label_re_02').forEach((element) {
     Course course = Course();
+
     // 강좌 URL 추출
     course.url = element.innerHtml.substring(
         element.innerHtml.indexOf('<a href="') + '<a href="'.length,
