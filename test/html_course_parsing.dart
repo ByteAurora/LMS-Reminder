@@ -5,7 +5,7 @@ import 'package:html/dom.dart' as html_dom;
 import 'package:html/parser.dart' as html_parser;
 import 'package:lms_reminder/model/course.dart';
 
-/// Html 파싱 테스트
+/// Html에서 Course 관련 정보 파싱 테스트.
 Future<void> main() async {
   // 테스트할 강의목록 영역 html 경로
   String filePath =
