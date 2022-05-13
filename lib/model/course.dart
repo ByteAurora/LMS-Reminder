@@ -18,7 +18,7 @@ class Course {
   String? _url;
 
   /// 해당 강좌의 주차별 강의 목록.
-  List? _lectureList;
+  List<Lecture>? _lectureList;
 
   /// 전달된 html에서 강좌 정보를 추출하여 반환하는 함수.
   static List<Course> parseCoursesFromHtml(String html) {
@@ -42,9 +42,6 @@ class Course {
       course.classNumber = titleAndClass.substring(
           titleAndClass.indexOf('[') + 1, titleAndClass.indexOf(']'));
       course.professor = courseInfo[0].getElementsByTagName('p')[0].text;
-
-      // 강좌 내 주차별 강의 목록 리스트 생성 필요
-      Lecture.parseLecturesFromHtml('html');
 
       courseList.add(course);
     });
@@ -76,9 +73,9 @@ class Course {
     _title = value;
   }
 
-  List get lectureList => _lectureList!;
+  List<Lecture> get lectureList => _lectureList!;
 
-  set lectureList(List value) {
+  set lectureList(List<Lecture> value) {
     _lectureList = value;
   }
 }
