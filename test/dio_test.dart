@@ -9,13 +9,19 @@ Future<void> main() async {
 
   await lmsManager.getLectureList();
 
-  for (var element in (lmsManager.courseList)) {
-    print(element.title +
-        "/" +
-        element.classNumber +
-        "/" +
-        element.professor +
-        "/" +
-        element.url + "\n" + element.lectureList.toString());
+  await lmsManager.getAssignmentList();
+
+  for (var course in lmsManager.courseList) {
+    print(
+        '[과목] ${course.title}[${course.classNumber}] (교수: ${course.professor})');
+    for (var lecture in course.lectureList) {
+      print('   [주차] ${lecture.week}(${lecture.date})');
+      for (var assignment in lecture.assignmentList) {
+        print('       [과제] ${assignment.title}');
+        print('             - ${assignment.submitState ? '제출완료' : '미제출'}');
+        print('             - ${assignment.content}');
+        print('             - ${assignment.leftTime}');
+      }
+    }
   }
 }
