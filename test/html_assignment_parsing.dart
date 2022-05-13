@@ -37,7 +37,7 @@ Future<void> main() async {
           .getElementsByTagName('tr')
           .forEach((element2) {
         if (element2.getElementsByTagName('td')[0].text.contains("제출 여부")) {
-          assignment.submitState = (element2.text == "제출 완료");
+          assignment.submitState = (element2.text.contains("제출 완료"));
         } else if (element2
             .getElementsByTagName('td')[0]
             .text
@@ -53,4 +53,6 @@ Future<void> main() async {
       });
     }
   });
+
+  print(assignment.title + "/" + assignment.content + "/" + assignment.deadLine.toString() + "/" + assignment.leftTime + "/" + assignment.submitState.toString());
 }
