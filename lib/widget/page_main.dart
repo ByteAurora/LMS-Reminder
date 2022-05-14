@@ -10,7 +10,9 @@ class PageMain extends StatefulWidget {
 
   final String? appBarTitle;
 
-  const PageMain({Key? key, required this.lmsManager, required this.appBarTitle}) : super(key: key);
+  const PageMain(
+      {Key? key, required this.lmsManager, required this.appBarTitle})
+      : super(key: key);
 
   @override
   State<PageMain> createState() => _PageMainState();
@@ -22,24 +24,6 @@ class _PageMainState extends State<PageMain>
     const TabPageNotFinished(),
     const TabPageFinished(),
     const TabPageNotice(),
-  ];
-
-  final tabs = <Tab>[
-    const Tab(
-      icon: Icon(Icons.assignment_late_outlined),
-      text: '미완료',
-      iconMargin: EdgeInsets.only(bottom: 4),
-    ),
-    const Tab(
-      icon: Icon(Icons.assignment_turned_in_outlined),
-      text: '완료',
-      iconMargin: EdgeInsets.only(bottom: 4),
-    ),
-    const Tab(
-      icon: Icon(Icons.circle_notifications_outlined),
-      text: '공지사항',
-      iconMargin: EdgeInsets.only(bottom: 4),
-    ),
   ];
 
   TabController? tabController;
@@ -92,7 +76,32 @@ class _PageMainState extends State<PageMain>
           child: SizedBox(
             height: 64.0,
             child: TabBar(
-              tabs: tabs,
+              onTap: (index) {
+                setState(() {});
+              },
+              tabs: <Tab>[
+                Tab(
+                  icon: tabController!.index == 0
+                      ? const Icon(Icons.assignment_late)
+                      : const Icon(Icons.assignment_late_outlined),
+                  text: tabController!.index == 0? null: '미완료',
+                  iconMargin: const EdgeInsets.only(bottom: 4),
+                ),
+                Tab(
+                  icon: tabController!.index == 1
+                      ? const Icon(Icons.assignment_turned_in)
+                      : const Icon(Icons.assignment_turned_in_outlined),
+                  text: tabController!.index == 1? null: '완료',
+                  iconMargin: const EdgeInsets.only(bottom: 4),
+                ),
+                Tab(
+                  icon: tabController!.index == 2
+                      ? const Icon(Icons.circle_notifications)
+                      : const Icon(Icons.circle_notifications_outlined),
+                  text: tabController!.index == 2? null: '공지사항',
+                  iconMargin: const EdgeInsets.only(bottom: 4),
+                ),
+              ],
               indicatorColor: Colors.white,
               labelColor: Colors.white,
               unselectedLabelColor: Colors.grey[400],
