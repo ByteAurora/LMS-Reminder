@@ -1,14 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:lms_reminder/widget/all_assignment_page.dart';
-import 'package:lms_reminder/widget/finished_assignment_page.dart';
-import 'package:lms_reminder/widget/unfinished_assignment_page.dart';
+import 'package:lms_reminder/widget/page_intro.dart';
+import 'package:lms_reminder/widget/page_login.dart';
+import 'package:lms_reminder/widget/page_main.dart';
+import 'package:lms_reminder/widget/page_setting.dart';
+import 'package:lms_reminder/widget/page_tutorial.dart';
+
+import '../manager/lms_manager.dart';
 
 /// 최상위 Stateful Widget.
 class AppMainStateful extends StatefulWidget {
-  const AppMainStateful({Key? key, required this.appBarTitle})
-      : super(key: key);
+  // 기기에서 표시될 App 이름
+  final String? applicationName;
 
+  // AppBar 제목
   final String? appBarTitle;
+
+  // Debug 라벨 표시 여부
+  final bool? showDebugLabel;
+
+  // 기본 색상
+  final MaterialColor? primarySwatchColor;
+
+  final LmsManager lmsManager = LmsManager();
+
+  AppMainStateful({
+    Key? key,
+    required this.appBarTitle,
+    required this.applicationName,
+    required this.showDebugLabel,
+    required this.primarySwatchColor,
+  }) : super(key: key);
 
   @override
   State<AppMainStateful> createState() => _AppMainStatefulState();
@@ -16,66 +37,27 @@ class AppMainStateful extends StatefulWidget {
 
 class _AppMainStatefulState extends State<AppMainStateful>
     with SingleTickerProviderStateMixin {
-  final pages = <Widget>[
-    const AllAssignmentPage(),
-    const UnfinishedAssignmentPage(),
-    const FinishedAssignmentPage()
-  ];
-
-  final tabs = <Tab>[
-    const Tab(
-      icon: Icon(Icons.assignment),
-      text: '과제',
-      iconMargin: EdgeInsets.only(bottom: 4),
-    ),
-    const Tab(
-      icon: Icon(Icons.assignment_late),
-      text: '미제출',
-      iconMargin: EdgeInsets.only(bottom: 4),
-    ),
-    const Tab(
-      icon: Icon(Icons.assignment_turned_in_rounded),
-      text: '제출',
-      iconMargin: EdgeInsets.only(bottom: 4),
-    ),
-  ];
-
-  TabController? tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    tabController = TabController(length: 3, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    tabController!.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.appBarTitle!),
+    return MaterialApp(
+      debugShowCheckedModeBanner: widget.showDebugLabel!,
+      title: widget.applicationName!,
+      theme: ThemeData(
+        primarySwatch: widget.primarySwatchColor!,
       ),
-      body: TabBarView(
-        children: pages,
-        controller: tabController,
-      ),
-      bottomNavigationBar: Material(
-        color: Colors.blue[700],
-        child: SizedBox(
-          height: 64.0,
-          child: TabBar(
-            tabs: tabs,
-            labelColor: Colors.white,
-            unselectedLabelColor: Colors.grey[400],
-            controller: tabController,
-          ),
-        ),
-      ),
+      initialRoute: '/intro',
+      routes: {
+        '/intro': (context) => PageIntro(),
+        '/tutorial': (context) => PageTutorial(),
+        '/login': (context) => PageLogin(
+              lmsManager: widget.lmsManager,
+            ),
+        '/main': (context) => PageMain(
+              appBarTitle: 'LMS 리마인더',
+              lmsManager: widget.lmsManager,
+            ),
+        '/main/setting': (context) => PageSetting(),
+      },
     );
   }
 }
