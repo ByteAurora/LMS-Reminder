@@ -3,6 +3,8 @@ import 'package:lms_reminder/manager/dio_manager.dart';
 import 'package:lms_reminder/model/course.dart';
 import 'package:lms_reminder/model/lecture.dart';
 
+import '../model/video.dart';
+
 class LmsManager {
   DioManager? dioManager;
   List<Course> courseList = List.empty(growable: true);
@@ -56,6 +58,7 @@ class LmsManager {
         .toString());
   }
 
+  /// LMS 내 강의 목록 불러오기
   Future getLectureList() async {
     for (var course in courseList) {
       course.lectureList = Lecture.parseLecturesFromHtml((await dioManager!
@@ -66,12 +69,35 @@ class LmsManager {
     }
   }
 
+  /// LMS 내 과제 목록 불러오기
   Future getAssignmentList() async {
     for (var course in courseList) {
       for (var lecture in course.lectureList) {
         for (var assignment in lecture.assignmentList) {
           await assignment.update(this);
         }
+      }
+    }
+  }
+
+  /// LMS 내 동영상 강의 목록 불러오기
+  Future getVideoList() async {
+    for (var course in courseList) {
+      String videoListUrl = '/report/ubcompletion/user_progress_a.php?' +
+          course.url.substring(course.url.indexOf('id='));
+
+      List<List<Video>> videoGroupedByLecture =
+          Video.parseVideosFromHtml((await dioManager!.httpGet(
+                  Options(
+                    headers: {'cookie': dioManager!.cookie},
+                  ),
+                  videoListUrl))
+              .data
+              .toString());
+
+      for (var lecture in course.lectureList) {
+        lecture.videoList = videoGroupedByLecture
+            .elementAt(course.lectureList.indexOf(lecture));
       }
     }
   }
