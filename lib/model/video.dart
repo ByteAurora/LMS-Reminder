@@ -1,3 +1,6 @@
+import 'package:html/dom.dart' as html_dom;
+import 'package:html/parser.dart' as html_parser;
+
 /// 동영상 강의 정보를 관리하는 클래스.
 class Video {
   /// 영상 제목.
@@ -34,5 +37,64 @@ class Video {
 
   set requiredWatchTime(String value) {
     _requiredWatchTime = value;
+  }
+
+  /// 전달된 html에서 영상 정보를 추출하여 반환하는 함수.
+  static List<List<Video>> parseVideosFromHtml(String html) {
+    List<List<Video>> courseVideoList = List.empty(growable: true);
+
+    html_dom.Document document = html_parser.parse(html);
+
+    int maxRowCount = 0;
+    int currentRowCount = 0;
+
+    List<Video>? weekVideoList;
+    document
+        .getElementById('ubcompletion-progress-wrapper')!
+        .getElementsByTagName('div')[1]
+        .getElementsByClassName('table  table-bordered user_progress_table')[0]
+        .getElementsByTagName('tbody')[0]
+        .getElementsByTagName('tr')
+        .forEach((element) {
+      List<html_dom.Element> tdList = element.getElementsByTagName('td');
+
+      if (tdList.length == 5) {
+        if (element.innerHtml.contains('rowspan')) {
+          weekVideoList = List.empty(growable: true);
+          currentRowCount = 1;
+          maxRowCount = int.parse(element.innerHtml.substring(
+              element.innerHtml.indexOf('rowspan="') + 9,
+              element.innerHtml.indexOf('">')));
+
+          Video video = Video();
+          video.title = tdList[1].text;
+          video.requiredWatchTime = tdList[2].text;
+          video.totalWatchTime = tdList[3].text;
+          video.watchState = tdList[4].text.contains('O');
+          weekVideoList!.add(video);
+
+          if (currentRowCount == maxRowCount) {
+            courseVideoList.add(weekVideoList!);
+          }
+        } else {
+          courseVideoList.add(List.empty());
+        }
+      } else {
+        Video video = Video();
+        video.title = tdList[0].text;
+        video.requiredWatchTime = tdList[1].text;
+        video.totalWatchTime = tdList[2].text;
+        video.watchState = tdList[3].text.contains('O');
+        weekVideoList!.add(video);
+
+        currentRowCount++;
+
+        if (currentRowCount == maxRowCount) {
+          courseVideoList.add(weekVideoList!);
+        }
+      }
+    });
+
+    return courseVideoList;
   }
 }
