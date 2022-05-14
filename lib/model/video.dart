@@ -69,7 +69,9 @@ class Video {
           Video video = Video();
           video.title = tdList[1].text;
           video.requiredWatchTime = tdList[2].text;
-          video.totalWatchTime = tdList[3].text;
+          video.totalWatchTime = tdList[3]
+              .innerHtml
+              .substring(0, tdList[3].innerHtml.indexOf('<'));
           video.watchState = tdList[4].text.contains('O');
           weekVideoList!.add(video);
 
@@ -83,7 +85,9 @@ class Video {
         Video video = Video();
         video.title = tdList[0].text;
         video.requiredWatchTime = tdList[1].text;
-        video.totalWatchTime = tdList[2].text;
+        video.totalWatchTime = tdList[2]
+            .innerHtml
+            .substring(0, tdList[2].innerHtml.indexOf('<'));
         video.watchState = tdList[3].text.contains('O');
         weekVideoList!.add(video);
 
