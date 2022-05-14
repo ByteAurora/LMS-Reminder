@@ -15,6 +15,9 @@ class Assignment {
   /// 제출 상태.
   bool? _submitState;
 
+  /// 채점 상태
+  String? _gradeState;
+
   /// 마감일.
   DateTime? _deadLine;
 
@@ -60,6 +63,12 @@ class Assignment {
     _url = value;
   }
 
+  String get gradeState => _gradeState!;
+
+  set gradeState(String value) {
+    _gradeState = value;
+  }
+
   /// URL로부터 과제 정보 갱신.
   update(LmsManager lmsManager) async {
     html_dom.Document document = html_parser.parse((await lmsManager.dioManager!
@@ -87,19 +96,17 @@ class Assignment {
             .getElementsByTagName('tbody')[0]
             .getElementsByTagName('tr')
             .forEach((element2) {
-          if (element2.getElementsByTagName('td')[0].text.contains("제출 여부")) {
+          String text = element2.getElementsByTagName('td')[0].text;
+
+          if (text.contains("제출 여부")) {
             submitState = (element2.text.contains("제출 완료"));
-          } else if (element2
-              .getElementsByTagName('td')[0]
-              .text
-              .contains("종료 일시")) {
+          } else if (text.contains("종료 일시")) {
             deadLine = DateFormat('yyyy-MM-dd HH:mm:ss')
                 .parse(element2.text.replaceAll("종료 일시", "").trim() + ":00");
-          } else if (element2
-              .getElementsByTagName('td')[0]
-              .text
-              .contains("마감까지 남은 기한")) {
+          } else if (text.contains("마감까지 남은 기한")) {
             leftTime = element2.text.replaceAll("마감까지 남은 기한", "").trim();
+          } else if (text.contains('채점 상황')) {
+            gradeState = element2.text.replaceAll("채점 상황", "").trim();
           }
         });
       }
