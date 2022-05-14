@@ -7,12 +7,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:lms_reminder/widget/app_main_stateless.dart';
+import 'package:lms_reminder/widget/app_main_stateful.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const AppMainStateless(
+    await tester.pumpWidget(AppMainStateful(
         applicationName: 'LMS 리마인더',
         appBarTitle: 'LMS 리마인더',
         showDebugLabel: true,
