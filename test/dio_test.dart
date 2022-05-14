@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:lms_reminder/manager/lms_manager.dart';
 
 Future<void> main() async {
@@ -9,7 +7,7 @@ Future<void> main() async {
 
   stopWatch.start();
   print(await lmsManager.login('학번', '비밀번호'));
-  print('로그인: ' + stopWatch.elapsed.inMilliseconds.toString());
+  print('로그인: ' + stopWatch.elapsed.inMilliseconds.toString() + "ms");
 
   stopWatch.reset();
   stopWatch.start();
@@ -39,6 +37,7 @@ Future<void> main() async {
       for (var assignment in lecture.assignmentList) {
         print('       [과제] ${assignment.title}');
         print('             - ${assignment.submitState ? '제출완료' : '미제출'}');
+        print('             - ${assignment.gradeState}');
         print('             - ${assignment.content}');
         print('             - ${assignment.leftTime}');
       }
