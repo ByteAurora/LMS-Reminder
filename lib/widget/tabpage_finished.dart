@@ -64,18 +64,36 @@ class _TabPageFinished extends State<TabPageFinished> {
                                                           .lecture
                                                           .week +
                                                       "]",
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 18,
                                                   ),
                                                 ),
                                                 Padding(
-                                                  padding: const EdgeInsets.only(
-                                                      top: 8.0),
-                                                  child: Text(
-                                                      (todoList.elementAt(index)
-                                                              as Assignment)
-                                                          .title),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 8.0),
+                                                  child: Row(
+                                                    children: [
+                                                      const Image(
+                                                        image: AssetImage(
+                                                            'resource/image/icon_assignment.png'),
+                                                        width: 24,
+                                                        height: 24,
+                                                        fit: BoxFit.fill,
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(left: 4),
+                                                        child: Text((todoList
+                                                                    .elementAt(
+                                                                        index)
+                                                                as Assignment)
+                                                            .title),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ],
                                             ),
@@ -105,12 +123,12 @@ class _TabPageFinished extends State<TabPageFinished> {
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
-                                                  fontSize: 24.0,
+                                                  fontSize: 20.0,
                                                 ),
                                               ),
                                             ),
-                                            width: 72,
-                                            height: 72,
+                                            width: 64,
+                                            height: 64,
                                           ),
                                         ],
                                       ),
@@ -148,12 +166,30 @@ class _TabPageFinished extends State<TabPageFinished> {
                                                   ),
                                                 ),
                                                 Padding(
-                                                  padding: const EdgeInsets.only(
-                                                      top: 8.0),
-                                                  child: Text(
-                                                      (todoList.elementAt(index)
-                                                              as Video)
-                                                          .title),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 8.0),
+                                                  child: Row(
+                                                    children: [
+                                                      const Image(
+                                                        image: AssetImage(
+                                                            'resource/image/icon_video.png'),
+                                                        width: 24,
+                                                        height: 24,
+                                                        fit: BoxFit.fill,
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(left: 4),
+                                                        child: Text(
+                                                            (todoList.elementAt(
+                                                                        index)
+                                                                    as Video)
+                                                                .title),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ],
                                             ),
@@ -183,12 +219,12 @@ class _TabPageFinished extends State<TabPageFinished> {
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
-                                                  fontSize: 24.0,
+                                                  fontSize: 20.0,
                                                 ),
                                               ),
                                             ),
-                                            width: 72,
-                                            height: 72,
+                                            width: 64,
+                                            height: 64,
                                           ),
                                         ],
                                       ),
@@ -213,8 +249,6 @@ class _TabPageFinished extends State<TabPageFinished> {
 
   Future<void> _refreshAllData() async {
     await LmsManager().refreshAllData();
-    setState(() {
-
-    });
+    setState(() {});
   }
 }

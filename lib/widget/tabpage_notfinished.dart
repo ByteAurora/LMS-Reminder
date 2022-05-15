@@ -28,9 +28,9 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
               if (todoList.isEmpty) {
                 return const Text('할일이 없습니다!');
               } else {
-                return RefreshIndicator(
-                  onRefresh: _refreshAllData,
-                  child: Expanded(
+                return Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: _refreshAllData,
                     child: ListView.builder(
                       scrollDirection: Axis.vertical,
                       itemCount: todoList.length,
@@ -50,32 +50,50 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                           Expanded(
                                             child: Column(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   (todoList.elementAt(index)
-                                                          as Assignment)
+                                                  as Assignment)
                                                       .lecture
                                                       .course
-                                                      .title,
-                                                  style: TextStyle(
+                                                      .title +
+                                                      " [" +
+                                                      (todoList.elementAt(index)
+                                                      as Assignment)
+                                                          .lecture
+                                                          .week +
+                                                      "]",
+                                                  style: const TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 18,
                                                   ),
                                                 ),
                                                 Padding(
-                                                  padding: const EdgeInsets.only(
+                                                  padding:
+                                                  const EdgeInsets.only(
                                                       top: 8.0),
-                                                  child: Text((todoList.elementAt(
-                                                                  index)
-                                                              as Assignment)
-                                                          .title +
-                                                      " [" +
-                                                      (todoList.elementAt(index)
-                                                              as Assignment)
-                                                          .lecture
-                                                          .week +
-                                                      "]"),
+                                                  child: Row(
+                                                    children: [
+                                                      const Image(
+                                                        image: AssetImage(
+                                                            'resource/image/icon_assignment.png'),
+                                                        width: 24,
+                                                        height: 24,
+                                                        fit: BoxFit.fill,
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                        const EdgeInsets
+                                                            .only(left: 4),
+                                                        child: Text((todoList
+                                                            .elementAt(
+                                                            index)
+                                                        as Assignment)
+                                                            .title),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ],
                                             ),
@@ -100,25 +118,25 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                             child: Center(
                                               child: Text(
                                                 (todoList.elementAt(index)
-                                                        as Assignment)
+                                                as Assignment)
                                                     .getLeftTime(),
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
-                                                  fontSize: 24.0,
+                                                  fontSize: 20.0,
                                                 ),
                                               ),
                                             ),
-                                            width: 72,
-                                            height: 72,
+                                            width: 64,
+                                            height: 64,
                                           ),
                                         ],
                                       ),
                                     ),
                                   ),
                                 ] else if (todoList
-                                        .elementAt(index)
-                                        .runtimeType ==
+                                    .elementAt(index)
+                                    .runtimeType ==
                                     Video) ...[
                                   Expanded(
                                     child: Padding(
@@ -128,17 +146,17 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                           Expanded(
                                             child: Column(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   (todoList.elementAt(index)
-                                                              as Video)
-                                                          .lecture
-                                                          .course
-                                                          .title +
+                                                  as Video)
+                                                      .lecture
+                                                      .course
+                                                      .title +
                                                       " [" +
                                                       (todoList.elementAt(index)
-                                                              as Video)
+                                                      as Video)
                                                           .lecture
                                                           .week +
                                                       "]",
@@ -148,12 +166,30 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                                   ),
                                                 ),
                                                 Padding(
-                                                  padding: const EdgeInsets.only(
+                                                  padding:
+                                                  const EdgeInsets.only(
                                                       top: 8.0),
-                                                  child: Text(
-                                                      (todoList.elementAt(index)
-                                                              as Video)
-                                                          .title),
+                                                  child: Row(
+                                                    children: [
+                                                      const Image(
+                                                        image: AssetImage(
+                                                            'resource/image/icon_video.png'),
+                                                        width: 24,
+                                                        height: 24,
+                                                        fit: BoxFit.fill,
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                        const EdgeInsets
+                                                            .only(left: 4),
+                                                        child: Text(
+                                                            (todoList.elementAt(
+                                                                index)
+                                                            as Video)
+                                                                .title),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ],
                                             ),
@@ -178,17 +214,17 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                             child: Center(
                                               child: Text(
                                                 (todoList.elementAt(index)
-                                                        as Video)
+                                                as Video)
                                                     .getLeftTime(),
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
-                                                  fontSize: 24.0,
+                                                  fontSize: 20.0,
                                                 ),
                                               ),
                                             ),
-                                            width: 72,
-                                            height: 72,
+                                            width: 64,
+                                            height: 64,
                                           ),
                                         ],
                                       ),
