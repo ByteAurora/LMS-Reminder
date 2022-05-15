@@ -41,6 +41,7 @@ class Lecture {
             sectionName.indexOf("[") + 1, sectionName.indexOf("]"));
 
         List<Assignment> assignmentList = List.empty(growable: true);
+        List<Video> videoList = List.empty(growable: true);
 
         List<html_dom.Element> activities = element
             .getElementsByClassName('content')[0]
@@ -62,14 +63,37 @@ class Lecture {
                 .getElementsByTagName('a')[0]
                 .getElementsByClassName('instancename')[0]
                 .text;
-            assignment.url = assignmentElement.innerHtml.substring(
-                assignmentElement.innerHtml.indexOf("href=") + 6,
-                assignmentElement.innerHtml.indexOf("\">")).replaceAll('https://learn.hoseo.ac.kr', '');
+            assignment.url = assignmentElement.innerHtml
+                .substring(assignmentElement.innerHtml.indexOf("href=") + 6,
+                    assignmentElement.innerHtml.indexOf("\">"))
+                .replaceAll('https://learn.hoseo.ac.kr', '');
 
             assignmentList.add(assignment);
           });
+
+          activities[0]
+              .getElementsByClassName('activity vod modtype_vod ')
+              .forEach((element2) {
+            Video video = Video();
+
+            String videoTerm = element2
+                .getElementsByTagName('div')[0]
+                .getElementsByClassName('mod-indent-outer')[0]
+                .getElementsByTagName('div')[1]
+                .getElementsByClassName('activityinstance')[0]
+                .getElementsByClassName('displayoptions')[0]
+                .getElementsByClassName('text-ubstrap')[0]
+                .text
+                .trim();
+
+            video.enableTime = DateTime.parse(videoTerm.substring(0, 19));
+            video.deadLine = DateTime.parse(videoTerm.substring(22));
+
+            videoList.add(video);
+          });
         }
         lecture.assignmentList = assignmentList;
+        lecture.videoList = videoList;
 
         lectureList.add(lecture);
       }
