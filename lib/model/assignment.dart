@@ -81,14 +81,14 @@ class Assignment {
     title = document
         .getElementById('region-main')!
         .getElementsByTagName('h2')[0]
-        .text;
+        .text.trim();
 
     document
         .getElementById('region-main')!
         .getElementsByTagName('div')
         .forEach((element) {
       if (element.className == 'box generalbox boxaligncenter') {
-        content = element.text;
+        content = element.text.trim();
       } else if (element.className == 'submissionstatustable') {
         element
             .getElementsByTagName('div')[0]
