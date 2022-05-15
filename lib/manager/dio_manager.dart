@@ -37,6 +37,7 @@ class DioManager {
     }
 
     if (useExistCookie && cookie != null) {
+      options.headers ??= <String, String>{};
       options.headers!['cookie'] = cookie;
     }
 
