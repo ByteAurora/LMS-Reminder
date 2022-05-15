@@ -6,12 +6,11 @@ import 'package:lms_reminder/model/lecture.dart';
 import '../model/video.dart';
 
 class LmsManager {
-  DioManager? dioManager;
+  static final LmsManager _instance = LmsManager._constructor();
   List<Course> courseList = List.empty(growable: true);
 
-  LmsManager() {
-    dioManager = DioManager();
-    dioManager!.init(
+  LmsManager._constructor() {
+    DioManager().init(
       BaseOptions(
           baseUrl: 'https://learn.hoseo.ac.kr',
           validateStatus: (statusCode) {
@@ -20,10 +19,14 @@ class LmsManager {
     );
   }
 
+  factory LmsManager() {
+    return _instance;
+  }
+
   /// LMS 로그인.
   Future<bool> login(String username, String password) async {
     // 로그인 요청 전송
-    Response response = await dioManager!.httpPost(
+    Response response = await DioManager().httpPost(
         Options(
             followRedirects: false,
             contentType: 'application/x-www-form-urlencoded'),
@@ -37,14 +40,14 @@ class LmsManager {
         if (moodleSessionCount == 0) {
           moodleSessionCount++;
         } else if (moodleSessionCount == 1) {
-          dioManager!.cookie = element.substring(0, element.indexOf(";"));
+          DioManager().cookie = element.substring(0, element.indexOf(";"));
           break;
         }
       }
     }
 
-    return (await dioManager!
-            .httpGet(Options(headers: {'cookie': dioManager!.cookie}), ''))
+    return (await DioManager()
+            .httpGet(options: Options(), useExistCookie: true, subUrl: ''))
         .data
         .toString()
         .contains('예정');
@@ -52,8 +55,8 @@ class LmsManager {
 
   /// LMS 내 강좌 목록 불러오기.
   Future getCourseList() async {
-    courseList = Course.parseCoursesFromHtml((await dioManager!
-            .httpGet(Options(headers: {'cookie': dioManager!.cookie}), ''))
+    courseList = Course.parseCoursesFromHtml((await DioManager()
+            .httpGet(options: Options(), useExistCookie: true, subUrl: ''))
         .data
         .toString());
   }
@@ -61,9 +64,9 @@ class LmsManager {
   /// LMS 내 강의 목록 불러오기
   Future getLectureList() async {
     for (var course in courseList) {
-      course.lectureList = Lecture.parseLecturesFromHtml((await dioManager!
+      course.lectureList = Lecture.parseLecturesFromHtml((await DioManager()
               .httpGet(
-                  Options(headers: {'cookie': dioManager!.cookie}), course.url))
+                  options: Options(), useExistCookie: true, subUrl: course.url))
           .data
           .toString());
     }
@@ -86,12 +89,11 @@ class LmsManager {
       String videoListUrl = '/report/ubcompletion/user_progress_a.php?' +
           course.url.substring(course.url.indexOf('id='));
 
-      List<List<Video>> videoGroupedByLecture =
-          Video.parseVideosFromHtml((await dioManager!.httpGet(
-                  Options(
-                    headers: {'cookie': dioManager!.cookie},
-                  ),
-                  videoListUrl))
+      List<List<Video>> videoGroupedByLecture = Video.parseVideosFromHtml(
+          (await DioManager().httpGet(
+                  options: Options(),
+                  useExistCookie: true,
+                  subUrl: videoListUrl))
               .data
               .toString());
 
