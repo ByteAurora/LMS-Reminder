@@ -20,12 +20,6 @@ class PageMain extends StatefulWidget {
 
 class _PageMainState extends State<PageMain>
     with SingleTickerProviderStateMixin {
-  final pages = <Widget>[
-    const TabPageNotFinished(),
-    const TabPageFinished(),
-    const TabPageNotice(),
-  ];
-
   TabController? tabController;
 
   @override
@@ -66,7 +60,11 @@ class _PageMainState extends State<PageMain>
         ],
       ),
       body: TabBarView(
-        children: pages,
+        children: <Widget>[
+          TabPageNotFinished(),
+          TabPageFinished(),
+          TabPageNotice(),
+        ],
         controller: tabController,
       ),
       bottomNavigationBar: Material(
@@ -84,21 +82,21 @@ class _PageMainState extends State<PageMain>
                   icon: tabController!.index == 0
                       ? const Icon(Icons.assignment_late)
                       : const Icon(Icons.assignment_late_outlined),
-                  text: tabController!.index == 0? null: '미완료',
+                  text: tabController!.index == 0 ? null : '미완료',
                   iconMargin: const EdgeInsets.only(bottom: 4),
                 ),
                 Tab(
                   icon: tabController!.index == 1
                       ? const Icon(Icons.assignment_turned_in)
                       : const Icon(Icons.assignment_turned_in_outlined),
-                  text: tabController!.index == 1? null: '완료',
+                  text: tabController!.index == 1 ? null : '완료',
                   iconMargin: const EdgeInsets.only(bottom: 4),
                 ),
                 Tab(
                   icon: tabController!.index == 2
                       ? const Icon(Icons.circle_notifications)
                       : const Icon(Icons.circle_notifications_outlined),
-                  text: tabController!.index == 2? null: '공지사항',
+                  text: tabController!.index == 2 ? null : '공지사항',
                   iconMargin: const EdgeInsets.only(bottom: 4),
                 ),
               ],
