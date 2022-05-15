@@ -98,8 +98,19 @@ class LmsManager {
               .toString());
 
       for (var lecture in course.lectureList) {
-        lecture.videoList = videoGroupedByLecture
+        List<Video> videos = videoGroupedByLecture
             .elementAt(course.lectureList.indexOf(lecture));
+
+        if (videos.isEmpty) {
+          lecture.videoList = List.empty(growable: true);
+        } else {
+          for(var video in lecture.videoList) {
+            video.title = videos.elementAt(lecture.videoList.indexOf(video)).title;
+            video.totalWatchTime = videos.elementAt(lecture.videoList.indexOf(video)).totalWatchTime;
+            video.requiredWatchTime = videos.elementAt(lecture.videoList.indexOf(video)).requiredWatchTime;
+            video.watch = videos.elementAt(lecture.videoList.indexOf(video)).watch;
+          }
+        }
       }
     }
   }
