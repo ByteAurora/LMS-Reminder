@@ -1,8 +1,12 @@
 import 'package:html/dom.dart' as html_dom;
 import 'package:html/parser.dart' as html_parser;
 
+import 'lecture.dart';
+
 /// 동영상 강의 정보를 관리하는 클래스.
 class Video {
+  Lecture? _lecture;
+
   /// 영상 제목.
   String? _title;
 
@@ -45,7 +49,6 @@ class Video {
     _requiredWatchTime = value;
   }
 
-
   DateTime get enableTime => _enableTime!;
 
   set enableTime(DateTime value) {
@@ -87,7 +90,8 @@ class Video {
           if (video.watch) {
             video.totalWatchTime = tdList[3]
                 .innerHtml
-                .substring(0, tdList[3].innerHtml.indexOf('<')).trim();
+                .substring(0, tdList[3].innerHtml.indexOf('<'))
+                .trim();
           } else {
             video.totalWatchTime = "O0:00";
           }
@@ -109,7 +113,8 @@ class Video {
         if (video.watch) {
           video.totalWatchTime = tdList[2]
               .innerHtml
-              .substring(0, tdList[2].innerHtml.indexOf('<')).trim();
+              .substring(0, tdList[2].innerHtml.indexOf('<'))
+              .trim();
         } else {
           video.totalWatchTime = "O0:00";
         }
@@ -127,9 +132,43 @@ class Video {
     return courseVideoList;
   }
 
+  Video({Lecture? lecture}) {
+    _lecture = lecture;
+  }
+
   DateTime get deadLine => _deadLine!;
 
   set deadLine(DateTime value) {
     _deadLine = value;
+  }
+
+  Lecture get lecture => _lecture!;
+
+  set lecture(Lecture value) {
+    _lecture = value;
+  }
+
+  String getLeftTime() {
+    DateTime currentTime = DateTime.now();
+    if (deadLine.isBefore(currentTime)) {
+      return '마감';
+    }
+
+    String result = "";
+    Duration leftTime = deadLine.difference(currentTime);
+
+    if (leftTime.inMinutes < 1440) {
+      String hour = (leftTime.inMinutes ~/ 60).toString().length == 1
+          ? '0' + (leftTime.inMinutes ~/ 60).toString()
+          : (leftTime.inMinutes ~/ 60).toString();
+      String minute = (leftTime.inMinutes % 60).toInt().toString().length == 1
+          ? '0' + (leftTime.inMinutes % 60).toString()
+          : (leftTime.inMinutes % 60).toString();
+      return hour + ":" + minute;
+    }
+
+    result = leftTime.inDays.toString();
+
+    return 'D-' + result;
   }
 }

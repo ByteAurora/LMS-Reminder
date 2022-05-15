@@ -5,9 +5,12 @@ import 'package:intl/intl.dart';
 import 'package:lms_reminder/manager/lms_manager.dart';
 
 import '../manager/dio_manager.dart';
+import 'lecture.dart';
 
 /// 과제 정보를 관리하는 클래스.
 class Assignment {
+  Lecture? _lecture;
+
   /// 과제 URL.
   String? _url;
 
@@ -59,6 +62,12 @@ class Assignment {
     _submit = value;
   }
 
+  Lecture get lecture => _lecture!;
+
+  set lecture(Lecture value) {
+    _lecture = value;
+  }
+
   String get url => _url!;
 
   set url(String value) {
@@ -71,6 +80,10 @@ class Assignment {
     _grade = value;
   }
 
+  Assignment(Lecture lecture) {
+    _lecture = lecture;
+  }
+
   /// URL로부터 과제 정보 갱신.
   update(LmsManager lmsManager) async {
     html_dom.Document document = html_parser.parse((await DioManager()
@@ -81,7 +94,8 @@ class Assignment {
     title = document
         .getElementById('region-main')!
         .getElementsByTagName('h2')[0]
-        .text.trim();
+        .text
+        .trim();
 
     document
         .getElementById('region-main')!
@@ -111,5 +125,29 @@ class Assignment {
         });
       }
     });
+  }
+
+  String getLeftTime() {
+    DateTime currentTime = DateTime.now();
+    if (deadLine.isBefore(currentTime)) {
+      return '마감';
+    }
+
+    String result = "";
+    Duration leftTime = deadLine.difference(currentTime);
+
+    if (leftTime.inMinutes < 1440) {
+      String hour = (leftTime.inMinutes ~/ 60).toString().length == 1
+          ? '0' + (leftTime.inMinutes ~/ 60).toString()
+          : (leftTime.inMinutes ~/ 60).toString();
+      String minute = (leftTime.inMinutes % 60).toInt().toString().length == 1
+          ? '0' + (leftTime.inMinutes % 60).toString()
+          : (leftTime.inMinutes % 60).toString();
+      return hour + ":" + minute;
+    }
+
+    result = leftTime.inDays.toString();
+
+    return 'D-' + result;
   }
 }

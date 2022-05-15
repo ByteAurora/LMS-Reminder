@@ -3,8 +3,12 @@ import 'package:html/parser.dart' as html_parser;
 import 'package:lms_reminder/model/assignment.dart';
 import 'package:lms_reminder/model/video.dart';
 
+import 'course.dart';
+
 /// 주차별 강의 정보를 관리하는 클래스.
 class Lecture {
+  Course? _course;
+
   /// 주차.
   String? _week;
 
@@ -18,7 +22,7 @@ class Lecture {
   List<Video>? _videoList;
 
   /// 전달된 html에서 주차별 강의 정보를 추출하여 반환하는 함수.
-  static List<Lecture> parseLecturesFromHtml(String html) {
+  static List<Lecture> parseLecturesFromHtml(Course course, String html) {
     List<Lecture> lectureList = List.empty(growable: true);
 
     html_dom.Document document = html_parser.parse(html);
@@ -32,7 +36,7 @@ class Lecture {
         .getElementsByTagName('li')
         .forEach((element) {
       if (element.className.contains("section main clearfix")) {
-        Lecture lecture = Lecture();
+        Lecture lecture = Lecture(course);
 
         String sectionName =
             element.getElementsByClassName('hidden sectionname')[0].text;
@@ -51,7 +55,7 @@ class Lecture {
           activities[0]
               .getElementsByClassName('activity assign modtype_assign ')
               .forEach((element2) {
-            Assignment assignment = Assignment();
+            Assignment assignment = Assignment(lecture);
 
             html_dom.Element assignmentElement = element2
                 .getElementsByTagName('div')[0]
@@ -65,7 +69,7 @@ class Lecture {
                 .text;
             assignment.url = assignmentElement.innerHtml
                 .substring(assignmentElement.innerHtml.indexOf("href=") + 6,
-                    assignmentElement.innerHtml.indexOf("\">"))
+                assignmentElement.innerHtml.indexOf("\">"))
                 .replaceAll('https://learn.hoseo.ac.kr', '');
 
             assignmentList.add(assignment);
@@ -74,7 +78,7 @@ class Lecture {
           activities[0]
               .getElementsByClassName('activity vod modtype_vod ')
               .forEach((element2) {
-            Video video = Video();
+            Video video = Video(lecture: lecture);
 
             String videoTerm = element2
                 .getElementsByTagName('div')[0]
@@ -102,10 +106,20 @@ class Lecture {
     return lectureList;
   }
 
+  Lecture(Course course) {
+    _course = course;
+  }
+
   String get week => _week!;
 
   set week(String value) {
     _week = value;
+  }
+
+  Course get course => _course!;
+
+  set course(Course value) {
+    _course = value;
   }
 
   String get date => _date!;
