@@ -69,7 +69,7 @@ class Lecture {
                 .text;
             assignment.url = assignmentElement.innerHtml
                 .substring(assignmentElement.innerHtml.indexOf("href=") + 6,
-                assignmentElement.innerHtml.indexOf("\">"))
+                    assignmentElement.innerHtml.indexOf("\">"))
                 .replaceAll('https://learn.hoseo.ac.kr', '');
 
             assignmentList.add(assignment);

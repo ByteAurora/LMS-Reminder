@@ -30,9 +30,7 @@ class _PageMainState extends State<PageMain>
     initializeData();
 
     tabController!.addListener(() {
-      setState(() {
-
-      });
+      setState(() {});
     });
   }
 
@@ -127,8 +125,6 @@ class _PageMainState extends State<PageMain>
     await LmsManager().getAssignmentList();
     await LmsManager().getVideoList();
 
-    setState(() {
-
-    });
+    setState(() {});
   }
 }

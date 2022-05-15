@@ -48,11 +48,11 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                         Expanded(
                                           child: Column(
                                             crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Text(
                                                 (todoList.elementAt(index)
-                                                as Assignment)
+                                                        as Assignment)
                                                     .lecture
                                                     .course
                                                     .title,
@@ -64,11 +64,16 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                               Padding(
                                                 padding: const EdgeInsets.only(
                                                     top: 8.0),
-                                                child: Text(
+                                                child: Text((todoList.elementAt(
+                                                                index)
+                                                            as Assignment)
+                                                        .title +
+                                                    " [" +
                                                     (todoList.elementAt(index)
-                                                    as Assignment)
-                                                        .title + " [" + (todoList.elementAt(index)
-                                                    as Assignment).lecture.week + "]"),
+                                                            as Assignment)
+                                                        .lecture
+                                                        .week +
+                                                    "]"),
                                               ),
                                             ],
                                           ),
@@ -93,7 +98,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                           child: Center(
                                             child: Text(
                                               (todoList.elementAt(index)
-                                              as Assignment)
+                                                      as Assignment)
                                                   .getLeftTime(),
                                               style: TextStyle(
                                                 color: Colors.white,
@@ -110,8 +115,8 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                   ),
                                 ),
                               ] else if (todoList
-                                  .elementAt(index)
-                                  .runtimeType ==
+                                      .elementAt(index)
+                                      .runtimeType ==
                                   Video) ...[
                                 Expanded(
                                   child: Padding(
@@ -121,15 +126,20 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                         Expanded(
                                           child: Column(
                                             crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Text(
                                                 (todoList.elementAt(index)
-                                                as Video)
-                                                    .lecture
-                                                    .course
-                                                    .title + " [" + (todoList.elementAt(index)
-                                                as Video).lecture.week + "]",
+                                                            as Video)
+                                                        .lecture
+                                                        .course
+                                                        .title +
+                                                    " [" +
+                                                    (todoList.elementAt(index)
+                                                            as Video)
+                                                        .lecture
+                                                        .week +
+                                                    "]",
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 18,
@@ -140,7 +150,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                                     top: 8.0),
                                                 child: Text(
                                                     (todoList.elementAt(index)
-                                                    as Video)
+                                                            as Video)
                                                         .title),
                                               ),
                                             ],
@@ -166,7 +176,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                           child: Center(
                                             child: Text(
                                               (todoList.elementAt(index)
-                                              as Video)
+                                                      as Video)
                                                   .getLeftTime(),
                                               style: TextStyle(
                                                 color: Colors.white,

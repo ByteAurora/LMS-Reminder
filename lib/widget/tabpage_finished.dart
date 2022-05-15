@@ -52,11 +52,16 @@ class _TabPageFinished extends State<TabPageFinished> {
                                             children: [
                                               Text(
                                                 (todoList.elementAt(index)
-                                                        as Assignment)
-                                                    .lecture
-                                                    .course
-                                                    .title + " [" + (todoList.elementAt(index)
-                                                as Assignment).lecture.week + "]",
+                                                            as Assignment)
+                                                        .lecture
+                                                        .course
+                                                        .title +
+                                                    " [" +
+                                                    (todoList.elementAt(index)
+                                                            as Assignment)
+                                                        .lecture
+                                                        .week +
+                                                    "]",
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 18,
@@ -125,11 +130,16 @@ class _TabPageFinished extends State<TabPageFinished> {
                                             children: [
                                               Text(
                                                 (todoList.elementAt(index)
-                                                        as Video)
-                                                    .lecture
-                                                    .course
-                                                    .title + " [" + (todoList.elementAt(index)
-                                                as Video).lecture.week + "]",
+                                                            as Video)
+                                                        .lecture
+                                                        .course
+                                                        .title +
+                                                    " [" +
+                                                    (todoList.elementAt(index)
+                                                            as Video)
+                                                        .lecture
+                                                        .week +
+                                                    "]",
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 18,
