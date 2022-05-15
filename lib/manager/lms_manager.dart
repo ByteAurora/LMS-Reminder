@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:lms_reminder/manager/dio_manager.dart';
 import 'package:lms_reminder/model/assignment.dart';
 import 'package:lms_reminder/model/course.dart';
@@ -253,5 +254,12 @@ class LmsManager {
     });
 
     return toDoneList;
+  }
+
+  Future refreshAllData() async {
+    await getCourseList();
+    await getLectureList();
+    await getAssignmentList();
+    await getVideoList();
   }
 }
