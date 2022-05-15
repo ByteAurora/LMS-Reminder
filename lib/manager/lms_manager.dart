@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:lms_reminder/manager/dio_manager.dart';
+import 'package:lms_reminder/model/assignment.dart';
 import 'package:lms_reminder/model/course.dart';
 import 'package:lms_reminder/model/lecture.dart';
 
@@ -104,14 +105,124 @@ class LmsManager {
         if (videos.isEmpty) {
           lecture.videoList = List.empty(growable: true);
         } else {
-          for(var video in lecture.videoList) {
-            video.title = videos.elementAt(lecture.videoList.indexOf(video)).title;
-            video.totalWatchTime = videos.elementAt(lecture.videoList.indexOf(video)).totalWatchTime;
-            video.requiredWatchTime = videos.elementAt(lecture.videoList.indexOf(video)).requiredWatchTime;
-            video.watch = videos.elementAt(lecture.videoList.indexOf(video)).watch;
+          for (var video in lecture.videoList) {
+            video.title =
+                videos.elementAt(lecture.videoList.indexOf(video)).title;
+            video.totalWatchTime = videos
+                .elementAt(lecture.videoList.indexOf(video))
+                .totalWatchTime;
+            video.requiredWatchTime = videos
+                .elementAt(lecture.videoList.indexOf(video))
+                .requiredWatchTime;
+            video.watch =
+                videos.elementAt(lecture.videoList.indexOf(video)).watch;
           }
         }
       }
     }
+  }
+
+  Future<List<dynamic>> getNotFinishedList() async {
+    List<dynamic> todoList = List.empty(growable: true);
+
+    var stopWatch = Stopwatch();
+
+    stopWatch.start();
+    await LmsManager().getCourseList();
+    print('강좌 불러오기: ' + stopWatch.elapsed.inMilliseconds.toString() + "ms");
+
+    stopWatch.reset();
+    stopWatch.start();
+    await LmsManager().getLectureList();
+    print('강의 불러오기: ' + stopWatch.elapsed.inMilliseconds.toString() + "ms");
+
+    stopWatch.reset();
+    stopWatch.start();
+    await LmsManager().getAssignmentList();
+    print('과제 불러오기: ' + stopWatch.elapsed.inMilliseconds.toString() + "ms");
+
+    stopWatch.reset();
+    stopWatch.start();
+    await LmsManager().getVideoList();
+    print('영상 불러오기: ' + stopWatch.elapsed.inMilliseconds.toString() + "ms");
+
+    DateTime currentTime = DateTime.now();
+    for (var course in courseList) {
+      for (var lecture in course.lectureList) {
+        for (Assignment assignment in lecture.assignmentList) {
+          if (assignment.submit == false &&
+              assignment.deadLine.isAfter(currentTime)) {
+            todoList.add(assignment);
+          }
+        }
+        for (Video video in lecture.videoList) {
+          if (video.watch == false && video.deadLine.isAfter(currentTime)) {
+            todoList.add(video);
+          }
+        }
+      }
+    }
+
+    for (var element in todoList) {
+      if (element.runtimeType == Assignment) {
+        print((element as Assignment).title);
+      } else if (element.runtimeType == Video) {
+        print((element as Video).title);
+      }
+    }
+
+    return todoList;
+  }
+
+  Future<List<dynamic>> getFinishedList() async {
+    List<dynamic> todoList = List.empty(growable: true);
+
+    var stopWatch = Stopwatch();
+
+    stopWatch.start();
+    await LmsManager().getCourseList();
+    print('강좌 불러오기: ' + stopWatch.elapsed.inMilliseconds.toString() + "ms");
+
+    stopWatch.reset();
+    stopWatch.start();
+    await LmsManager().getLectureList();
+    print('강의 불러오기: ' + stopWatch.elapsed.inMilliseconds.toString() + "ms");
+
+    stopWatch.reset();
+    stopWatch.start();
+    await LmsManager().getAssignmentList();
+    print('과제 불러오기: ' + stopWatch.elapsed.inMilliseconds.toString() + "ms");
+
+    stopWatch.reset();
+    stopWatch.start();
+    await LmsManager().getVideoList();
+    print('영상 불러오기: ' + stopWatch.elapsed.inMilliseconds.toString() + "ms");
+
+    DateTime currentTime = DateTime.now();
+    for (var course in courseList) {
+      for (var lecture in course.lectureList) {
+        for (Assignment assignment in lecture.assignmentList) {
+          if (assignment.submit == true &&
+              assignment.deadLine.isAfter(currentTime)) {
+            todoList.add(assignment);
+          }
+        }
+        for (Video video in lecture.videoList) {
+          if (video.watch == true && video.deadLine.isAfter(currentTime)) {
+            todoList.add(video);
+          }
+        }
+      }
+    }
+
+    for (var element in todoList) {
+      if (element.runtimeType == Assignment) {
+        print((element as Assignment).title);
+      } else if (element.runtimeType == Video) {
+        print((element as Video).title);
+      }
+    }
+
+    return todoList;
   }
 }
