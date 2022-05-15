@@ -29,175 +29,178 @@ class _TabPageFinished extends State<TabPageFinished> {
                 return const Text('한 일이 없네요...');
               } else {
                 return Expanded(
-                  child: ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    itemCount: todoList.length,
-                    itemBuilder: (context, index) {
-                      return Card(
-                        child: InkWell(
-                          onTap: () {},
-                          child: Row(
-                            children: <Widget>[
-                              if (todoList.elementAt(index).runtimeType ==
-                                  Assignment) ...[
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
+                  child: RefreshIndicator(
+                    onRefresh: _refreshAllData,
+                    child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      itemCount: todoList.length,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          child: InkWell(
+                            onTap: () {},
+                            child: Row(
+                              children: <Widget>[
+                                if (todoList.elementAt(index).runtimeType ==
+                                    Assignment) ...[
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  (todoList.elementAt(index)
+                                                              as Assignment)
+                                                          .lecture
+                                                          .course
+                                                          .title +
+                                                      " [" +
+                                                      (todoList.elementAt(index)
+                                                              as Assignment)
+                                                          .lecture
+                                                          .week +
+                                                      "]",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 18,
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.only(
+                                                      top: 8.0),
+                                                  child: Text(
+                                                      (todoList.elementAt(index)
+                                                              as Assignment)
+                                                          .title),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              color: Color.fromARGB(
+                                                  255, 52, 128, 235),
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(64),
+                                              ),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey
+                                                      .withOpacity(0.5),
+                                                  spreadRadius: 1,
+                                                  blurRadius: 4,
+                                                  offset: Offset(4, 4),
+                                                ),
+                                              ],
+                                            ),
+                                            child: Center(
+                                              child: Text(
                                                 (todoList.elementAt(index)
-                                                            as Assignment)
-                                                        .lecture
-                                                        .course
-                                                        .title +
-                                                    " [" +
-                                                    (todoList.elementAt(index)
-                                                            as Assignment)
-                                                        .lecture
-                                                        .week +
-                                                    "]",
+                                                        as Assignment)
+                                                    .getLeftTime(),
                                                 style: TextStyle(
+                                                  color: Colors.white,
                                                   fontWeight: FontWeight.bold,
-                                                  fontSize: 18,
+                                                  fontSize: 24.0,
                                                 ),
                                               ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 8.0),
-                                                child: Text(
-                                                    (todoList.elementAt(index)
-                                                            as Assignment)
-                                                        .title),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            color: Color.fromARGB(
-                                                255, 52, 128, 235),
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(64),
                                             ),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey
-                                                    .withOpacity(0.5),
-                                                spreadRadius: 1,
-                                                blurRadius: 4,
-                                                offset: Offset(4, 4),
-                                              ),
-                                            ],
+                                            width: 72,
+                                            height: 72,
                                           ),
-                                          child: Center(
-                                            child: Text(
-                                              (todoList.elementAt(index)
-                                                      as Assignment)
-                                                  .getLeftTime(),
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 24.0,
-                                              ),
-                                            ),
-                                          ),
-                                          width: 72,
-                                          height: 72,
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ] else if (todoList
-                                      .elementAt(index)
-                                      .runtimeType ==
-                                  Video) ...[
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
+                                ] else if (todoList
+                                        .elementAt(index)
+                                        .runtimeType ==
+                                    Video) ...[
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  (todoList.elementAt(index)
+                                                              as Video)
+                                                          .lecture
+                                                          .course
+                                                          .title +
+                                                      " [" +
+                                                      (todoList.elementAt(index)
+                                                              as Video)
+                                                          .lecture
+                                                          .week +
+                                                      "]",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 18,
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.only(
+                                                      top: 8.0),
+                                                  child: Text(
+                                                      (todoList.elementAt(index)
+                                                              as Video)
+                                                          .title),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              color: const Color.fromARGB(
+                                                  255, 52, 128, 235),
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(64),
+                                              ),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey
+                                                      .withOpacity(0.5),
+                                                  spreadRadius: 1,
+                                                  blurRadius: 4,
+                                                  offset: Offset(4, 4),
+                                                ),
+                                              ],
+                                            ),
+                                            child: Center(
+                                              child: Text(
                                                 (todoList.elementAt(index)
-                                                            as Video)
-                                                        .lecture
-                                                        .course
-                                                        .title +
-                                                    " [" +
-                                                    (todoList.elementAt(index)
-                                                            as Video)
-                                                        .lecture
-                                                        .week +
-                                                    "]",
+                                                        as Video)
+                                                    .getLeftTime(),
                                                 style: TextStyle(
+                                                  color: Colors.white,
                                                   fontWeight: FontWeight.bold,
-                                                  fontSize: 18,
+                                                  fontSize: 24.0,
                                                 ),
                                               ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 8.0),
-                                                child: Text(
-                                                    (todoList.elementAt(index)
-                                                            as Video)
-                                                        .title),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            color: const Color.fromARGB(
-                                                255, 52, 128, 235),
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(64),
                                             ),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey
-                                                    .withOpacity(0.5),
-                                                spreadRadius: 1,
-                                                blurRadius: 4,
-                                                offset: Offset(4, 4),
-                                              ),
-                                            ],
+                                            width: 72,
+                                            height: 72,
                                           ),
-                                          child: Center(
-                                            child: Text(
-                                              (todoList.elementAt(index)
-                                                      as Video)
-                                                  .getLeftTime(),
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 24.0,
-                                              ),
-                                            ),
-                                          ),
-                                          width: 72,
-                                          height: 72,
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ]
-                            ],
+                                ]
+                              ],
+                            ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
                 );
               }
@@ -206,5 +209,12 @@ class _TabPageFinished extends State<TabPageFinished> {
         ),
       ),
     );
+  }
+
+  Future<void> _refreshAllData() async {
+    await LmsManager().refreshAllData();
+    setState(() {
+
+    });
   }
 }
