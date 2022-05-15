@@ -9,6 +9,7 @@ import '../model/video.dart';
 class LmsManager {
   static final LmsManager _instance = LmsManager._constructor();
   List<Course> courseList = List.empty(growable: true);
+  static bool isLoading = false;
 
   LmsManager._constructor() {
     DioManager().init(
@@ -26,6 +27,7 @@ class LmsManager {
 
   /// LMS 로그인.
   Future<bool> login(String username, String password) async {
+    isLoading = true;
     // 로그인 요청 전송
     Response response = await DioManager().httpPost(
         Options(
@@ -47,6 +49,19 @@ class LmsManager {
       }
     }
 
+    bool result = (await DioManager()
+            .httpGet(options: Options(), useExistCookie: true, subUrl: ''))
+        .data
+        .toString()
+        .contains('예정');
+
+    isLoading = false;
+
+    return result;
+  }
+
+  /// 로그인 상태 확인.
+  Future<bool> checkLoginState() async {
     return (await DioManager()
             .httpGet(options: Options(), useExistCookie: true, subUrl: ''))
         .data
@@ -56,25 +71,31 @@ class LmsManager {
 
   /// LMS 내 강좌 목록 불러오기.
   Future getCourseList() async {
+    isLoading = true;
     courseList = Course.parseCoursesFromHtml((await DioManager()
             .httpGet(options: Options(), useExistCookie: true, subUrl: ''))
         .data
         .toString());
+    isLoading = false;
   }
 
   /// LMS 내 강의 목록 불러오기
   Future getLectureList() async {
+    isLoading = true;
     for (var course in courseList) {
-      course.lectureList = Lecture.parseLecturesFromHtml((await DioManager()
-              .httpGet(
+      course.lectureList = Lecture.parseLecturesFromHtml(
+          course,
+          (await DioManager().httpGet(
                   options: Options(), useExistCookie: true, subUrl: course.url))
-          .data
-          .toString());
+              .data
+              .toString());
     }
+    isLoading = false;
   }
 
   /// LMS 내 과제 목록 불러오기
   Future getAssignmentList() async {
+    isLoading = true;
     for (var course in courseList) {
       for (var lecture in course.lectureList) {
         for (var assignment in lecture.assignmentList) {
@@ -82,10 +103,12 @@ class LmsManager {
         }
       }
     }
+    isLoading = false;
   }
 
   /// LMS 내 동영상 강의 목록 불러오기
   Future getVideoList() async {
+    isLoading = true;
     for (var course in courseList) {
       String videoListUrl = '/report/ubcompletion/user_progress_a.php?' +
           course.url.substring(course.url.indexOf('id='));
@@ -120,31 +143,13 @@ class LmsManager {
         }
       }
     }
+    isLoading = false;
   }
 
   Future<List<dynamic>> getNotFinishedList() async {
+    if (!await checkLoginState()) {}
+
     List<dynamic> todoList = List.empty(growable: true);
-
-    var stopWatch = Stopwatch();
-
-    stopWatch.start();
-    await LmsManager().getCourseList();
-    print('강좌 불러오기: ' + stopWatch.elapsed.inMilliseconds.toString() + "ms");
-
-    stopWatch.reset();
-    stopWatch.start();
-    await LmsManager().getLectureList();
-    print('강의 불러오기: ' + stopWatch.elapsed.inMilliseconds.toString() + "ms");
-
-    stopWatch.reset();
-    stopWatch.start();
-    await LmsManager().getAssignmentList();
-    print('과제 불러오기: ' + stopWatch.elapsed.inMilliseconds.toString() + "ms");
-
-    stopWatch.reset();
-    stopWatch.start();
-    await LmsManager().getVideoList();
-    print('영상 불러오기: ' + stopWatch.elapsed.inMilliseconds.toString() + "ms");
 
     DateTime currentTime = DateTime.now();
     for (var course in courseList) {
@@ -163,66 +168,90 @@ class LmsManager {
       }
     }
 
-    for (var element in todoList) {
-      if (element.runtimeType == Assignment) {
-        print((element as Assignment).title);
-      } else if (element.runtimeType == Video) {
-        print((element as Video).title);
+    todoList.sort((obj1, obj2) {
+      DateTime? dateTime1;
+      DateTime? dateTime2;
+
+      if (obj1.runtimeType == Assignment) {
+        dateTime1 = (obj1 as Assignment).deadLine;
+      } else {
+        dateTime1 = (obj1 as Video).deadLine;
       }
-    }
+
+      if (obj2.runtimeType == Assignment) {
+        dateTime2 = (obj2 as Assignment).deadLine;
+      } else {
+        dateTime2 = (obj2 as Video).deadLine;
+      }
+
+      return dateTime1.compareTo(dateTime2);
+    });
 
     return todoList;
   }
 
   Future<List<dynamic>> getFinishedList() async {
-    List<dynamic> todoList = List.empty(growable: true);
+    if (!await checkLoginState()) {}
 
-    var stopWatch = Stopwatch();
+    List<dynamic> toDoneList = List.empty(growable: true);
 
-    stopWatch.start();
-    await LmsManager().getCourseList();
-    print('강좌 불러오기: ' + stopWatch.elapsed.inMilliseconds.toString() + "ms");
-
-    stopWatch.reset();
-    stopWatch.start();
-    await LmsManager().getLectureList();
-    print('강의 불러오기: ' + stopWatch.elapsed.inMilliseconds.toString() + "ms");
-
-    stopWatch.reset();
-    stopWatch.start();
-    await LmsManager().getAssignmentList();
-    print('과제 불러오기: ' + stopWatch.elapsed.inMilliseconds.toString() + "ms");
-
-    stopWatch.reset();
-    stopWatch.start();
-    await LmsManager().getVideoList();
-    print('영상 불러오기: ' + stopWatch.elapsed.inMilliseconds.toString() + "ms");
-
-    DateTime currentTime = DateTime.now();
     for (var course in courseList) {
       for (var lecture in course.lectureList) {
         for (Assignment assignment in lecture.assignmentList) {
-          if (assignment.submit == true &&
-              assignment.deadLine.isAfter(currentTime)) {
-            todoList.add(assignment);
+          if (assignment.submit == true) {
+            toDoneList.add(assignment);
           }
         }
         for (Video video in lecture.videoList) {
-          if (video.watch == true && video.deadLine.isAfter(currentTime)) {
-            todoList.add(video);
+          if (video.watch == true) {
+            toDoneList.add(video);
           }
         }
       }
     }
 
-    for (var element in todoList) {
-      if (element.runtimeType == Assignment) {
-        print((element as Assignment).title);
-      } else if (element.runtimeType == Video) {
-        print((element as Video).title);
-      }
-    }
+    toDoneList.sort((obj1, obj2) {
+      String value1 = "";
+      String value2 = "";
 
-    return todoList;
+      if (obj1.runtimeType == Assignment) {
+        value1 = (obj1 as Assignment).getLeftTime();
+      } else {
+        value1 = (obj1 as Video).getLeftTime();
+      }
+
+      if (obj2.runtimeType == Assignment) {
+        value2 = (obj2 as Assignment).getLeftTime();
+      } else {
+        value2 = (obj2 as Video).getLeftTime();
+      }
+
+      if (value1 == '마감' && value2 == '마감') {
+        int iValue1;
+        int iValue2;
+
+        if (obj1.runtimeType == Assignment) {
+          iValue1 =
+              int.parse((obj1 as Assignment).lecture.week.replaceAll('주차', ''));
+        } else {
+          iValue1 =
+              int.parse((obj1 as Video).lecture.week.replaceAll('주차', ''));
+        }
+
+        if (obj2.runtimeType == Assignment) {
+          iValue2 =
+              int.parse((obj2 as Assignment).lecture.week.replaceAll('주차', ''));
+        } else {
+          iValue2 =
+              int.parse((obj2 as Video).lecture.week.replaceAll('주차', ''));
+        }
+
+        return iValue2.compareTo(iValue1);
+      }
+
+      return value1.compareTo(value2);
+    });
+
+    return toDoneList;
   }
 }
