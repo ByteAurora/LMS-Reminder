@@ -80,14 +80,14 @@ class Video {
               element.innerHtml.indexOf('">')));
 
           Video video = Video();
-          video.title = tdList[1].text;
-          video.requiredWatchTime = tdList[2].text;
+          video.title = tdList[1].text.trim();
+          video.requiredWatchTime = tdList[2].text.trim();
           video.watch = tdList[4].text.contains('O');
 
           if (video.watch) {
             video.totalWatchTime = tdList[3]
                 .innerHtml
-                .substring(0, tdList[3].innerHtml.indexOf('<'));
+                .substring(0, tdList[3].innerHtml.indexOf('<')).trim();
           } else {
             video.totalWatchTime = "O0:00";
           }
@@ -102,14 +102,14 @@ class Video {
         }
       } else {
         Video video = Video();
-        video.title = tdList[0].text;
-        video.requiredWatchTime = tdList[1].text;
+        video.title = tdList[0].text.trim();
+        video.requiredWatchTime = tdList[1].text.trim();
         video.watch = tdList[3].text.contains('O');
 
         if (video.watch) {
           video.totalWatchTime = tdList[2]
               .innerHtml
-              .substring(0, tdList[2].innerHtml.indexOf('<'));
+              .substring(0, tdList[2].innerHtml.indexOf('<')).trim();
         } else {
           video.totalWatchTime = "O0:00";
         }
