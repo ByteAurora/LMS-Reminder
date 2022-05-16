@@ -27,6 +27,10 @@ class Lecture {
     List<Lecture> lectureList = List.empty(growable: true);
 
     html_dom.Document document = html_parser.parse(html);
+
+    String temp = document.getElementById('section-0')!.getElementsByClassName('content')[0].getElementsByClassName('section img-text')[0].getElementsByClassName('activity ubboard modtype_ubboard')[0].getElementsByTagName('div')[4].innerHtml;
+    course.noticeListUrl = temp.substring(temp.indexOf('href="https://learn.hoseo.ac.kr') + 'href="https://learn.hoseo.ac.kr'.length, temp.indexOf('">'));
+
     document
         .getElementById('region-main')!
         .getElementsByTagName('div')[0]
