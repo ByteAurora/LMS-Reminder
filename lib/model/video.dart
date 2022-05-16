@@ -5,6 +5,7 @@ import 'lecture.dart';
 
 /// 동영상 강의 정보를 관리하는 클래스.
 class Video {
+  /// 주차.
   Lecture? _lecture;
 
   /// 영상 제목.
@@ -24,36 +25,6 @@ class Video {
 
   /// 출석마감 시간.
   DateTime? _deadLine;
-
-  String get title => _title!;
-
-  set title(String value) {
-    _title = value;
-  }
-
-  String get requiredWatchTime => _requiredWatchTime!;
-
-  bool get watch => _watch!;
-
-  set watch(bool value) {
-    _watch = value;
-  }
-
-  String get totalWatchTime => _totalWatchTime!;
-
-  set totalWatchTime(String value) {
-    _totalWatchTime = value;
-  }
-
-  set requiredWatchTime(String value) {
-    _requiredWatchTime = value;
-  }
-
-  DateTime get enableTime => _enableTime!;
-
-  set enableTime(DateTime value) {
-    _enableTime = value;
-  }
 
   /// 전달된 html에서 영상 정보를 추출하여 반환하는 함수.
   static List<List<Video>> parseVideosFromHtml(String html) {
@@ -132,22 +103,12 @@ class Video {
     return courseVideoList;
   }
 
+  /// Video 생성자.
   Video({Lecture? lecture}) {
     _lecture = lecture;
   }
 
-  DateTime get deadLine => _deadLine!;
-
-  set deadLine(DateTime value) {
-    _deadLine = value;
-  }
-
-  Lecture get lecture => _lecture!;
-
-  set lecture(Lecture value) {
-    _lecture = value;
-  }
-
+  /// 영상 출석 마감까지 남은 시간을 반환해주는 함수.
   String getLeftTime() {
     DateTime currentTime = DateTime.now();
     if (deadLine.isBefore(currentTime)) {
@@ -170,5 +131,47 @@ class Video {
     result = leftTime.inDays.toString();
 
     return 'D-' + result;
+  }
+
+  DateTime get deadLine => _deadLine!;
+
+  set deadLine(DateTime value) {
+    _deadLine = value;
+  }
+
+  Lecture get lecture => _lecture!;
+
+  set lecture(Lecture value) {
+    _lecture = value;
+  }
+
+  String get title => _title!;
+
+  set title(String value) {
+    _title = value;
+  }
+
+  String get requiredWatchTime => _requiredWatchTime!;
+
+  bool get watch => _watch!;
+
+  set watch(bool value) {
+    _watch = value;
+  }
+
+  String get totalWatchTime => _totalWatchTime!;
+
+  set totalWatchTime(String value) {
+    _totalWatchTime = value;
+  }
+
+  set requiredWatchTime(String value) {
+    _requiredWatchTime = value;
+  }
+
+  DateTime get enableTime => _enableTime!;
+
+  set enableTime(DateTime value) {
+    _enableTime = value;
   }
 }

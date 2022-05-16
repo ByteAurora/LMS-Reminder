@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 
+/// Http 통신을 담당하는 클래스.
 class DioManager {
+  /// Singleton Pattern 구현을 위한 객체.
   static final DioManager _instance = DioManager._constructor();
   Dio? dio;
   String? cookie;
@@ -11,12 +13,14 @@ class DioManager {
     return _instance;
   }
 
+  /// DioManager 초기화.
   void init(BaseOptions options) {
     dio ??= Dio();
 
     dio!.options = options;
   }
 
+  /// http post 요청을 전송하는 함수.
   Future<Response> httpPost(
       Options options, String subUrl, Map<String, String> data) async {
     if (dio == null) {
@@ -27,6 +31,7 @@ class DioManager {
     return await dio!.post(subUrl, data: data, options: options);
   }
 
+  /// http get 요청을 전송하는 함수.
   Future<Response> httpGet(
       {required Options options,
       bool useExistCookie = false,

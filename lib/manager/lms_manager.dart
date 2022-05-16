@@ -7,9 +7,15 @@ import 'package:lms_reminder/model/lecture.dart';
 
 import '../model/video.dart';
 
+/// LMS에서 데이터 불러오기 및 불러온 데이터를 관리하는 클래스.
 class LmsManager {
+  /// Singleton Pattern 구현을 위한 객체.
   static final LmsManager _instance = LmsManager._constructor();
+
+  /// 과목 리스트.
   List<Course> courseList = List.empty(growable: true);
+
+  /// 데이터 로딩 상태.
   static bool isLoading = false;
 
   LmsManager._constructor() {
@@ -147,6 +153,7 @@ class LmsManager {
     isLoading = false;
   }
 
+  /// 미제출 과제 및 미시청 영상을 반환하는 함수.
   Future<List<dynamic>> getNotFinishedList() async {
     if (!await checkLoginState()) {}
 
@@ -191,6 +198,7 @@ class LmsManager {
     return todoList;
   }
 
+  /// 제출 과제 및 시청 동영상을 반환하는 함수.
   Future<List<dynamic>> getFinishedList() async {
     if (!await checkLoginState()) {}
 
@@ -256,6 +264,7 @@ class LmsManager {
     return toDoneList;
   }
 
+  /// Course, Lecture, Assignment, Video를 반환하는 함수.
   Future refreshAllData() async {
     await getCourseList();
     await getLectureList();

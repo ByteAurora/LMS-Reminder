@@ -7,6 +7,7 @@ import 'course.dart';
 
 /// 주차별 강의 정보를 관리하는 클래스.
 class Lecture {
+  /// 과목.
   Course? _course;
 
   /// 주차.
@@ -106,6 +107,7 @@ class Lecture {
     return lectureList;
   }
 
+  /// Lecture 생성자.
   Lecture(Course course) {
     _course = course;
   }
