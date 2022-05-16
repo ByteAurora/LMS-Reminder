@@ -120,10 +120,7 @@ class _PageMainState extends State<PageMain>
 
   Future initializeData() async {
     await LmsManager().login('20181179', 'dudwls1234');
-    await LmsManager().getCourseList();
-    await LmsManager().getLectureList();
-    await LmsManager().getAssignmentList();
-    await LmsManager().getVideoList();
+    await LmsManager().refreshAllData();
 
     setState(() {});
   }
