@@ -37,6 +37,8 @@ dependencies:
   html: ^0.15.0
   intl: ^0.17.0
   dio: ^4.0.6
+  shared_preferences: ^2.0.15
+  workmanager: ^0.5.0
 
 dev_dependencies:
   flutter_test:
