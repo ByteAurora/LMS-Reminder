@@ -5,6 +5,7 @@ import 'package:lms_reminder/model/assignment.dart';
 import 'package:lms_reminder/model/course.dart';
 import 'package:lms_reminder/model/lecture.dart';
 
+import '../model/notice.dart';
 import '../model/video.dart';
 
 /// LMS에서 데이터 불러오기 및 불러온 데이터를 관리하는 클래스.
@@ -83,6 +84,24 @@ class LmsManager {
             .httpGet(options: Options(), useExistCookie: true, subUrl: ''))
         .data
         .toString());
+    isLoading = false;
+  }
+
+  /// LMS 내 공지사항 불러오기.
+  Future getNoticeList() async {
+    isLoading = true;
+    for (var course in courseList) {
+      List<Notice> noticeList = await Notice.praseNoticeFromHtml(
+          course,
+          (await DioManager().httpGet(
+                  options: Options(),
+                  useExistCookie: true,
+                  subUrl: course.noticeListUrl))
+              .data
+              .toString());
+
+      course.noticeList = noticeList;
+    }
     isLoading = false;
   }
 
@@ -268,6 +287,7 @@ class LmsManager {
   Future refreshAllData() async {
     await getCourseList();
     await getLectureList();
+    await getNoticeList();
     await getAssignmentList();
     await getVideoList();
   }
