@@ -118,7 +118,6 @@ class _PageMainState extends State<PageMain>
   }
 
   Future initializeData() async {
-    await LmsManager().login('학번', '비밀번호');
     await LmsManager().refreshAllData();
 
     setState(() {});
