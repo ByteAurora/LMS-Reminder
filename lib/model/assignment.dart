@@ -34,7 +34,7 @@ class Assignment {
   String? _leftTime;
 
   /// URL로부터 과제 정보 갱신.
-  update(LmsManager lmsManager) async {
+  Future update(LmsManager lmsManager) async {
     html_dom.Document document = html_parser.parse((await DioManager()
             .httpGet(options: Options(), useExistCookie: true, subUrl: url))
         .data
