@@ -25,10 +25,9 @@ class _PageMainState extends State<PageMain>
   @override
   void initState() {
     super.initState();
+
     tabController = TabController(length: 3, vsync: this);
-
     initializeData();
-
     tabController!.addListener(() {
       setState(() {});
     });
@@ -119,7 +118,7 @@ class _PageMainState extends State<PageMain>
   }
 
   Future initializeData() async {
-    await LmsManager().login('20181179', 'dudwls1234');
+    await LmsManager().login('학번', '비밀번호');
     await LmsManager().refreshAllData();
 
     setState(() {});
