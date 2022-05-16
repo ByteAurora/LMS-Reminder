@@ -64,7 +64,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                           activityTitle = video.title;
                           activityImage = const Image(
                             image: AssetImage(
-                                'resource/image/icon_assignment.png'),
+                                'resource/image/icon_video.png'),
                             width: 24,
                             height: 24,
                             fit: BoxFit.fill,
