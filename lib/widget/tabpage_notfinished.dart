@@ -40,11 +40,12 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                         String? activityTitle;
                         Image? activityImage;
                         String? leftTime;
+                        Color? leftTimeCircleColor;
 
                         if (todoList.elementAt(index).runtimeType ==
                             Assignment) {
                           Assignment assignment =
-                          todoList.elementAt(index) as Assignment;
+                              todoList.elementAt(index) as Assignment;
                           courseTitle = assignment.lecture.course.title;
                           week = assignment.lecture.week;
                           activityTitle = assignment.title;
@@ -71,6 +72,15 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                           leftTime = video.getLeftTime();
                         }
 
+                        if (leftTime == '마감') {
+                          leftTimeCircleColor = Colors.grey;
+                        } else if (leftTime == 'D-1' ||
+                            !leftTime.contains('D')) {
+                          leftTimeCircleColor = Colors.redAccent;
+                        } else {
+                          leftTimeCircleColor = Colors.lightBlueAccent;
+                        }
+
                         return Card(
                           child: InkWell(
                             onTap: () {},
@@ -84,7 +94,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                         Expanded(
                                           child: Column(
                                             crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Text(
                                                 courseTitle + " [" + week + "]",
@@ -101,8 +111,8 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                                     activityImage,
                                                     Padding(
                                                       padding:
-                                                      const EdgeInsets.only(
-                                                          left: 4),
+                                                          const EdgeInsets.only(
+                                                              left: 4),
                                                       child: Text(
                                                         activityTitle,
                                                       ),
@@ -115,9 +125,9 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                         ),
                                         Container(
                                           decoration: BoxDecoration(
-                                            color: Color.fromARGB(
-                                                255, 52, 128, 235),
-                                            borderRadius: BorderRadius.all(
+                                            color: leftTimeCircleColor,
+                                            borderRadius:
+                                                const BorderRadius.all(
                                               Radius.circular(64),
                                             ),
                                             boxShadow: [
@@ -126,14 +136,14 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                                     .withOpacity(0.5),
                                                 spreadRadius: 1,
                                                 blurRadius: 4,
-                                                offset: Offset(4, 4),
+                                                offset: const Offset(4, 4),
                                               ),
                                             ],
                                           ),
                                           child: Center(
                                             child: Text(
                                               leftTime,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 20.0,
@@ -165,8 +175,6 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
 
   Future<void> _refreshAllData() async {
     await LmsManager().refreshAllData();
-    setState(() {
-
-    });
+    setState(() {});
   }
 }
