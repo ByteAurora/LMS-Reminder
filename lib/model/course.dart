@@ -2,6 +2,7 @@ import 'package:html/dom.dart' as html_dom;
 import 'package:html/parser.dart' as html_parser;
 
 import 'lecture.dart';
+import 'notice.dart';
 
 /// 강좌 정보를 관리하는 클래스.
 class Course {
@@ -17,8 +18,14 @@ class Course {
   /// 강좌 URL.
   String? _url;
 
+  /// 강좌 공지사항 목록 URL.
+  String? _noticeListUrl;
+
   /// 해당 강좌의 주차별 강의 목록.
   List<Lecture>? _lectureList;
+
+  /// 해당 강좌의 공지사항 목록.
+  List<Notice>? _noticeList;
 
   /// 전달된 html에서 강좌 정보를 추출하여 반환하는 함수.
   static List<Course> parseCoursesFromHtml(String html) {
@@ -77,5 +84,17 @@ class Course {
 
   set lectureList(List<Lecture> value) {
     _lectureList = value;
+  }
+
+  List<Notice> get noticeList => _noticeList!;
+
+  set noticeList(List<Notice> value) {
+    _noticeList = value;
+  }
+
+  String get noticeListUrl => _noticeListUrl!;
+
+  set noticeListUrl(String value) {
+    _noticeListUrl = value;
   }
 }
