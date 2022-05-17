@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:workmanager/workmanager.dart';
+import 'package:lms_reminder/main.dart';
 
 class PageIntro extends StatefulWidget {
   const PageIntro({Key? key}) : super(key: key);
@@ -18,7 +20,11 @@ class _PageIntroState extends State<PageIntro> {
             Text('인트로 화면'),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/tutorial');
+                Workmanager().initialize(
+                  callbackDispatcher,
+                  isInDebugMode: true,
+                );
+                Navigator.popAndPushNamed(context, '/tutorial');
               },
               child: Text('튜토리얼 화면 이동'),
             ),

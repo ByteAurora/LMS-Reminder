@@ -54,7 +54,7 @@ class _PageLoginState extends State<PageLogin> {
               onPressed: () async {
 
                 if ((await LmsManager().login(userID.text, password.text))) {
-                  Navigator.pushNamed(context, '/main');
+                  Navigator.popAndPushNamed(context, '/main');
                 } else {
                   ScaffoldMessenger.of(context)
                       .showSnackBar(SnackBar(content: Text("로그인 실패")));
