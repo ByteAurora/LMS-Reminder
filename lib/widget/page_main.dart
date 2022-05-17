@@ -67,8 +67,8 @@ class _PageMainState extends State<PageMain>
       ),
       body: TabBarView(
         children: <Widget>[
-          TabPageNotFinished(),
-          TabPageFinished(),
+          TabPageNotFinished(notifyParent: refresh,),
+          TabPageFinished(notifyParent: refresh,),
           TabPageNotice(),
         ],
         controller: tabController,
@@ -119,7 +119,10 @@ class _PageMainState extends State<PageMain>
 
   Future initializeData() async {
     await LmsManager().refreshAllData();
+    refresh();
+  }
 
+  refresh() {
     setState(() {});
   }
 }

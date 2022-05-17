@@ -5,7 +5,10 @@ import '../model/assignment.dart';
 import '../model/video.dart';
 
 class TabPageFinished extends StatefulWidget {
-  const TabPageFinished({Key? key}) : super(key: key);
+  final Function() notifyParent;
+
+  const TabPageFinished({Key? key, required this.notifyParent})
+      : super(key: key);
 
   @override
   State createState() {
@@ -21,7 +24,7 @@ class _TabPageFinished extends State<TabPageFinished> {
         child: FutureBuilder(
           future: LmsManager().getFinishedList(),
           builder: (context, snapshot) {
-            if (snapshot.hasData == false || LmsManager.isLoading) {
+            if (snapshot.hasData == false) {
               return const CircularProgressIndicator();
             } else {
               List<dynamic> todoList = (snapshot.data as List<dynamic>);
@@ -63,8 +66,7 @@ class _TabPageFinished extends State<TabPageFinished> {
                           week = video.lecture.week;
                           activityTitle = video.title;
                           activityImage = const Image(
-                            image: AssetImage(
-                                'resource/image/icon_video.png'),
+                            image: AssetImage('resource/image/icon_video.png'),
                             width: 24,
                             height: 24,
                             fit: BoxFit.fill,
@@ -72,9 +74,10 @@ class _TabPageFinished extends State<TabPageFinished> {
                           leftTime = video.getLeftTime();
                         }
 
-                        if(leftTime == '마감') {
+                        if (leftTime == '마감') {
                           leftTimeCircleColor = Colors.grey;
-                        } else if(leftTime == 'D-1' || !leftTime.contains('D')) {
+                        } else if (leftTime == 'D-1' ||
+                            !leftTime.contains('D')) {
                           leftTimeCircleColor = Colors.redAccent;
                         } else {
                           leftTimeCircleColor = Colors.lightBlueAccent;
@@ -125,7 +128,8 @@ class _TabPageFinished extends State<TabPageFinished> {
                                         Container(
                                           decoration: BoxDecoration(
                                             color: leftTimeCircleColor,
-                                            borderRadius: const BorderRadius.all(
+                                            borderRadius:
+                                                const BorderRadius.all(
                                               Radius.circular(64),
                                             ),
                                             boxShadow: [
@@ -173,6 +177,6 @@ class _TabPageFinished extends State<TabPageFinished> {
 
   Future<void> _refreshAllData() async {
     await LmsManager().refreshAllData();
-    setState(() {});
+    widget.notifyParent();
   }
 }

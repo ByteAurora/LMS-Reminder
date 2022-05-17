@@ -5,7 +5,10 @@ import '../model/assignment.dart';
 import '../model/video.dart';
 
 class TabPageNotFinished extends StatefulWidget {
-  const TabPageNotFinished({Key? key}) : super(key: key);
+  final Function() notifyParent;
+
+  const TabPageNotFinished({Key? key, required this.notifyParent})
+      : super(key: key);
 
   @override
   State createState() {
@@ -21,7 +24,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
         child: FutureBuilder(
           future: LmsManager().getNotFinishedList(),
           builder: (context, snapshot) {
-            if (snapshot.hasData == false || LmsManager.isLoading) {
+            if (snapshot.hasData == false) {
               return const CircularProgressIndicator();
             } else {
               List<dynamic> todoList = (snapshot.data as List<dynamic>);
@@ -63,8 +66,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                           week = video.lecture.week;
                           activityTitle = video.title;
                           activityImage = const Image(
-                            image: AssetImage(
-                                'resource/image/icon_video.png'),
+                            image: AssetImage('resource/image/icon_video.png'),
                             width: 24,
                             height: 24,
                             fit: BoxFit.fill,
@@ -175,6 +177,6 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
 
   Future<void> _refreshAllData() async {
     await LmsManager().refreshAllData();
-    setState(() {});
+    widget.notifyParent();
   }
 }
