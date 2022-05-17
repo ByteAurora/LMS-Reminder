@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:html/dom.dart' as html_dom;
 import 'package:html/parser.dart' as html_parser;
 import 'package:lms_reminder/model/assignment.dart';
+import 'package:lms_reminder/model/course.dart';
 import 'package:lms_reminder/model/lecture.dart';
 
 /// Html에서 Lecture 관련 정보 파싱 테스트.
@@ -25,7 +26,7 @@ Future<void> main() async {
       .getElementsByTagName('li')
       .forEach((element) {
     if (element.className.contains("section main clearfix")) {
-      Lecture lecture = Lecture();
+      Lecture lecture = Lecture(Course());
 
       String sectionName =
           element.getElementsByClassName('hidden sectionname')[0].text;
@@ -41,7 +42,7 @@ Future<void> main() async {
         activities[0]
             .getElementsByClassName('activity assign modtype_assign ')
             .forEach((element2) {
-          Assignment assignment = Assignment();
+          Assignment assignment = Assignment(lecture);
 
           html_dom.Element assignmentElement = element2
               .getElementsByTagName('div')[0]
