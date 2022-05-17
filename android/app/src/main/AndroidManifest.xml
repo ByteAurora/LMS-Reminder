@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lmsreminder.lms_reminder">
+
    <application
         android:label="lms_reminder"
         android:name="${applicationName}"
