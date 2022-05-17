@@ -2,7 +2,7 @@
     package="com.lmsreminder.lms_reminder">
 
    <application
-        android:label="lms_reminder"
+        android:label="LMS 리마인더"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
