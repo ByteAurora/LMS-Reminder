@@ -60,18 +60,6 @@ class Notice {
           .getElementsByClassName('content')[0]
           .text;
 
-      print(course.title +
-          "/" +
-          notice.url +
-          "/" +
-          notice.title +
-          "/" +
-          notice.author +
-          "/" +
-          notice.date +
-          "/" +
-          notice.content);
-
       courseNoticeList.add(notice);
     });
 
