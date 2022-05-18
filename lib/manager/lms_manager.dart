@@ -226,14 +226,10 @@ class LmsManager {
     for (var course in courseList) {
       for (var lecture in course.lectureList) {
         for (Assignment assignment in lecture.assignmentList) {
-          if (assignment.submit == true) {
-            toDoneList.add(assignment);
-          }
+          toDoneList.add(assignment);
         }
         for (Video video in lecture.videoList) {
-          if (video.watch == true) {
-            toDoneList.add(video);
-          }
+          toDoneList.add(video);
         }
       }
     }
