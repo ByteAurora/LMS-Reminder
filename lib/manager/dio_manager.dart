@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 
 /// Http 통신을 담당하는 클래스.
 class DioManager {
@@ -47,5 +50,25 @@ class DioManager {
     }
 
     return await dio!.get(subUrl, options: options);
+  }
+
+  Future httpGetFile(String url, File file, VoidCallback callback) async {
+    try {
+      Response response = await DioManager().httpGet(
+        options: Options(
+          responseType: ResponseType.bytes,
+          followRedirects: false,
+        ),
+        useExistCookie: true,
+        subUrl: url,
+      );
+
+      var randomAccessFile = file.openSync(mode: FileMode.write);
+      randomAccessFile.writeFromSync(response.data);
+      await randomAccessFile.close();
+    } catch (e) {
+      print(e);
+    }
+    callback.call();
   }
 }
