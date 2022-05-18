@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lmsreminder.lms_reminder">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
    <application
         android:label="LMS 리마인더"
         android:name="${applicationName}"
