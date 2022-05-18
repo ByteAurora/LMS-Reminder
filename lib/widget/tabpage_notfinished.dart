@@ -1,11 +1,14 @@
+import 'dart:io';
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_html/html_parser.dart';
 import 'package:html/dom.dart' as html_dom;
 import 'package:intl/intl.dart';
 import 'package:lms_reminder/manager/lms_manager.dart';
 
+import '../manager/dio_manager.dart';
+import '../manager/lms_manager.dart';
 import '../model/assignment.dart';
 import '../model/video.dart';
 
@@ -158,11 +161,75 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                                     child: Html(
                                                       data: content,
                                                       onLinkTap: (String? url,
-                                                          RenderContext context,
+                                                          RenderContext
+                                                              renderContext,
                                                           Map<String, String>
                                                               attributes,
                                                           html_dom.Element?
-                                                              element) {},
+                                                              element) async {
+                                                        String decodeUrl =
+                                                            Uri.decodeComponent(
+                                                                url!);
+                                                        String fileName =
+                                                            decodeUrl.substring(
+                                                                decodeUrl.indexOf(
+                                                                        '/0/') +
+                                                                    3,
+                                                                decodeUrl.indexOf(
+                                                                    '?forcedownload'));
+
+                                                        File file = File(
+                                                            '/storage/emulated/0/Download/' +
+                                                                fileName);
+
+                                                        int loop = 1;
+                                                        while (
+                                                            file.existsSync()) {
+                                                          file = File(
+                                                              '/storage/emulated/0/Download/' +
+                                                                  fileName +
+                                                                  '(' +
+                                                                  loop.toString() +
+                                                                  ')');
+                                                          loop++;
+                                                        }
+
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                                SnackBar(
+                                                          content: Text("'" +
+                                                              fileName +
+                                                              "' 다운로드 시작"),
+                                                          duration:
+                                                              const Duration(
+                                                                  seconds: 1),
+                                                        ));
+
+                                                        DioManager()
+                                                            .httpGetFile(
+                                                                url!, file, () {
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                            SnackBar(
+                                                              content: Text("'" +
+                                                                  fileName +
+                                                                  "' 다운로드 완료"),
+                                                              duration:
+                                                                  const Duration(
+                                                                      seconds:
+                                                                          3),
+                                                              action:
+                                                                  SnackBarAction(
+                                                                label: '열기',
+                                                                onPressed:
+                                                                    () {},
+                                                              ),
+                                                            ),
+                                                          );
+                                                        });
+                                                      },
                                                     ),
                                                   )
                                               ],
