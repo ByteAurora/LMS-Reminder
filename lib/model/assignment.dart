@@ -51,7 +51,7 @@ class Assignment {
         .getElementsByTagName('div')
         .forEach((element) {
       if (element.className == 'box generalbox boxaligncenter') {
-        content = element.text.trim();
+        content = element.innerHtml.trim();
       } else if (element.className == 'submissionstatustable') {
         element
             .getElementsByTagName('div')[0]
