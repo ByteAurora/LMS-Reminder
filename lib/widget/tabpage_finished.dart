@@ -1,4 +1,8 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:html/dom.dart' as html_dom;
+import 'package:intl/intl.dart';
 
 import '../manager/lms_manager.dart';
 import '../model/assignment.dart';
@@ -44,8 +48,11 @@ class _TabPageFinished extends State<TabPageFinished> {
                             String? week;
                             String? activityTitle;
                             Image? activityImage;
+                            String? deadLine;
                             String? leftTime;
                             Color? leftTimeCircleColor;
+                            bool? state;
+                            String? content;
 
                             if (todoList.elementAt(index).runtimeType ==
                                 Assignment) {
@@ -61,19 +68,27 @@ class _TabPageFinished extends State<TabPageFinished> {
                                 height: 24,
                                 fit: BoxFit.fill,
                               );
+                              deadLine = DateFormat('yyyy년 MM월 dd일 00시 00분')
+                                  .format(assignment.deadLine);
                               leftTime = assignment.getLeftTime();
+                              content = assignment.content;
+                              state = assignment.submit;
                             } else {
                               Video video = todoList.elementAt(index) as Video;
                               courseTitle = video.lecture.course.title;
                               week = video.lecture.week;
                               activityTitle = video.title;
                               activityImage = const Image(
-                                image: AssetImage('resource/image/icon_video.png'),
+                                image:
+                                    AssetImage('resource/image/icon_video.png'),
                                 width: 24,
                                 height: 24,
                                 fit: BoxFit.fill,
                               );
+                              deadLine = DateFormat('yyyy년 MM월 dd일 00시 00분')
+                                  .format(video.deadLine);
                               leftTime = video.getLeftTime();
+                              state = video.watch;
                             }
 
                             if (leftTime == '마감') {
@@ -87,7 +102,79 @@ class _TabPageFinished extends State<TabPageFinished> {
 
                             return Card(
                               child: InkWell(
-                                onTap: () {},
+                                onTap: () {
+                                  AwesomeDialog(
+                                          context: context,
+                                          headerAnimationLoop: false,
+                                          body: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Column(
+                                              children: <Widget>[
+                                                Text(
+                                                  courseTitle!,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 22,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  activityTitle!,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                    top: 14,
+                                                  ),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: <Widget>[
+                                                      Text(
+                                                        '주차: ' + week!,
+                                                        style: const TextStyle(
+                                                            fontSize: 14),
+                                                      ),
+                                                      Text(
+                                                        '마감일: ' + deadLine!,
+                                                        style: const TextStyle(
+                                                            fontSize: 14),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                if (content != null)
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 8.0,
+                                                            left: 8.0,
+                                                            right: 8.0),
+                                                    child: Html(
+                                                      data: content,
+                                                      onLinkTap: (String? url,
+                                                          RenderContext context,
+                                                          Map<String, String>
+                                                              attributes,
+                                                          html_dom.Element?
+                                                              element) {},
+                                                    ),
+                                                  )
+                                              ],
+                                            ),
+                                          ),
+                                          dialogType: state!
+                                              ? DialogType.SUCCES
+                                              : DialogType.ERROR,
+                                          animType: AnimType.SCALE,
+                                          btnOkText: '확인',
+                                          btnOkOnPress: () {})
+                                      .show();
+                                },
                                 child: Row(
                                   children: <Widget>[
                                     Expanded(
@@ -100,25 +187,44 @@ class _TabPageFinished extends State<TabPageFinished> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-                                                  Text(
-                                                    courseTitle + " [" + week + "]",
-                                                    style: const TextStyle(
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 18,
-                                                    ),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        courseTitle,
+                                                        style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 18,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        " [" + week + "]",
+                                                        style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14,
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                   Padding(
-                                                    padding: const EdgeInsets.only(
-                                                        top: 8.0),
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 8.0),
                                                     child: Row(
                                                       children: [
                                                         activityImage,
                                                         Padding(
                                                           padding:
-                                                              const EdgeInsets.only(
+                                                              const EdgeInsets
+                                                                      .only(
                                                                   left: 4),
                                                           child: Text(
                                                             activityTitle,
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        12),
                                                           ),
                                                         ),
                                                       ],
