@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:html/dom.dart' as html_dom;
 import 'package:intl/intl.dart';
+import 'package:open_file/open_file.dart';
 
 import '../manager/dio_manager.dart';
 import '../manager/lms_manager.dart';
@@ -176,20 +177,44 @@ class _TabPageFinished extends State<TabPageFinished> {
                                                                     3,
                                                                 decodeUrl.indexOf(
                                                                     '?forcedownload'));
+                                                        String fileExtension =
+                                                            fileName.substring(
+                                                                fileName
+                                                                    .lastIndexOf(
+                                                                        '.'));
+                                                        fileName =
+                                                            fileName.substring(
+                                                                0,
+                                                                fileName
+                                                                    .lastIndexOf(
+                                                                        '.'));
 
                                                         File file = File(
                                                             '/storage/emulated/0/Download/' +
-                                                                fileName);
+                                                                fileName +
+                                                                fileExtension);
 
                                                         int loop = 1;
+                                                        String filePath =
+                                                            '/storage/emulated/0/Download/' +
+                                                                fileName +
+                                                                fileExtension;
+
+                                                        String finalFileName =
+                                                            fileName +
+                                                                fileExtension;
                                                         while (
                                                             file.existsSync()) {
-                                                          file = File(
-                                                              '/storage/emulated/0/Download/' +
-                                                                  fileName +
+                                                          finalFileName =
+                                                              fileName +
                                                                   '(' +
                                                                   loop.toString() +
-                                                                  ')');
+                                                                  ')' +
+                                                                  fileExtension;
+                                                          filePath =
+                                                              '/storage/emulated/0/Download/' +
+                                                                  finalFileName;
+                                                          file = File(filePath);
                                                           loop++;
                                                         }
 
@@ -198,7 +223,7 @@ class _TabPageFinished extends State<TabPageFinished> {
                                                             .showSnackBar(
                                                                 SnackBar(
                                                           content: Text("'" +
-                                                              fileName +
+                                                              finalFileName +
                                                               "' 다운로드 시작"),
                                                           duration:
                                                               const Duration(
@@ -213,15 +238,19 @@ class _TabPageFinished extends State<TabPageFinished> {
                                                               .showSnackBar(
                                                             SnackBar(
                                                               content: Text("'" +
-                                                                  fileName +
+                                                                  finalFileName +
                                                                   "' 다운로드 완료"),
                                                               duration:
                                                                   const Duration(
                                                                       seconds:
                                                                           3),
-                                                              action: SnackBarAction(
+                                                              action:
+                                                                  SnackBarAction(
                                                                 label: '열기',
-                                                                onPressed: () {},
+                                                                onPressed: () {
+                                                                  OpenFile.open(
+                                                                      file.path);
+                                                                },
                                                               ),
                                                             ),
                                                           );

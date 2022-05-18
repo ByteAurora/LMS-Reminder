@@ -6,6 +6,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:html/dom.dart' as html_dom;
 import 'package:intl/intl.dart';
 import 'package:lms_reminder/manager/lms_manager.dart';
+import 'package:open_file/open_file.dart';
 
 import '../manager/dio_manager.dart';
 import '../manager/lms_manager.dart';
@@ -61,7 +62,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                             if (todoList.elementAt(index).runtimeType ==
                                 Assignment) {
                               Assignment assignment =
-                                  todoList.elementAt(index) as Assignment;
+                              todoList.elementAt(index) as Assignment;
                               courseTitle = assignment.lecture.course.title;
                               week = assignment.lecture.week;
                               activityTitle = assignment.title;
@@ -84,7 +85,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                               activityTitle = video.title;
                               activityImage = const Image(
                                 image:
-                                    AssetImage('resource/image/icon_video.png'),
+                                AssetImage('resource/image/icon_video.png'),
                                 width: 24,
                                 height: 24,
                                 fit: BoxFit.fill,
@@ -108,139 +109,165 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                               child: InkWell(
                                 onTap: () {
                                   AwesomeDialog(
-                                          context: context,
-                                          headerAnimationLoop: false,
-                                          body: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Column(
-                                              children: <Widget>[
-                                                Text(
-                                                  courseTitle!,
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 22,
+                                      context: context,
+                                      headerAnimationLoop: false,
+                                      body: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          children: <Widget>[
+                                            Text(
+                                              courseTitle!,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 22,
+                                              ),
+                                            ),
+                                            Text(
+                                              activityTitle!,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                              const EdgeInsets.only(
+                                                top: 14,
+                                              ),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment
+                                                    .start,
+                                                children: <Widget>[
+                                                  Text(
+                                                    '주차: ' + week!,
+                                                    style: const TextStyle(
+                                                        fontSize: 14),
                                                   ),
-                                                ),
-                                                Text(
-                                                  activityTitle!,
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 16,
+                                                  Text(
+                                                    '마감일: ' + deadLine!,
+                                                    style: const TextStyle(
+                                                        fontSize: 14),
                                                   ),
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                    top: 14,
-                                                  ),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: <Widget>[
-                                                      Text(
-                                                        '주차: ' + week!,
-                                                        style: const TextStyle(
-                                                            fontSize: 14),
-                                                      ),
-                                                      Text(
-                                                        '마감일: ' + deadLine!,
-                                                        style: const TextStyle(
-                                                            fontSize: 14),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                if (content != null)
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 8.0,
-                                                            left: 8.0,
-                                                            right: 8.0),
-                                                    child: Html(
-                                                      data: content,
-                                                      onLinkTap: (String? url,
-                                                          RenderContext
-                                                              renderContext,
-                                                          Map<String, String>
-                                                              attributes,
-                                                          html_dom.Element?
-                                                              element) async {
-                                                        String decodeUrl =
-                                                            Uri.decodeComponent(
-                                                                url!);
-                                                        String fileName =
-                                                            decodeUrl.substring(
-                                                                decodeUrl.indexOf(
-                                                                        '/0/') +
-                                                                    3,
-                                                                decodeUrl.indexOf(
-                                                                    '?forcedownload'));
+                                                ],
+                                              ),
+                                            ),
+                                            if (content != null)
+                                              Padding(
+                                                padding:
+                                                const EdgeInsets.only(
+                                                    top: 8.0,
+                                                    left: 8.0,
+                                                    right: 8.0),
+                                                child: Html(
+                                                  data: content,
+                                                  onLinkTap: (String? url,
+                                                      RenderContext
+                                                      renderContext,
+                                                      Map<String, String>
+                                                      attributes,
+                                                      html_dom.Element?
+                                                      element) async {
+                                                    String decodeUrl =
+                                                    Uri.decodeComponent(
+                                                        url!);
+                                                    String fileName =
+                                                    decodeUrl.substring(
+                                                        decodeUrl.indexOf(
+                                                            '/0/') +
+                                                            3,
+                                                        decodeUrl.indexOf(
+                                                            '?forcedownload'));
+                                                    String fileExtension =
+                                                    fileName.substring(
+                                                        fileName
+                                                            .lastIndexOf(
+                                                            '.'));
+                                                    fileName =
+                                                        fileName.substring(
+                                                            0,
+                                                            fileName
+                                                                .lastIndexOf(
+                                                                '.'));
 
-                                                        File file = File(
-                                                            '/storage/emulated/0/Download/' +
-                                                                fileName);
+                                                    File file = File(
+                                                        '/storage/emulated/0/Download/' +
+                                                            fileName +
+                                                            fileExtension);
 
-                                                        int loop = 1;
-                                                        while (
-                                                            file.existsSync()) {
-                                                          file = File(
-                                                              '/storage/emulated/0/Download/' +
-                                                                  fileName +
-                                                                  '(' +
-                                                                  loop.toString() +
-                                                                  ')');
-                                                          loop++;
-                                                        }
+                                                    int loop = 1;
+                                                    String filePath =
+                                                        '/storage/emulated/0/Download/' +
+                                                            fileName +
+                                                            fileExtension;
 
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                                SnackBar(
+                                                    String finalFileName =
+                                                        fileName +
+                                                            fileExtension;
+                                                    while (
+                                                    file.existsSync()) {
+                                                      finalFileName =
+                                                          fileName +
+                                                              '(' +
+                                                              loop.toString() +
+                                                              ')' +
+                                                              fileExtension;
+                                                      filePath =
+                                                          '/storage/emulated/0/Download/' +
+                                                              finalFileName;
+                                                      file = File(filePath);
+                                                      loop++;
+                                                    }
+
+                                                    ScaffoldMessenger.of(
+                                                        context)
+                                                        .showSnackBar(
+                                                        SnackBar(
                                                           content: Text("'" +
-                                                              fileName +
+                                                              finalFileName +
                                                               "' 다운로드 시작"),
                                                           duration:
-                                                              const Duration(
-                                                                  seconds: 1),
+                                                          const Duration(
+                                                              seconds: 1),
                                                         ));
 
-                                                        DioManager()
-                                                            .httpGetFile(
-                                                                url!, file, () {
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .showSnackBar(
-                                                            SnackBar(
-                                                              content: Text("'" +
-                                                                  fileName +
-                                                                  "' 다운로드 완료"),
-                                                              duration:
-                                                                  const Duration(
-                                                                      seconds:
-                                                                          3),
-                                                              action:
-                                                                  SnackBarAction(
-                                                                label: '열기',
-                                                                onPressed:
-                                                                    () {},
-                                                              ),
-                                                            ),
-                                                          );
-                                                        });
-                                                      },
-                                                    ),
-                                                  )
-                                              ],
-                                            ),
-                                          ),
-                                          dialogType: state!
-                                              ? DialogType.SUCCES
-                                              : DialogType.ERROR,
-                                          animType: AnimType.SCALE,
-                                          btnOkText: '확인',
-                                          btnOkOnPress: () {})
+                                                    DioManager()
+                                                        .httpGetFile(
+                                                        url!, file, () {
+                                                      ScaffoldMessenger.of(
+                                                          context)
+                                                          .showSnackBar(
+                                                        SnackBar(
+                                                          content: Text("'" +
+                                                              finalFileName +
+                                                              "' 다운로드 완료"),
+                                                          duration:
+                                                          const Duration(
+                                                              seconds:
+                                                              3),
+                                                          action:
+                                                          SnackBarAction(
+                                                            label: '열기',
+                                                            onPressed: () {
+                                                              OpenFile.open(
+                                                                  file.path);
+                                                            },
+                                                          ),
+                                                        ),
+                                                      );
+                                                    });
+                                                  },
+                                                ),
+                                              )
+                                          ],
+                                        ),
+                                      ),
+                                      dialogType: state!
+                                          ? DialogType.SUCCES
+                                          : DialogType.ERROR,
+                                      animType: AnimType.SCALE,
+                                      btnOkText: '확인',
+                                      btnOkOnPress: () {})
                                       .show();
                                 },
                                 child: Row(
@@ -253,7 +280,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                             Expanded(
                                               child: Column(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                CrossAxisAlignment.start,
                                                 children: [
                                                   Row(
                                                     children: [
@@ -261,7 +288,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                                         courseTitle,
                                                         style: const TextStyle(
                                                           fontWeight:
-                                                              FontWeight.bold,
+                                                          FontWeight.bold,
                                                           fontSize: 18,
                                                         ),
                                                       ),
@@ -269,7 +296,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                                         " [" + week + "]",
                                                         style: const TextStyle(
                                                           fontWeight:
-                                                              FontWeight.bold,
+                                                          FontWeight.bold,
                                                           fontSize: 14,
                                                         ),
                                                       ),
@@ -277,22 +304,22 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                                   ),
                                                   Padding(
                                                     padding:
-                                                        const EdgeInsets.only(
-                                                            top: 8.0),
+                                                    const EdgeInsets.only(
+                                                        top: 8.0),
                                                     child: Row(
                                                       children: [
                                                         activityImage,
                                                         Padding(
                                                           padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  left: 4),
+                                                          const EdgeInsets
+                                                              .only(
+                                                              left: 4),
                                                           child: Text(
                                                             activityTitle,
                                                             style:
-                                                                const TextStyle(
-                                                                    fontSize:
-                                                                        12),
+                                                            const TextStyle(
+                                                                fontSize:
+                                                                12),
                                                           ),
                                                         ),
                                                       ],
@@ -305,7 +332,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                               decoration: BoxDecoration(
                                                 color: leftTimeCircleColor,
                                                 borderRadius:
-                                                    const BorderRadius.all(
+                                                const BorderRadius.all(
                                                   Radius.circular(64),
                                                 ),
                                                 boxShadow: [
