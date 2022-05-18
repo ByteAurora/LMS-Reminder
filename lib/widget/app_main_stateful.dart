@@ -43,6 +43,7 @@ class _AppMainStatefulState extends State<AppMainStateful>
       debugShowCheckedModeBanner: widget.showDebugLabel!,
       title: widget.applicationName!,
       theme: ThemeData(
+        fontFamily: 'Noto Sans KR',
         primarySwatch: widget.primarySwatchColor!,
       ),
       initialRoute: '/intro',
