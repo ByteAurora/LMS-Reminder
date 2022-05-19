@@ -223,13 +223,23 @@ class LmsManager {
 
     List<dynamic> toDoneList = List.empty(growable: true);
 
+    DateTime currentTime = DateTime.now();
+
     for (var course in courseList) {
       for (var lecture in course.lectureList) {
         for (Assignment assignment in lecture.assignmentList) {
-          toDoneList.add(assignment);
+          if(assignment.submit) {
+            toDoneList.add(assignment);
+          } else if(assignment.deadLine.isBefore(currentTime)){
+            toDoneList.add(assignment);
+          }
         }
         for (Video video in lecture.videoList) {
-          toDoneList.add(video);
+          if(video.watch) {
+            toDoneList.add(video);
+          } else if(video.deadLine.isBefore(currentTime)){
+            toDoneList.add(video);
+          }
         }
       }
     }
