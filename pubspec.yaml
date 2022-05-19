@@ -44,6 +44,7 @@ dependencies:
   flutter_html: ^3.0.0-alpha.3
   open_file: ^3.2.1
   permission_handler: ^9.2.0
+  flutter_settings_screens: ^0.2.2+1
 
 dev_dependencies:
   flutter_test:
