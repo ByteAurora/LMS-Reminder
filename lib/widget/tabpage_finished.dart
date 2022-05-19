@@ -73,7 +73,7 @@ class _TabPageFinished extends State<TabPageFinished> {
                                 height: 24,
                                 fit: BoxFit.fill,
                               );
-                              deadLine = DateFormat('yyyy년 MM월 dd일 00시 00분')
+                              deadLine = DateFormat('yyyy년 MM월 dd일 HH시 mm분')
                                   .format(assignment.deadLine);
                               leftTime = assignment.getLeftTime();
                               content = assignment.content;

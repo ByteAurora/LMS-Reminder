@@ -91,7 +91,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                 height: 24,
                                 fit: BoxFit.fill,
                               );
-                              deadLine = DateFormat('yyyy년 MM월 dd일 00시 00분')
+                              deadLine = DateFormat('yyyy년 MM월 dd일 HH시 mm분')
                                   .format(video.deadLine);
                               leftTime = video.getLeftTime();
                               state = video.watch;
