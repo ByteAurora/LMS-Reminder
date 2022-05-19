@@ -54,7 +54,7 @@ class Assignment {
         content = element.innerHtml.trim();
       } else if (element.className == 'submissionstatustable') {
         element
-            .getElementsByTagName('div')[0]
+            .getElementsByClassName('box boxaligncenter submissionsummarytable')[0]
             .getElementsByTagName('table')[0]
             .getElementsByTagName('tbody')[0]
             .getElementsByTagName('tr')
