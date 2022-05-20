@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lms_reminder/manager/lms_manager.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../sharedpreference_key.dart';
 
 class PageLogin extends StatefulWidget {
   final LmsManager lmsManager;
@@ -11,10 +14,12 @@ class PageLogin extends StatefulWidget {
 }
 
 class _PageLoginState extends State<PageLogin> {
-  ///id변수
+  ///id 컨트롤
   TextEditingController userID = TextEditingController();
-  ///pw변수
+  String? keepID='';
+  ///pw 컨트롤
   TextEditingController password = TextEditingController();
+  String? keepPW='';
 
   @override
   Widget build(BuildContext context) {
@@ -46,25 +51,31 @@ class _PageLoginState extends State<PageLogin> {
                     fillColor: Colors.grey,
                     labelText: 'Password',
                   ),
+                  obscureText: true,
                 ),
               ),
             ),
-            Text('로그인 화면'),
             ElevatedButton(
               onPressed: () async {
-
-                if ((await LmsManager().login(userID.text, password.text))) {
+                final prefs = await SharedPreferences.getInstance();
+                prefs.setString(keyUserId, userID.text);
+                prefs.setString(keyUserPw, password.text);
+                keepID = prefs.getString(keyUserId);
+                keepPW = prefs.getString(keyUserPw);
+                if ((await LmsManager().login(keepID!, keepPW!))) {
                   Navigator.popAndPushNamed(context, '/main');
-                } else {
+                }
+                else {
                   ScaffoldMessenger.of(context)
                       .showSnackBar(SnackBar(content: Text("로그인 실패")));
                 }
               },
-              child: Text('메인 화면 이동'),
+              child: Text('로그인'),
             ),
           ],
         ),
       ),
     );
   }
+
 }
