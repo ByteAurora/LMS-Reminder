@@ -56,7 +56,7 @@ class _PageTutorialState extends State<PageTutorial> {
       onSkip: (){ Navigator.popAndPushNamed(context, '/login');},
       onDone: () { Navigator.popAndPushNamed(context, '/login');},
       globalBackgroundColor: Color.fromARGB(0xff, 0xb7, 0x21, 0x2d),
-      next: const Icon(Icons.arrow_forward,color: Colors.white),
+      next: Image.asset("resource/image/icon_next.png",color: Colors.white,width: 15, height: 15),
       dotsDecorator: DotsDecorator(
         size: const Size.square(10.0),
         activeSize: const Size(20.0, 10.0),
