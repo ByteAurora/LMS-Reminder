@@ -16,7 +16,7 @@ class _PageTutorialState extends State<PageTutorial> {
   @override
   Widget build(BuildContext context) {
     const pageDecoration = PageDecoration(
-      titleTextStyle: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700,color: Colors.white),
+      titleTextStyle: TextStyle(fontSize: 1.0, fontWeight: FontWeight.w700,color: Colors.white),
       bodyPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
 
       imagePadding: EdgeInsets.zero,
@@ -26,10 +26,10 @@ class _PageTutorialState extends State<PageTutorial> {
       pages:
       [
         PageViewModel(
-        titleWidget: Text("Custom widget for title"),
-        bodyWidget:
-        Text("LMS리마인더로 수강중인 과목의 강의 및 과제를 쉽게 확인해보세요."),
-        image: Image.asset("resource/image/icon_video.png"),
+
+        title: "LMS리마인더로 수강중인 과목의 강의 및 과제를 쉽게 확인해보세요.",
+        body: "LMS리마인더로 수강중인 과목의 강의 및 과제를 쉽게 확인해보세요.",
+        image: Image.asset("resource/image/image_todo.png",width: 300,height: 200,fit: BoxFit.contain,),
         decoration: pageDecoration,
 
       ),
@@ -49,19 +49,21 @@ class _PageTutorialState extends State<PageTutorial> {
         ),
       ],
 
-      done: const Text("시작하기", style: TextStyle(fontWeight: FontWeight.w600,color: Colors.white)),
+      done: const Text("시작하기", style: TextStyle(fontWeight: FontWeight.w600,color: Color.fromARGB(0xff, 070, 070, 070))),
       showBackButton: false,
       showSkipButton: true,
-      skip: const Text("건너뛰기",style: TextStyle(color: Colors.white)),
+      skip: const Text("건너뛰기",style: TextStyle(fontWeight: FontWeight.w600,color: Color.fromARGB(0xff, 070, 070, 070))),
       onSkip: (){ Navigator.popAndPushNamed(context, '/login');},
       onDone: () { Navigator.popAndPushNamed(context, '/login');},
-      globalBackgroundColor: Color.fromARGB(0xff, 0xb7, 0x21, 0x2d),
-      next: Image.asset("resource/image/icon_next.png",color: Colors.white,width: 15, height: 15),
+      globalBackgroundColor: Colors.white,
+      next: Image.asset("resource/image/icon_next.png", //> 색
+          color: Color.fromARGB(0xff, 070, 070, 070),
+          width: 15, height: 15),
       dotsDecorator: DotsDecorator(
         size: const Size.square(10.0),
         activeSize: const Size(20.0, 10.0),
-        activeColor: Colors.white,
-        color: Colors.white,
+        activeColor: Color.fromARGB(0xff, 070, 070, 070), //선택된 탭
+        color: Color.fromARGB(0xff, 235, 235, 235), //안선택된 탭
         spacing: const EdgeInsets.symmetric(horizontal: 3.0),
         activeShape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(25.0)
