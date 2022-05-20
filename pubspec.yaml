@@ -46,6 +46,8 @@ dependencies:
   open_file: ^3.2.1
   permission_handler: ^9.2.0
   flutter_settings_screens: ^0.2.2+1
+  sqflite: ^2.0.2+1
+  path: ^1.8.1
 
 dev_dependencies:
   flutter_test:
