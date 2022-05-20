@@ -93,12 +93,8 @@ class _PageSettingState extends State<PageSetting> {
                           final SharedPreferences prefs = await SharedPreferences.getInstance();
                           setState((){
                             if(prefs.getBool(keyNotifyAssignment)!){
-                              if((NotifyAssignment1daySwitch==false)&&
-                                  (NotifyAssignment3daysSwitch==false)&&
-                                  (NotifyAssignment5daysSwitch)==false){
-                                prefs.setBool(keyNotifyAssignmentBefore6Hours, value);
-                                NotifyAssignment6HourSwitch=prefs.getBool(keyNotifyAssignmentBefore6Hours)!;
-                              }
+                              prefs.setBool(keyNotifyAssignmentBefore6Hours, value);
+                              NotifyAssignment6HourSwitch=prefs.getBool(keyNotifyAssignmentBefore6Hours)!;
                             }
                           });
                         }
@@ -110,12 +106,8 @@ class _PageSettingState extends State<PageSetting> {
                           final SharedPreferences prefs = await SharedPreferences.getInstance();
                           setState((){
                             if(prefs.getBool(keyNotifyAssignment)!){
-                              if((NotifyAssignment6HourSwitch==false)&&
-                                  (NotifyAssignment3daysSwitch==false)&&
-                                  (NotifyAssignment5daysSwitch)==false){
-                                prefs.setBool(keyNotifyAssignmentBefore1Day, value);
-                                NotifyAssignment1daySwitch=prefs.getBool(keyNotifyAssignmentBefore1Day)!;
-                              }
+                              prefs.setBool(keyNotifyAssignmentBefore1Day, value);
+                              NotifyAssignment1daySwitch=prefs.getBool(keyNotifyAssignmentBefore1Day)!;
                             }
                           });
                         }
@@ -127,12 +119,8 @@ class _PageSettingState extends State<PageSetting> {
                           final SharedPreferences prefs = await SharedPreferences.getInstance();
                           setState((){
                             if(prefs.getBool(keyNotifyAssignment)!) {
-                              if((NotifyAssignment6HourSwitch==false)&&
-                                  (NotifyAssignment1daySwitch==false)&&
-                                  (NotifyAssignment5daysSwitch)==false){
-                                prefs.setBool(keyNotifyAssignmentBefore3Day, value);
-                                NotifyAssignment3daysSwitch=prefs.getBool(keyNotifyAssignmentBefore3Day)!;
-                              };
+                              prefs.setBool(keyNotifyAssignmentBefore3Day, value);
+                              NotifyAssignment3daysSwitch=prefs.getBool(keyNotifyAssignmentBefore3Day)!;
                             }
                           });
                         }
@@ -143,13 +131,9 @@ class _PageSettingState extends State<PageSetting> {
                         onChanged: (value) async {
                           final SharedPreferences prefs = await SharedPreferences.getInstance();
                           setState((){
-                            if(prefs.getBool(keyNotifyAssignment)!) {
-                              if((NotifyAssignment6HourSwitch==false)&&
-                                  (NotifyAssignment1daySwitch==false)&&
-                                  (NotifyAssignment3daysSwitch)==false){
+                              if(prefs.getBool(keyNotifyAssignment)!) {
                                 prefs.setBool(keyNotifyAssignmentBefore5Day, value);
                                 NotifyAssignment5daysSwitch=prefs.getBool(keyNotifyAssignmentBefore5Day)!;
-                              };
                             }
                           });
                         }
@@ -189,12 +173,8 @@ class _PageSettingState extends State<PageSetting> {
                           final SharedPreferences prefs = await SharedPreferences.getInstance();
                           setState((){
                             if(prefs.getBool(keyNotifyVideo)!){
-                              if((NotifyVideo1day==false)&&
-                                  (NotifyVideo3days==false)&&
-                                  (NotifyVideo5days)==false){
-                                prefs.setBool(keyNotifyVideoBefore6Hours, value);
-                                NotifyVideo6Hours=prefs.getBool(keyNotifyVideoBefore6Hours)!;
-                              }
+                              prefs.setBool(keyNotifyVideoBefore6Hours, value);
+                              NotifyVideo6Hours=prefs.getBool(keyNotifyVideoBefore6Hours)!;
                             }
                           });
                         }
@@ -206,12 +186,8 @@ class _PageSettingState extends State<PageSetting> {
                           final SharedPreferences prefs = await SharedPreferences.getInstance();
                           setState((){
                             if(prefs.getBool(keyNotifyVideo)!){
-                              if((NotifyVideo6Hours==false)&&
-                                  (NotifyVideo3days==false)&&
-                                  (NotifyVideo5days)==false){
-                                prefs.setBool(keyNotifyVideoBefore1Day, value);
-                                NotifyVideo1day=prefs.getBool(keyNotifyVideoBefore1Day)!;
-                              }
+                              prefs.setBool(keyNotifyVideoBefore1Day, value);
+                              NotifyVideo1day=prefs.getBool(keyNotifyVideoBefore1Day)!;
                             }
                           });
                         }
@@ -223,12 +199,8 @@ class _PageSettingState extends State<PageSetting> {
                           final SharedPreferences prefs = await SharedPreferences.getInstance();
                           setState((){
                             if(prefs.getBool(keyNotifyVideo)!){
-                              if((NotifyVideo6Hours==false)&&
-                                  (NotifyVideo1day==false)&&
-                                  (NotifyVideo5days)==false){
-                                prefs.setBool(keyNotifyVideoBefore3Days, value);
-                                NotifyVideo3days=prefs.getBool(keyNotifyVideoBefore3Days)!;
-                              }
+                              prefs.setBool(keyNotifyVideoBefore3Days, value);
+                              NotifyVideo3days=prefs.getBool(keyNotifyVideoBefore3Days)!;
                             }
                           });
                         }
@@ -240,12 +212,8 @@ class _PageSettingState extends State<PageSetting> {
                           final SharedPreferences prefs = await SharedPreferences.getInstance();
                           setState((){
                             if(prefs.getBool(keyNotifyVideo)!){
-                              if((NotifyVideo6Hours==false)&&
-                                  (NotifyVideo1day==false)&&
-                                  (NotifyVideo3days)==false){
-                                prefs.setBool(keyNotifyVideoBefore5Days, value);
-                                NotifyVideo5days=prefs.getBool(keyNotifyVideoBefore5Days)!;
-                              }
+                              prefs.setBool(keyNotifyVideoBefore5Days, value);
+                              NotifyVideo5days=prefs.getBool(keyNotifyVideoBefore5Days)!;
                             }
                           });
                         }
