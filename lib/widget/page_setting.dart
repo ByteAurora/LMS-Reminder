@@ -1,7 +1,10 @@
-import 'dart:ffi';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:lms_reminder/manager/lms_manager.dart';
+import 'package:lms_reminder/sharedpreference_key.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+
 
 class PageSetting extends StatefulWidget {
   const PageSetting({Key? key}) : super(key: key);
@@ -11,50 +14,23 @@ class PageSetting extends StatefulWidget {
 }
 
 class _PageSettingState extends State<PageSetting> {
-  /// 제출 or 시청 완료된 활동도 알림 (true, false)
-  bool keyNotifyFinishedActivities = false;
+  String? version="1.0.0";
 
-  /// 동영상 출석 마감알림 여부 (true, false)
-  bool keyNotifyVideo = false;
-
-  /// 동영상 출석 마감 6시간 전 알림 (true, false)
-  bool keyNotifyVideoBefore6Hours = false;
-
-  /// 동영상 출석 마감 하루 전 알림 (true, false)
-  bool keyNotifyVideoBefore1Day = false;
-
-  /// 동영상 출석 마감 3일 전 알림 (true, false)
-  bool keyNotifyVideoBefore3Days = false;
-
-  /// 동영상 출석 마감 5일 전 알림 (true, false)
-  bool keyNotifyVideoBefore5Days = false;
-
-  /// 과제 마감알림 여부 (true, false)
-  bool keyNotifyAssignment = false;
-
-  /// 과제 마감 6시간 전 알림 (true, false)
-  bool keyNotifyAssignmentBefore6Hours = false;
-
-  /// 과제 마감 하루 전 알림 (true, false)
-  bool keyNotifyAssignmentBefore1Day = false;
-
-  /// 과제 마감 3일 전 알림 (true, false)
-  bool keyNotifyAssignmentBefore3Day = false;
-
-  /// 과제 마감 5일 전 알림 (true, false)
-  bool keyNotifyAssignmentBefore5Day = false;
-
-  /// 사용자 아이디 저장값 (string)
-  String keyUserId = ' ';
-
-  /// 사용자 비밀번호 저장값 (string)
-  String keyUserPw = ' ';
-
-  /// 튜토리얼 표시 여부 (true, false)
-  bool keyTutorialShowed = true;
+  bool NotifyFinishedActivities=false;
+  bool NotifyAssignmentSwitch=true;
+  bool NotifyAssignment6HourSwitch=false;
+  bool NotifyAssignment1daySwitch=true;
+  bool NotifyAssignment3daysSwitch=false;
+  bool NotifyAssignment5daysSwitch=false;
+  bool NotifyVideo=true;
+  bool NotifyVideo6Hours=false;
+  bool NotifyVideo1day=true;
+  bool NotifyVideo3days=false;
+  bool NotifyVideo5days=false;
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 250, 250, 250),
@@ -62,160 +38,242 @@ class _PageSettingState extends State<PageSetting> {
         elevation: 0,
       ),
       body: ListView(
-          children: <Widget>[
-            Flexible(
-              child:Container(
-                padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                child: Row(
+        children: <Widget>[
+          Text("일반",style: TextStyle(fontSize: 30)),
+          Padding(
+            padding:EdgeInsets.all(10),
+            child: Text("버전 : "+version!),
+          ),
+          Text("알림",style: TextStyle(fontSize: 30)),
+          Padding(
+            padding:EdgeInsets.all(10),
+            child: Column(
+              children: <Widget>[
+                SwitchListTile(
+                    title: Text("제출/시청 완료한 알림"),
+                    subtitle: Text("제출/시청 완료한 활동의 알림을 받습니다."),
+                    value: NotifyFinishedActivities,
+                    onChanged: (value) async {
+                      final SharedPreferences prefs = await SharedPreferences.getInstance();
+                      setState((){
+                        prefs.setBool(keyNotifyFinishedActivities, value);
+                        NotifyFinishedActivities=prefs.getBool(keyNotifyFinishedActivities)!;
+                      });
+                    }
+                ),
+                SwitchListTile(
+                    title: Text("과제 알림"),
+                    subtitle: Text("과제 알람을 받습니다."),
+                    value: NotifyAssignmentSwitch,
+                    onChanged: (value) async {
+                      final SharedPreferences prefs = await SharedPreferences.getInstance();
+                      setState((){
+                        prefs.setBool(keyNotifyAssignment, value);
+                        NotifyAssignmentSwitch=prefs.getBool(keyNotifyAssignment)!;
+                        if(value==false){
+                          prefs.setBool(keyNotifyAssignmentBefore6Hours, false);
+                          NotifyAssignment6HourSwitch=prefs.getBool(keyNotifyAssignmentBefore6Hours)!;
+                          prefs.setBool(keyNotifyAssignmentBefore1Day, false);
+                          NotifyAssignment1daySwitch=prefs.getBool(keyNotifyAssignmentBefore1Day)!;
+                          prefs.setBool(keyNotifyAssignmentBefore3Day, false);
+                          NotifyAssignment3daysSwitch=prefs.getBool(keyNotifyAssignmentBefore3Day)!;
+                          prefs.setBool(keyNotifyAssignmentBefore5Day, false);
+                          NotifyAssignment5daysSwitch=prefs.getBool(keyNotifyAssignmentBefore5Day)!;
+                        }
+                      });
+                    }
+                ),
+                ExpansionTile(
+                  title:Text("알림주기"),
                   children: [
-                    Text("일반",
-                      style:TextStyle(fontSize: 30),
+                    SwitchListTile(
+                        title: Text("6시간 전"),
+                        value: NotifyAssignment6HourSwitch,
+                        onChanged: (value) async {
+                          final SharedPreferences prefs = await SharedPreferences.getInstance();
+                          setState((){
+                            if(prefs.getBool(keyNotifyAssignment)!){
+                              if((NotifyAssignment1daySwitch==false)&&
+                                  (NotifyAssignment3daysSwitch==false)&&
+                                  (NotifyAssignment5daysSwitch)==false){
+                                prefs.setBool(keyNotifyAssignmentBefore6Hours, value);
+                                NotifyAssignment6HourSwitch=prefs.getBool(keyNotifyAssignmentBefore6Hours)!;
+                              }
+                            }
+                          });
+                        }
+                    ),
+                    SwitchListTile(
+                        title: Text("1일 전"),
+                        value: NotifyAssignment1daySwitch,
+                        onChanged: (value) async {
+                          final SharedPreferences prefs = await SharedPreferences.getInstance();
+                          setState((){
+                            if(prefs.getBool(keyNotifyAssignment)!){
+                              if((NotifyAssignment6HourSwitch==false)&&
+                                  (NotifyAssignment3daysSwitch==false)&&
+                                  (NotifyAssignment5daysSwitch)==false){
+                                prefs.setBool(keyNotifyAssignmentBefore1Day, value);
+                                NotifyAssignment1daySwitch=prefs.getBool(keyNotifyAssignmentBefore1Day)!;
+                              }
+                            }
+                          });
+                        }
+                    ),
+                    SwitchListTile(
+                        title: Text("3일 전"),
+                        value: NotifyAssignment3daysSwitch,
+                        onChanged: (value) async {
+                          final SharedPreferences prefs = await SharedPreferences.getInstance();
+                          setState((){
+                            if(prefs.getBool(keyNotifyAssignment)!) {
+                              if((NotifyAssignment6HourSwitch==false)&&
+                                  (NotifyAssignment1daySwitch==false)&&
+                                  (NotifyAssignment5daysSwitch)==false){
+                                prefs.setBool(keyNotifyAssignmentBefore3Day, value);
+                                NotifyAssignment3daysSwitch=prefs.getBool(keyNotifyAssignmentBefore3Day)!;
+                              };
+                            }
+                          });
+                        }
+                    ),
+                    SwitchListTile(
+                        title: Text("5일 전"),
+                        value: NotifyAssignment5daysSwitch,
+                        onChanged: (value) async {
+                          final SharedPreferences prefs = await SharedPreferences.getInstance();
+                          setState((){
+                            if(prefs.getBool(keyNotifyAssignment)!) {
+                              if((NotifyAssignment6HourSwitch==false)&&
+                                  (NotifyAssignment1daySwitch==false)&&
+                                  (NotifyAssignment3daysSwitch)==false){
+                                prefs.setBool(keyNotifyAssignmentBefore5Day, value);
+                                NotifyAssignment5daysSwitch=prefs.getBool(keyNotifyAssignmentBefore5Day)!;
+                              };
+                            }
+                          });
+                        }
                     ),
                   ],
                 ),
-              ),
-            ),
-            Flexible(
-              child:Container(
-                padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                child: Row(
+
+                SwitchListTile(
+                    title: Text("동영상 알림"),
+                    subtitle: Text("동영상  미시청 알림을 받습니다."),
+                    value: NotifyVideo,
+                    onChanged: (value) async {
+                      final SharedPreferences prefs = await SharedPreferences.getInstance();
+                      setState((){
+                        prefs.setBool(keyNotifyVideo, value);
+                        NotifyVideo=prefs.getBool(keyNotifyVideo)!;
+                        if(value==false){
+                          prefs.setBool(keyNotifyVideoBefore6Hours, false);
+                          NotifyVideo6Hours=prefs.getBool(keyNotifyVideoBefore6Hours)!;
+                          prefs.setBool(keyNotifyVideoBefore1Day, false);
+                          NotifyVideo1day=prefs.getBool(keyNotifyVideoBefore1Day)!;
+                          prefs.setBool(keyNotifyVideoBefore3Days, false);
+                          NotifyVideo3days=prefs.getBool(keyNotifyVideoBefore3Days)!;
+                          prefs.setBool(keyNotifyVideoBefore5Days, false);
+                          NotifyVideo5days=prefs.getBool(keyNotifyVideoBefore5Days)!;
+                        }
+                      });
+                    }
+                ),
+                ExpansionTile(
+                  title: Text("알림주기"),
                   children: [
-                    Text("1.0.0"),
-                  ],
-                ),
-              ),
-            ),
-            Flexible(
-                child:Container(
-                  padding: EdgeInsets.fromLTRB(10, 20, 0, 0),
-                  child: Row(
-                    children: <Widget>[
-                      Text("마감 전 알림",
-                        style: TextStyle(fontSize: 30),
-                      ),
-                    ],
-                  ),
-                ),
-            ),
-            Flexible(
-                child:SwitchListTile(
-                    title: const Text("제출/시청 완료한 활동 알림"),
-                    value: keyNotifyFinishedActivities,
-                    onChanged: (value){
-                      setState((){
-                        keyNotifyFinishedActivities=value;
-                      });
-                    })
-            ),
-            Flexible(
-                child:SwitchListTile(
-                    title: const Text("동영상 알림"),
-                    value: keyNotifyVideo,
-                    onChanged: (value){
-                      setState((){
-                        keyNotifyVideo=value;
-                      });
-                    })
-            ),
-            Flexible(
-                child:SwitchListTile(
-                    title: const Text("6시간 전"),
-                    value: keyNotifyVideoBefore6Hours,
-                    onChanged: (value){
-                      setState((){
-                        keyNotifyVideoBefore6Hours=value;
-                      });
-                    })
-            ),
-            Flexible(
-                child:SwitchListTile(
-                    title: const Text("1일 전"),
-                    value: keyNotifyVideoBefore1Day,
-                    onChanged: (value){
-                      setState((){
-                        keyNotifyVideoBefore1Day=value;
-                      });
-                    })
-            ),
-            Flexible(
-                child:SwitchListTile(
-                    title: const Text("3일 전"),
-                    value: keyNotifyVideoBefore3Days,
-                    onChanged: (value){
-                      setState((){
-                        keyNotifyVideoBefore3Days=value;
-                      });
-                    })
-            ),
-            Flexible(
-                child:SwitchListTile(
-                    title: const Text("과제 알림"),
-                    value: keyNotifyAssignment,
-                    onChanged: (value){
-                      setState((){
-                        keyNotifyAssignment=value;
-                      });
-                    })
-            ),
-            Flexible(
-                child:SwitchListTile(
-                    title: const Text("6시간 전"),
-                    value: keyNotifyAssignmentBefore6Hours,
-                    onChanged: (value){
-                      setState((){
-                        keyNotifyAssignmentBefore6Hours=value;
-                      });
-                    })
-            ),
-            Flexible(
-                child:SwitchListTile(
-                    title: const Text("1일 전"),
-                    value: keyNotifyAssignmentBefore1Day,
-                    onChanged: (value){
-                      setState((){
-                        keyNotifyAssignmentBefore1Day=value;
-                      });
-                    })
-            ),
-            Flexible(
-                child:SwitchListTile(
-                    title: const Text("3일 전"),
-                    value: keyNotifyAssignmentBefore3Day,
-                    onChanged: (value){
-                      setState((){
-                        keyNotifyAssignmentBefore3Day=value;
-                      });
-                    })
-            ),
-            Flexible(
-              child:Container(
-                padding: EdgeInsets.fromLTRB(10, 20, 0, 0),
-                child: Row(
-                  children: <Widget>[
-                    Text("사용자",
-                      style: TextStyle(fontSize: 30),
+                    SwitchListTile(
+                        title: Text("6시간 전"),
+                        value: NotifyVideo6Hours,
+                        onChanged: (value) async {
+                          final SharedPreferences prefs = await SharedPreferences.getInstance();
+                          setState((){
+                            if(prefs.getBool(keyNotifyVideo)!){
+                              if((NotifyVideo1day==false)&&
+                                  (NotifyVideo3days==false)&&
+                                  (NotifyVideo5days)==false){
+                                prefs.setBool(keyNotifyVideoBefore6Hours, value);
+                                NotifyVideo6Hours=prefs.getBool(keyNotifyVideoBefore6Hours)!;
+                              }
+                            }
+                          });
+                        }
+                    ),
+                    SwitchListTile(
+                        title: Text("1일 전"),
+                        value: NotifyVideo1day,
+                        onChanged: (value) async {
+                          final SharedPreferences prefs = await SharedPreferences.getInstance();
+                          setState((){
+                            if(prefs.getBool(keyNotifyVideo)!){
+                              if((NotifyVideo6Hours==false)&&
+                                  (NotifyVideo3days==false)&&
+                                  (NotifyVideo5days)==false){
+                                prefs.setBool(keyNotifyVideoBefore1Day, value);
+                                NotifyVideo1day=prefs.getBool(keyNotifyVideoBefore1Day)!;
+                              }
+                            }
+                          });
+                        }
+                    ),
+                    SwitchListTile(
+                        title: Text("3일 전"),
+                        value: NotifyVideo3days,
+                        onChanged: (value) async {
+                          final SharedPreferences prefs = await SharedPreferences.getInstance();
+                          setState((){
+                            if(prefs.getBool(keyNotifyVideo)!){
+                              if((NotifyVideo6Hours==false)&&
+                                  (NotifyVideo1day==false)&&
+                                  (NotifyVideo5days)==false){
+                                prefs.setBool(keyNotifyVideoBefore3Days, value);
+                                NotifyVideo3days=prefs.getBool(keyNotifyVideoBefore3Days)!;
+                              }
+                            }
+                          });
+                        }
+                    ),
+                    SwitchListTile(
+                        title: Text("5일 전"),
+                        value: NotifyVideo5days,
+                        onChanged: (value) async {
+                          final SharedPreferences prefs = await SharedPreferences.getInstance();
+                          setState((){
+                            if(prefs.getBool(keyNotifyVideo)!){
+                              if((NotifyVideo6Hours==false)&&
+                                  (NotifyVideo1day==false)&&
+                                  (NotifyVideo3days)==false){
+                                prefs.setBool(keyNotifyVideoBefore5Days, value);
+                                NotifyVideo5days=prefs.getBool(keyNotifyVideoBefore5Days)!;
+                              }
+                            }
+                          });
+                        }
                     ),
                   ],
                 ),
-              ),
+              ],
             ),
-            Flexible(
-                child: Container(
-                  padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                  child: Row(
-                    children: <Widget>[
-                      ElevatedButton(
-                        child: Text("로그아웃"),
-                        onPressed: (){
-                          LmsManager().login(keyUserId, keyUserPw);
-                          Navigator.popAndPushNamed(context, '/login');
-                        },
-                      ),
-                    ],
-                  ),
+          ),
+
+          Text("사용자",style: TextStyle(fontSize: 30)),
+          Padding(
+            padding:EdgeInsets.all(10),
+            child: Row(
+              children: [
+                ElevatedButton(
+                  child: Text("로그아웃"),
+                  onPressed: () async {
+                    final prefs = await SharedPreferences.getInstance();
+                    prefs.remove(keyUserId);
+                    prefs.remove(keyUserPw);
+                    Navigator.popAndPushNamed(context, '/login');
+                  },
                 ),
+              ],
             ),
-          ],
+          ),
+        ],
       ),
     );
   }
