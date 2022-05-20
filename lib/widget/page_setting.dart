@@ -235,7 +235,7 @@ class _PageSettingState extends State<PageSetting> {
                     final prefs = await SharedPreferences.getInstance();
                     prefs.remove(keyUserId);
                     prefs.remove(keyUserPw);
-                    Navigator.popAndPushNamed(context, '/login');
+                    Navigator.pushNamedAndRemoveUntil(context, '/login', (Route<dynamic> route) => false);
                   },
                 ),
               ],
