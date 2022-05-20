@@ -72,7 +72,7 @@ packages:
     source: hosted
     version: "4.0.6"
   dots_indicator:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: dots_indicator
       url: "https://pub.dartlang.org"
