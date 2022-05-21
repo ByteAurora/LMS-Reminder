@@ -5,9 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../sharedpreference_key.dart';
 
 class PageLogin extends StatefulWidget {
-  final LmsManager lmsManager;
-
-  const PageLogin({Key? key, required this.lmsManager}) : super(key: key);
+  const PageLogin({Key? key}) : super(key: key);
 
   @override
   State<PageLogin> createState() => _PageLoginState();

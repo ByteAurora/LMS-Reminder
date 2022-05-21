@@ -21,8 +21,6 @@ class AppMainStateful extends StatefulWidget {
   // 기본 색상
   final MaterialColor? primarySwatchColor;
 
-  final LmsManager lmsManager = LmsManager();
-
   AppMainStateful({
     Key? key,
     required this.appBarTitle,
@@ -40,22 +38,27 @@ class _AppMainStatefulState extends State<AppMainStateful>
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      // 디버그 라벨 표시 여부
       debugShowCheckedModeBanner: widget.showDebugLabel!,
+
+      // AppBar에 표시될 문구.
       title: widget.applicationName!,
+
+      // 테마.
       theme: ThemeData(
         fontFamily: 'Noto Sans KR',
         primarySwatch: widget.primarySwatchColor!,
       ),
+
+      // 화면 이동을 위한 route.
       initialRoute: '/intro',
       routes: {
         '/intro': (context) => PageIntro(),
         '/tutorial': (context) => PageTutorial(),
         '/login': (context) => PageLogin(
-              lmsManager: widget.lmsManager,
             ),
         '/main': (context) => PageMain(
               appBarTitle: 'LMS 리마인더',
-              lmsManager: widget.lmsManager,
             ),
         '/main/setting': (context) => PageSetting(),
       },

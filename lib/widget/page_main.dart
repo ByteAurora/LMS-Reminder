@@ -6,12 +6,10 @@ import 'package:lms_reminder/widget/tabpage_notice.dart';
 import '../manager/lms_manager.dart';
 
 class PageMain extends StatefulWidget {
-  final LmsManager lmsManager;
-
   final String? appBarTitle;
 
   const PageMain(
-      {Key? key, required this.lmsManager, required this.appBarTitle})
+      {Key? key, required this.appBarTitle})
       : super(key: key);
 
   @override
