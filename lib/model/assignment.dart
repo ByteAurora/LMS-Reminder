@@ -1,8 +1,12 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:html/dom.dart' as html_dom;
 import 'package:html/parser.dart' as html_parser;
 import 'package:intl/intl.dart';
 import 'package:lms_reminder/manager/lms_manager.dart';
+import 'package:lms_reminder/model/schedule.dart';
 
 import '../manager/dio_manager.dart';
 import 'lecture.dart';
@@ -54,7 +58,8 @@ class Assignment {
         content = element.innerHtml.trim();
       } else if (element.className == 'submissionstatustable') {
         element
-            .getElementsByClassName('box boxaligncenter submissionsummarytable')[0]
+            .getElementsByClassName(
+                'box boxaligncenter submissionsummarytable')[0]
             .getElementsByTagName('table')[0]
             .getElementsByTagName('tbody')[0]
             .getElementsByTagName('tr')
@@ -152,5 +157,15 @@ class Assignment {
 
   set grade(String value) {
     _grade = value;
+  }
+
+  Schedule toSchedule() {
+    return Schedule(
+        sha256.convert(utf8.encode(title)).toString(),
+        'assignment',
+        lecture.week,
+        lecture.course.title,
+        title,
+        DateFormat('yyyy-MM-dd 00:00').format(deadLine));
   }
 }

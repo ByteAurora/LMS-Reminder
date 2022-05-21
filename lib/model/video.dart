@@ -1,5 +1,10 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 import 'package:html/dom.dart' as html_dom;
 import 'package:html/parser.dart' as html_parser;
+import 'package:intl/intl.dart';
+import 'package:lms_reminder/model/schedule.dart';
 
 import 'lecture.dart';
 
@@ -173,5 +178,15 @@ class Video {
 
   set enableTime(DateTime value) {
     _enableTime = value;
+  }
+
+  Schedule toSchedule() {
+    return Schedule(
+        sha256.convert(utf8.encode(title)).toString(),
+        'video',
+        lecture.week,
+        lecture.course.title,
+        title,
+        DateFormat('yyyy-MM-dd 00:00').format(deadLine));
   }
 }
