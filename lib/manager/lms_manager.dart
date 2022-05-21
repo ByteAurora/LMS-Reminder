@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:lms_reminder/manager/dio_manager.dart';
 import 'package:lms_reminder/model/assignment.dart';
 import 'package:lms_reminder/model/course.dart';
 import 'package:lms_reminder/model/lecture.dart';
+import 'package:lms_reminder/model/schedule.dart';
 
 import '../model/notice.dart';
 import '../model/video.dart';
@@ -228,16 +228,16 @@ class LmsManager {
     for (var course in courseList) {
       for (var lecture in course.lectureList) {
         for (Assignment assignment in lecture.assignmentList) {
-          if(assignment.submit) {
+          if (assignment.submit) {
             toDoneList.add(assignment);
-          } else if(assignment.deadLine.isBefore(currentTime)){
+          } else if (assignment.deadLine.isBefore(currentTime)) {
             toDoneList.add(assignment);
           }
         }
         for (Video video in lecture.videoList) {
-          if(video.watch) {
+          if (video.watch) {
             toDoneList.add(video);
-          } else if(video.deadLine.isBefore(currentTime)){
+          } else if (video.deadLine.isBefore(currentTime)) {
             toDoneList.add(video);
           }
         }
@@ -287,6 +287,31 @@ class LmsManager {
     });
 
     return toDoneList;
+  }
+
+  /// 마감일이 지나지 않은 항목들을 반환하는 함수.
+  List<Schedule> getBeforeDeadLineList() {
+    List<Schedule> resultList = List.empty(growable: true);
+
+    DateTime currentTime = DateTime.now();
+
+    for (var course in courseList) {
+      for (var lecture in course.lectureList) {
+        for (var assignment in lecture.assignmentList) {
+          if (assignment.deadLine.isAfter(currentTime)) {
+            resultList.add(assignment.toSchedule());
+          }
+        }
+
+        for (var video in lecture.videoList) {
+          if (video.deadLine.isAfter(currentTime)) {
+            resultList.add(video.toSchedule());
+          }
+        }
+      }
+    }
+
+    return resultList;
   }
 
   /// Course, Lecture, Assignment, Video를 반환하는 함수.
