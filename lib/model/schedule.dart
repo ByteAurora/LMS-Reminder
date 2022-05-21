@@ -27,6 +27,10 @@ class Schedule {
     };
   }
 
+  static Schedule fromMap(Map<String, dynamic> mapData){
+    return Schedule(mapData[ScheduleManager.columnId], ScheduleManager.columnWeek, ScheduleManager.columnActivityType, ScheduleManager.columnCourseTitle, ScheduleManager.columnActivityTitle, ScheduleManager.columnActivityDeadLine);
+  }
+
   @override
   String toString() {
     return id! + "/" + week! + "/" + activityType! + "/" + courseTitle! + "/" + activityTitle! + "/" + activityDeadLine!;
