@@ -1,62 +1,86 @@
 
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
+
+import '../sharedpreference_key.dart';
 
 class PageTutorial extends StatefulWidget {
   const PageTutorial({Key? key}) : super(key: key);
 
+
+
   @override
-  State<PageTutorial> createState() => _PageTutorialState();
-}
+  State<PageTutorial> createState() {
+
+    return _PageTutorialState();
+  }
+  }
 
 class _PageTutorialState extends State<PageTutorial> {
-   //내 최애 빨강색 >_<
+  /// 튜토리얼을 완료했을 경우
+  /// 다시 튜토리얼을 실행하지 않도록 판단하는 키값(keyNotificationId)를 true로 바꾸는 함수.
+  Future<void> tutorialGraduate() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setBool(keyTutorialShowed, true);
+}
 
   @override
   Widget build(BuildContext context) {
-    const pageDecoration = PageDecoration(
+
+    const pageDecoration = PageDecoration ( //페이지마다 디자인설정
       titleTextStyle: TextStyle(fontSize: 1.0, fontWeight: FontWeight.w700,color: Colors.white),
       bodyPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-
+      imageFlex:4,
+      bodyFlex: 2,
       imagePadding: EdgeInsets.zero,
+      imageAlignment: Alignment.bottomCenter
     );
 
     return IntroductionScreen(
       pages:
       [
-        PageViewModel(
+        PageViewModel( //튜토리얼 첫번쨰 페이지
 
-        title: "LMS리마인더로 수강중인 과목의 강의 및 과제를 쉽게 확인해보세요.",
-        body: "LMS리마인더로 수강중인 과목의 강의 및 과제를 쉽게 확인해보세요.",
-        image: Image.asset("resource/image/image_todo.png",width: 300,height: 200,fit: BoxFit.contain,),
+        title: " .",
+        body: "LMS리마인더로 수강중인 과목의 강의 및 \n과제를 쉽게 확인해보세요.",
+        image: Image.asset("resource/image/image_tutorial_01.png",width: 350,height: 350,fit: BoxFit.contain),
         decoration: pageDecoration,
 
       ),
-        PageViewModel(
-          title: "Fractional shares",
-          body:
-          "아직 시청하지 않은 강의나 제출하지 않은 과제가 있으면 LMS 리마인더가 알려줍니다.",
-          image: Image.asset("resource/image/icon_video.png"),
+        PageViewModel(//튜토리얼 두번쨰 페이지
+          title: ".",
+          body: "아직 시청하지 않은 강의나 제출하지 않은 \n과제가 있으면 LMS 리마인더가 알려줍니다.",
+          image: Image.asset("resource/image/image_tutorial_02.png",width: 300,height: 300,fit: BoxFit.contain),
           decoration: pageDecoration,
         ),
-        PageViewModel(
-          title: "Fractional shares",
+        PageViewModel(//튜토리얼 세번쨰 페이지
+          title: ".",
           body:
           "수강중인 과목의 중요한 공지사항을 \n확인해보세요",
-          image: Image.asset("resource/image/icon_video.png"),
+          image: Image.asset("resource/image/image_tutorial_03.png",width: 300,height: 300,fit: BoxFit.contain),
           decoration: pageDecoration,
         ),
       ],
 
-      done: const Text("시작하기", style: TextStyle(fontWeight: FontWeight.w600,color: Color.fromARGB(0xff, 070, 070, 070))),
+      done: const Text("시작하기", style: TextStyle(color: Colors.black)),
       showBackButton: false,
       showSkipButton: true,
-      skip: const Text("건너뛰기",style: TextStyle(fontWeight: FontWeight.w600,color: Color.fromARGB(0xff, 070, 070, 070))),
-      onSkip: (){ Navigator.popAndPushNamed(context, '/login');},
-      onDone: () { Navigator.popAndPushNamed(context, '/login');},
+      skip: const Text("건너뛰기",style: TextStyle(fontWeight: FontWeight.w600,color: Colors.grey)),
+      onSkip: (){  //튜토리얼 스킵.
+        tutorialGraduate();
+        Navigator.popAndPushNamed(context, '/login');
+
+        },
+      onDone: () {  //튜토리얼 완료
+        tutorialGraduate();
+        Navigator.popAndPushNamed(context, '/login');
+
+        },
+
       globalBackgroundColor: Colors.white,
-      next: Image.asset("resource/image/icon_next.png", //> 색
+      next: Image.asset("resource/image/icon_next.png", // 넥스트(>모양)색
           color: Color.fromARGB(0xff, 070, 070, 070),
           width: 15, height: 15),
       dotsDecorator: DotsDecorator(

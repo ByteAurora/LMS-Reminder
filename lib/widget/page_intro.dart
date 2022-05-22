@@ -27,20 +27,34 @@ class _PageIntroState extends State<PageIntro> {
                 final prefs = await SharedPreferences.getInstance();
                 String? userID = prefs.getString(keyUserId);
                 String? password = prefs.getString(keyUserPw);
+                bool? tutorialShowed = prefs.getBool(keyTutorialShowed);
 
-                if (!((userID == null || userID == "") &&
-                    (password == null || password == ""))) {
-                  if ((await LmsManager().login(userID!, password!))) {
-                    Navigator.popAndPushNamed(context, '/main');
-                  } else {
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(content: Text("로그인 실패")));
-                  }
+                if (!tutorialShowed!) {
+                  //튜토리얼을 본적이 없을 경우
+                  Navigator.popAndPushNamed(
+                      context, '/tutorial'); //튜토리얼 페이지로 이동
                 } else {
-                  Navigator.popAndPushNamed(context, '/tutorial');
+                  //튜토리얼을 완료 경우
+                  if (!((userID == null || userID == "") &&
+                      (password == null || password == ""))) {
+                    // 저장된 아이디나 비밀번호가 있을 경우
+                    if ((await LmsManager().login(
+                        userID!, password!))) { // 저장된 값으로 로그인 진행
+                      Navigator.popAndPushNamed(
+                          context, '/main'); //자동로그인후 메인으로 이동
+                    } else { //저장된 ID/PW로 로그인이 실패할 경우
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(
+                          SnackBar(content: Text("로그인 실패"))); //로그인 실패 팝업
+                      Navigator.popAndPushNamed(
+                          context, '/login'); // 로그인 페이지로 이동
+                    }
+                  } else { //저장된 ID/PW가 없을 경우
+                    Navigator.popAndPushNamed(context, '/login');
+                  }
                 }
               },
-              child: Text('튜토리얼 화면 이동'),
+              child: const Text('튜토리얼 화면 이동'),
             ),
           ],
         ),
