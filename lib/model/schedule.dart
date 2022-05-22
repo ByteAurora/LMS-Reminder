@@ -17,17 +17,8 @@ class Schedule {
   /// 테이블 컬럼 - 활동마감시간.
   static const String columnActivityDeadLine = 'activity_deadline';
 
-  /// 테이블 컬럼 - 6시간 전 알람 활성화 상태.
-  static const String columnAlert6Hours = 'alert_6hours';
-
-  /// 테이블 컬럼 - 1일 전 알람 활성화 상태.
-  static const String columnAlert1Day = 'alert_1day';
-
-  /// 테이블 컬럼 - 3일 전 알람 활성화 상태.
-  static const String columnAlert3Days = 'alert_3days';
-
-  /// 테이블 컬럼 - 5일 전 알람 활성화 상태.
-  static const String columnAlert5Days = 'alert_5days';
+  /// 테이블 컬럼 - 남은시간.
+  static const String columnActivityLeftTime = 'activity_lefttime';
 
   String? id;
   String? activityType;
@@ -35,9 +26,10 @@ class Schedule {
   String? courseTitle;
   String? activityTitle;
   String? activityDeadLine;
+  String? activityLeftTime;
 
   Schedule(this.id, this.activityType, this.week, this.courseTitle,
-      this.activityTitle, this.activityDeadLine);
+      this.activityTitle, this.activityDeadLine, this.activityLeftTime);
 
   Map<String, dynamic> toMap() {
     return {
@@ -46,13 +38,20 @@ class Schedule {
       columnActivityType: activityType,
       columnCourseTitle: courseTitle,
       columnActivityTitle: activityTitle,
-      columnActivityDeadLine: activityDeadLine
+      columnActivityDeadLine: activityDeadLine,
+      columnActivityLeftTime: activityLeftTime
     };
   }
 
   static Schedule fromMap(Map<String, dynamic> mapData) {
-    return Schedule(mapData[columnId], columnWeek, columnActivityType,
-        columnCourseTitle, columnActivityTitle, columnActivityDeadLine);
+    return Schedule(
+        mapData[columnId],
+        mapData[columnActivityType],
+        mapData[columnWeek],
+        mapData[columnCourseTitle],
+        mapData[columnActivityTitle],
+        mapData[columnActivityDeadLine],
+        mapData[columnActivityLeftTime]);
   }
 
   @override
