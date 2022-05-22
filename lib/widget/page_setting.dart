@@ -15,22 +15,43 @@ class PageSetting extends StatefulWidget {
 
 class _PageSettingState extends State<PageSetting> {
   String? version="1.0.0";
-
   bool NotifyFinishedActivities=false;
-  bool NotifyAssignmentSwitch=true;
+  bool NotifyAssignmentSwitch=false;
   bool NotifyAssignment6HourSwitch=false;
-  bool NotifyAssignment1daySwitch=true;
+  bool NotifyAssignment1daySwitch=false;
   bool NotifyAssignment3daysSwitch=false;
   bool NotifyAssignment5daysSwitch=false;
-  bool NotifyVideo=true;
+  bool NotifyVideo=false;
   bool NotifyVideo6Hours=false;
-  bool NotifyVideo1day=true;
+  bool NotifyVideo1day=false;
   bool NotifyVideo3days=false;
   bool NotifyVideo5days=false;
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+    _loadSetting();
+  }
 
+  _loadSetting() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState((){
+      NotifyFinishedActivities = (prefs.getBool(keyNotifyFinishedActivities)??false);
+      NotifyAssignmentSwitch = (prefs.getBool(keyNotifyAssignment)??false);
+      NotifyAssignment6HourSwitch = (prefs.getBool(keyNotifyAssignmentBefore6Hours)??false);
+      NotifyAssignment1daySwitch= (prefs.getBool(keyNotifyAssignmentBefore1Day)??false);
+      NotifyAssignment3daysSwitch= (prefs.getBool(keyNotifyVideoBefore3Days)??false);
+      NotifyAssignment5daysSwitch= (prefs.getBool(keyNotifyVideoBefore5Days)??false);
+      NotifyVideo= (prefs.getBool(keyNotifyVideo)??false);
+      NotifyVideo6Hours= (prefs.getBool(keyNotifyVideoBefore6Hours)??false);
+      NotifyVideo1day= (prefs.getBool(keyNotifyVideoBefore1Day)??false);
+      NotifyVideo3days= (prefs.getBool(keyNotifyVideoBefore3Days)??false);
+      NotifyVideo5days= (prefs.getBool(keyNotifyVideoBefore5Days)??false);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 250, 250, 250),
@@ -246,3 +267,8 @@ class _PageSettingState extends State<PageSetting> {
     );
   }
 }
+
+
+
+
+
