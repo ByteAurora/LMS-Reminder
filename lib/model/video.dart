@@ -187,6 +187,6 @@ class Video {
         lecture.week,
         lecture.course.title,
         title,
-        DateFormat('yyyy-MM-dd 00:00').format(deadLine), leftTime);
+        DateFormat('yyyy-MM-dd 00:00').format(deadLine), leftTime, watch);
   }
 }
