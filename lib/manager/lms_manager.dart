@@ -298,14 +298,20 @@ class LmsManager {
     for (var course in courseList) {
       for (var lecture in course.lectureList) {
         for (var assignment in lecture.assignmentList) {
-          if (assignment.deadLine.isAfter(currentTime)) {
-            resultList.add(assignment.toSchedule());
+          if (assignment.deadLine.isAfter(currentTime.subtract(const Duration(hours: 6)))) {
+            resultList.add(assignment.toSchedule('6시간'));
+            resultList.add(assignment.toSchedule('1일'));
+            resultList.add(assignment.toSchedule('3일'));
+            resultList.add(assignment.toSchedule('5일'));
           }
         }
 
         for (var video in lecture.videoList) {
-          if (video.deadLine.isAfter(currentTime)) {
-            resultList.add(video.toSchedule());
+          if (video.deadLine.isAfter(currentTime.subtract(const Duration(hours: 6)))) {
+            resultList.add(video.toSchedule('6시간'));
+            resultList.add(video.toSchedule('1일'));
+            resultList.add(video.toSchedule('3일'));
+            resultList.add(video.toSchedule('5일'));
           }
         }
       }
