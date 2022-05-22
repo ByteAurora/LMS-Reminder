@@ -41,3 +41,6 @@ const keyUserPw = 'KEY_USER_PW';
 
 /// 튜토리얼 표시 여부 (true, false)
 const keyTutorialShowed = 'KEY_TUTORIAL_SHOWED';
+
+/// Notification 아이디 값 (int)
+const keyNotificationId = 'KEY_NOTIFICATION_ID';
