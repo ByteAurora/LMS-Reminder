@@ -159,13 +159,13 @@ class Assignment {
     _grade = value;
   }
 
-  Schedule toSchedule() {
+  Schedule toSchedule(String leftTime) {
     return Schedule(
-        sha256.convert(utf8.encode(title)).toString(),
+        sha256.convert(utf8.encode(title+leftTime)).toString(),
         'assignment',
         lecture.week,
         lecture.course.title,
         title,
-        DateFormat('yyyy-MM-dd 00:00').format(deadLine));
+        DateFormat('yyyy-MM-dd 00:00').format(deadLine), leftTime);
   }
 }

@@ -180,13 +180,13 @@ class Video {
     _enableTime = value;
   }
 
-  Schedule toSchedule() {
+  Schedule toSchedule(String leftTime) {
     return Schedule(
-        sha256.convert(utf8.encode(title)).toString(),
+        sha256.convert(utf8.encode(title+leftTime)).toString(),
         'video',
         lecture.week,
         lecture.course.title,
         title,
-        DateFormat('yyyy-MM-dd 00:00').format(deadLine));
+        DateFormat('yyyy-MM-dd 00:00').format(deadLine), leftTime);
   }
 }
