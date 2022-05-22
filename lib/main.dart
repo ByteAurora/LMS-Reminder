@@ -27,7 +27,7 @@ void callbackDispatcher() {
             AwesomeNotifications().createNotification(
                 content: NotificationContent(
                     id: 0,
-                    channelKey: 'update_lmsdata',
+                    channelKey: 'update_activities',
                     wakeUpScreen: true,
                     summary: '업데이트',
                     title: 'LMS에서 과제와 동영상을 확인하고 있습니다',
@@ -47,7 +47,6 @@ void callbackDispatcher() {
             DateTime currentTime = DateTime.now();
 
             for (var schedule in LmsManager().getBeforeDeadLineList()) {
-              print(schedule.toString());
               DateTime deadLine = DateFormat('yyyy-MM-dd HH:mm')
                   .parse(schedule.activityDeadLine!);
               DateTime? scheduleDate;
@@ -66,22 +65,26 @@ void callbackDispatcher() {
                   '마감시간: ${schedule.activityDeadLine}, ${schedule.activityLeftTime} 전: ${DateFormat('yyyy-MM-dd HH:mm').format(scheduleDate!)}');
               print(
                   '현재시간: ${DateFormat('yyyy-MM-dd HH:mm').format(currentTime)}, 앞으로 ${scheduleDate.difference(currentTime).toString()} 시간 뒤에 알림');
+              print(
+                  '[${schedule.courseTitle}] "${schedule.activityTitle}" 예약됨: ' +
+                      DateFormat('yyyy-MM-dd HH:mm').format(currentTime
+                          .add(scheduleDate!.difference(currentTime))));
 
               Workmanager().registerOneOffTask(schedule.id!, schedule.id!,
-                  existingWorkPolicy: ExistingWorkPolicy.keep,
-                  initialDelay: scheduleDate.difference(currentTime),
+                  existingWorkPolicy: ExistingWorkPolicy.replace,
+                  initialDelay: scheduleDate!.difference(currentTime),
                   inputData: schedule!.toMap());
             }
 
             // 데이터 업데이트 Notification 제거
             AwesomeNotifications()
-                .dismissNotificationsByChannelKey('update_lmsdata');
+                .dismissNotificationsByChannelKey('update_activities');
           } else {
             // 로그인 실패 Notification 표시
             AwesomeNotifications().createNotification(
                 content: NotificationContent(
                     id: 0,
-                    channelKey: 'update_lmsdata',
+                    channelKey: 'update_activities',
                     wakeUpScreen: true,
                     summary: '업데이트 실패',
                     title: 'LMS에 로그인할 수 없습니다',
@@ -145,18 +148,18 @@ void callbackDispatcher() {
           }
         }
 
-        int id = 0;
-        if (prefs.getInt(keyNotificationId) != null) {
-          id = prefs.getInt(keyNotificationId)! + 1;
-        }
+        int id = prefs.getInt(keyNotificationId)! + 1;
         prefs.setInt(keyNotificationId, id);
 
+        print('[알림 실행]' + schedule.toString());
         // Notificaion 표시
         AwesomeNotifications().createNotification(
             content: NotificationContent(
                 id: id,
                 channelKey: 'alert_lefttime',
+                groupKey: 'alert_lefttime_group',
                 wakeUpScreen: true,
+                autoDismissible: false,
                 summary: (schedule.courseTitle! + ' [' + schedule.week! + ']'),
                 title: (schedule.activityType == 'assignment'
                         ? '[과제]   '
@@ -169,7 +172,8 @@ void callbackDispatcher() {
                         ? (schedule.activityState! ? '(제출완료)' : '(미제출)')
                         : (schedule.activityState! ? '(시청완료)' : '(미시청)')),
                 backgroundColor: Colors.redAccent,
-                notificationLayout: NotificationLayout.Inbox));
+                notificationLayout: NotificationLayout.Default,
+                category: NotificationCategory.Reminder));
         break;
     }
 
@@ -207,19 +211,22 @@ void main() async {
     isInDebugMode: false,
   );
 
-  Workmanager().registerPeriodicTask('update_activities', 'update_activities',
-      existingWorkPolicy: ExistingWorkPolicy.keep,
-      initialDelay: const Duration(seconds: 0),
-      frequency: const Duration(hours: 4));
+  Workmanager().registerPeriodicTask(
+    'update_activities',
+    'update_activities',
+    existingWorkPolicy: ExistingWorkPolicy.keep,
+    initialDelay: const Duration(seconds: 0),
+    frequency: const Duration(hours: 4),
+  );
 
   // Awesome Notification 초기화
   AwesomeNotifications().initialize(
       null,
       [
         NotificationChannel(
-            channelGroupKey: 'update_lmsdata_group',
-            channelKey: 'update_lmsdata',
-            channelName: 'LMS 데이터 업데이트',
+            channelGroupKey: 'update_activities_group',
+            channelKey: 'update_activities',
+            channelName: 'LMS 활동 목록 업데이트',
             channelDescription: 'LMS에서 과제와 동영상 업데이트 중 보내는 알림',
             defaultColor: const Color(0xFF9D50DD),
             ledColor: Colors.white,
@@ -231,12 +238,12 @@ void main() async {
             channelDescription: '과제나 동영상 마감 전 띄워주는 알림',
             defaultColor: const Color(0xFF9D50DD),
             ledColor: Colors.white,
-            importance: NotificationImportance.Max),
+            importance: NotificationImportance.High),
       ],
       channelGroups: [
         NotificationChannelGroup(
-            channelGroupkey: 'update_lmsdata_group',
-            channelGroupName: 'LMS 데이터 업데이트 그룹'),
+            channelGroupkey: 'update_activities_group',
+            channelGroupName: 'LMS 활동 목록 업데이트 그룹'),
         NotificationChannelGroup(
             channelGroupkey: 'alert_lefttime_group',
             channelGroupName: '마감 전 알림 그룹'),
