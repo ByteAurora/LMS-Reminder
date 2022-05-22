@@ -67,10 +67,10 @@ void callbackDispatcher() {
               print(
                   '현재시간: ${DateFormat('yyyy-MM-dd HH:mm').format(currentTime)}, 앞으로 ${scheduleDate.difference(currentTime).toString()} 시간 뒤에 알림');
 
-              // Workmanager().registerOneOffTask(schedule.id!, schedule.id!,
-              //     existingWorkPolicy: ExistingWorkPolicy.keep,
-              //     initialDelay: scheduleDate.difference(currentTime),
-              //     inputData: schedule!.toMap());
+              Workmanager().registerOneOffTask(schedule.id!, schedule.id!,
+                  existingWorkPolicy: ExistingWorkPolicy.keep,
+                  initialDelay: scheduleDate.difference(currentTime),
+                  inputData: schedule!.toMap());
             }
 
             // 데이터 업데이트 Notification 제거
