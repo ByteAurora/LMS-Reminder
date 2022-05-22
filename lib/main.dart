@@ -41,7 +41,7 @@ void callbackDispatcher() {
             // WorkManager 추가 전 초기화
             await Workmanager().initialize(
               callbackDispatcher,
-              isInDebugMode: true,
+              isInDebugMode: false,
             );
 
             DateTime currentTime = DateTime.now();
@@ -164,8 +164,10 @@ void callbackDispatcher() {
                     schedule.activityTitle!,
                 body: '마감까지 ' +
                     schedule.activityLeftTime! +
-                    ' 남았습니다! (' +
-                    (schedule.activityState! ? '(제출완료)' : '(미제출)'),
+                    ' 남았습니다! ' +
+                    (schedule.activityType == 'assignment'
+                        ? (schedule.activityState! ? '(제출완료)' : '(미제출)')
+                        : (schedule.activityState! ? '(시청완료)' : '(미시청)')),
                 backgroundColor: Colors.redAccent,
                 notificationLayout: NotificationLayout.Inbox));
         break;
@@ -181,7 +183,7 @@ void main() async {
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  if(prefs.getBool(keyTutorialShowed) == null) {
+  if (prefs.getBool(keyTutorialShowed) == null) {
     prefs.setBool(keyNotifyFinishedActivities, true);
     prefs.setBool(keyNotifyVideo, true);
     prefs.setBool(keyNotifyVideoBefore6Hours, true);
@@ -202,13 +204,13 @@ void main() async {
   // WorkManager 초기화
   await Workmanager().initialize(
     callbackDispatcher,
-    isInDebugMode: true,
+    isInDebugMode: false,
   );
 
   Workmanager().registerPeriodicTask('update_activities', 'update_activities',
       existingWorkPolicy: ExistingWorkPolicy.keep,
       initialDelay: const Duration(seconds: 0),
-      frequency: const Duration(hours: 1));
+      frequency: const Duration(hours: 4));
 
   // Awesome Notification 초기화
   AwesomeNotifications().initialize(
