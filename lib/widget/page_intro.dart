@@ -14,6 +14,22 @@ class PageIntro extends StatefulWidget {
 }
 
 class _PageIntroState extends State<PageIntro> {
+  String? userID;
+  String? password;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLogin();
+  }
+
+  _loadLogin() async {
+    SharedPreferences pref= await SharedPreferences.getInstance();
+    setState((){
+      pref.setString(keyUserId, "");
+      pref.setString(keyUserPw, "");
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,8 +41,8 @@ class _PageIntroState extends State<PageIntro> {
             ElevatedButton(
               onPressed: () async {
                 final prefs = await SharedPreferences.getInstance();
-                String? userID = prefs.getString(keyUserId);
-                String? password = prefs.getString(keyUserPw);
+                userID = prefs.getString(keyUserId);
+                password = prefs.getString(keyUserPw);
                 bool? tutorialShowed = prefs.getBool(keyTutorialShowed);
 
                 if (!tutorialShowed!) {
