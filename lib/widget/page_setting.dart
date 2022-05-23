@@ -1,4 +1,5 @@
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lms_reminder/sharedpreference_key.dart';
@@ -64,10 +65,16 @@ class _PageSettingState extends State<PageSetting> {
           Padding(
             padding:EdgeInsets.all(10),
             child: Text("버전 : "+version!),
+          ), Divider(
+            height: 0,
+            thickness: 1,
+            indent: 0,
+            endIndent: 0,
+            color: Colors.grey,
           ),
           Text("알림",style: TextStyle(fontSize: 30)),
           Padding(
-            padding:EdgeInsets.all(10),
+            padding:EdgeInsets.all(0),
             child: Column(
               children: <Widget>[
                 SwitchListTile(
@@ -81,6 +88,12 @@ class _PageSettingState extends State<PageSetting> {
                         NotifyFinishedActivities=prefs.getBool(keyNotifyFinishedActivities)!;
                       });
                     }
+                ), Divider(
+                  height: 0,
+                  thickness: 1,
+                  indent: 0,
+                  endIndent: 0,
+                  color: Colors.grey,
                 ),
                 SwitchListTile(
                     title: Text("과제 알림"),
@@ -103,6 +116,12 @@ class _PageSettingState extends State<PageSetting> {
                         }
                       });
                     }
+                ), Divider(
+                  height: 0,
+                  thickness: 1,
+                  indent: 0,
+                  endIndent: 0,
+                  color: Colors.grey,
                 ),
                 ExpansionTile(
                   title:Text("알림주기"),
@@ -160,6 +179,12 @@ class _PageSettingState extends State<PageSetting> {
                         }
                     ),
                   ],
+                ), Divider(
+                  height: 0,
+                  thickness: 1,
+                  indent: 0,
+                  endIndent: 0,
+                  color: Colors.grey,
                 ),
 
                 SwitchListTile(
@@ -183,6 +208,12 @@ class _PageSettingState extends State<PageSetting> {
                         }
                       });
                     }
+                ), Divider(
+                  height: 0,
+                  thickness: 1,
+                  indent: 0,
+                  endIndent: 0,
+                  color: Colors.grey,
                 ),
                 ExpansionTile(
                   title: Text("알림주기"),
@@ -243,6 +274,12 @@ class _PageSettingState extends State<PageSetting> {
                 ),
               ],
             ),
+          ),Divider(
+            height: 0,
+            thickness: 1,
+            indent: 0,
+            endIndent: 0,
+            color: Colors.grey,
           ),
 
           Text("사용자",style: TextStyle(fontSize: 30)),
@@ -254,9 +291,11 @@ class _PageSettingState extends State<PageSetting> {
                   child: Text("로그아웃"),
                   onPressed: () async {
                     final prefs = await SharedPreferences.getInstance();
-                    prefs.remove(keyUserId);
-                    prefs.remove(keyUserPw);
-                    Navigator.pushNamedAndRemoveUntil(context, '/login', (Route<dynamic> route) => false);
+                    setState((){
+                      prefs.remove(keyUserId);
+                      prefs.remove(keyUserPw);
+                    });
+                    Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
                   },
                 ),
               ],
