@@ -55,7 +55,7 @@ class Assignment {
         .getElementsByTagName('div')
         .forEach((element) {
       if (element.className == 'box generalbox boxaligncenter') {
-        content = element.innerHtml.trim();
+        content = element.innerHtml.trim().replaceAll('<br>', '').replaceAll('<p></p>', '');
       } else if (element.className == 'submissionstatustable') {
         element
             .getElementsByClassName(
@@ -166,6 +166,6 @@ class Assignment {
         lecture.week,
         lecture.course.title,
         title,
-        DateFormat('yyyy-MM-dd 00:00').format(deadLine), leftTime, submit);
+        DateFormat('yyyy-MM-dd HH:mm').format(deadLine), leftTime, submit);
   }
 }

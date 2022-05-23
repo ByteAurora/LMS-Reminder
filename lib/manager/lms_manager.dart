@@ -298,19 +298,31 @@ class LmsManager {
     for (var course in courseList) {
       for (var lecture in course.lectureList) {
         for (var assignment in lecture.assignmentList) {
-          if (assignment.deadLine.isAfter(currentTime.subtract(const Duration(hours: 6)))) {
+          if (assignment.deadLine.isAfter(currentTime.add(const Duration(hours: 6)))) {
             resultList.add(assignment.toSchedule('6시간'));
+          }
+          if (assignment.deadLine.isAfter(currentTime.add(const Duration(days: 1)))) {
             resultList.add(assignment.toSchedule('1일'));
+          }
+          if (assignment.deadLine.isAfter(currentTime.add(const Duration(days: 3)))) {
             resultList.add(assignment.toSchedule('3일'));
+          }
+          if (assignment.deadLine.isAfter(currentTime.add(const Duration(days: 5)))) {
             resultList.add(assignment.toSchedule('5일'));
           }
         }
 
         for (var video in lecture.videoList) {
-          if (video.deadLine.isAfter(currentTime.subtract(const Duration(hours: 6)))) {
+          if (video.deadLine.isAfter(currentTime.add(const Duration(hours: 6)))) {
             resultList.add(video.toSchedule('6시간'));
+          }
+          if (video.deadLine.isAfter(currentTime.add(const Duration(days: 1)))) {
             resultList.add(video.toSchedule('1일'));
+          }
+          if (video.deadLine.isAfter(currentTime.add(const Duration(days: 3)))) {
             resultList.add(video.toSchedule('3일'));
+          }
+          if (video.deadLine.isAfter(currentTime.add(const Duration(days: 5)))) {
             resultList.add(video.toSchedule('5일'));
           }
         }

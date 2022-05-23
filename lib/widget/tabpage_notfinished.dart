@@ -8,6 +8,8 @@ import 'package:intl/intl.dart';
 import 'package:lms_reminder/manager/lms_manager.dart';
 import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:slide_countdown/slide_countdown.dart';
 
 import '../manager/dio_manager.dart';
 import '../manager/lms_manager.dart';
@@ -35,7 +37,94 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
           future: LmsManager().getNotFinishedList(),
           builder: (context, snapshot) {
             if (snapshot.hasData == false) {
-              return const CircularProgressIndicator();
+              return ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: 6,
+                itemBuilder: (context, index) {
+                  return Row(
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Shimmer.fromColors(
+                                          // 과목명[주차]
+                                          baseColor: Colors.grey.shade400,
+                                          highlightColor: Colors.grey.shade300,
+                                          child: Container(
+                                            width: 256,
+                                            height: 24,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Row(
+                                        children: [
+                                          Shimmer.fromColors(
+                                            // 과제, 동영상 아이콘
+                                            baseColor: Colors.grey.shade400,
+                                            highlightColor:
+                                                Colors.grey.shade300,
+                                            child: Container(
+                                              width: 40,
+                                              height: 40,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 4),
+                                            child: Shimmer.fromColors(
+                                              // 과제, 동영상 제목
+                                              baseColor: Colors.grey.shade400,
+                                              highlightColor:
+                                                  Colors.grey.shade300,
+                                              child: Container(
+                                                width: 212,
+                                                height: 16,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Shimmer.fromColors(
+                                // 남은시간 영역
+                                baseColor: Colors.grey.shade400,
+                                highlightColor: Colors.grey.shade300,
+                                child: Container(
+                                  width: 64,
+                                  height: 64,
+                                  decoration: const BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(64),
+                                    ),
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              );
             } else {
               List<dynamic> todoList = (snapshot.data as List<dynamic>);
               if (todoList.isEmpty) {
@@ -54,7 +143,8 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                             String? week;
                             String? activityTitle;
                             Image? activityImage;
-                            String? deadLine;
+                            DateTime? deadLine;
+                            String? strDeadLine;
                             String? leftTime;
                             Color? leftTimeCircleColor;
                             bool? state;
@@ -74,7 +164,8 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                 height: 24,
                                 fit: BoxFit.fill,
                               );
-                              deadLine = DateFormat('yyyy년 MM월 dd일 00시 00분')
+                              deadLine = assignment.deadLine;
+                              strDeadLine = DateFormat('yyyy년 MM월 dd일 HH시 mm분')
                                   .format(assignment.deadLine);
                               leftTime = assignment.getLeftTime();
                               content = assignment.content;
@@ -91,7 +182,8 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                 height: 24,
                                 fit: BoxFit.fill,
                               );
-                              deadLine = DateFormat('yyyy년 MM월 dd일 HH시 mm분')
+                              deadLine = video.deadLine;
+                              strDeadLine = DateFormat('yyyy년 MM월 dd일 HH시 mm분')
                                   .format(video.deadLine);
                               leftTime = video.getLeftTime();
                               state = video.watch;
@@ -133,6 +225,36 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                                 Padding(
                                                   padding:
                                                       const EdgeInsets.only(
+                                                          top: 14),
+                                                  child: Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      const Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                right: 8.0),
+                                                        child: Icon(
+                                                          Icons.timer,
+                                                          color: Colors.red,
+                                                        ),
+                                                      ),
+                                                      SlideCountdownSeparated(
+                                                        duration: deadLine!
+                                                            .difference(
+                                                                DateTime
+                                                                    .now()),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
                                                     top: 14,
                                                   ),
                                                   child: Column(
@@ -146,7 +268,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                                             fontSize: 14),
                                                       ),
                                                       Text(
-                                                        '마감일: ' + deadLine!,
+                                                        '마감일: ' + strDeadLine!,
                                                         style: const TextStyle(
                                                             fontSize: 14),
                                                       ),
@@ -179,9 +301,8 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                                                   const SnackBar(
                                                             content:
                                                                 Text('권한 거부됨'),
-                                                            duration:
-                                                                Duration(
-                                                                    seconds: 1),
+                                                            duration: Duration(
+                                                                seconds: 1),
                                                           ));
                                                         } else {
                                                           String decodeUrl = Uri

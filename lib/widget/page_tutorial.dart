@@ -44,21 +44,21 @@ class _PageTutorialState extends State<PageTutorial> {
         PageViewModel( //튜토리얼 첫번쨰 페이지
 
         title: " .",
-        body: "LMS리마인더로 수강중인 과목의 강의 및 \n과제를 쉽게 확인해보세요.",
+        body: "LMS리마인더로 수강중인 과목의 강의 및 과제를 쉽게 확인해보세요.",
         image: Image.asset("resource/image/image_tutorial_01.png",width: 350,height: 350,fit: BoxFit.contain),
         decoration: pageDecoration,
 
       ),
         PageViewModel(//튜토리얼 두번쨰 페이지
           title: ".",
-          body: "아직 시청하지 않은 강의나 제출하지 않은 \n과제가 있으면 LMS 리마인더가 알려줍니다.",
+          body: "아직 시청하지 않은 강의나 제출하지 않은 과제가 있으면 LMS 리마인더가 알려줍니다.",
           image: Image.asset("resource/image/image_tutorial_02.png",width: 300,height: 300,fit: BoxFit.contain),
           decoration: pageDecoration,
         ),
         PageViewModel(//튜토리얼 세번쨰 페이지
           title: ".",
           body:
-          "수강중인 과목의 중요한 공지사항을 \n확인해보세요",
+          "수강중인 과목의 중요한 공지사항을 확인해보세요",
           image: Image.asset("resource/image/image_tutorial_03.png",width: 300,height: 300,fit: BoxFit.contain),
           decoration: pageDecoration,
         ),
