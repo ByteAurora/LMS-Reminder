@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:slide_countdown/slide_countdown.dart';
 
 import '../manager/dio_manager.dart';
 import '../manager/lms_manager.dart';
@@ -141,7 +142,8 @@ class _TabPageFinished extends State<TabPageFinished> {
                             String? week;
                             String? activityTitle;
                             Image? activityImage;
-                            String? deadLine;
+                            DateTime? deadLine;
+                            String? strDeadLine;
                             String? leftTime;
                             Color? leftTimeCircleColor;
                             bool? state;
@@ -161,7 +163,8 @@ class _TabPageFinished extends State<TabPageFinished> {
                                 height: 24,
                                 fit: BoxFit.fill,
                               );
-                              deadLine = DateFormat('yyyy년 MM월 dd일 HH시 mm분')
+                              deadLine = assignment.deadLine;
+                              strDeadLine = DateFormat('yyyy년 MM월 dd일 HH시 mm분')
                                   .format(assignment.deadLine);
                               leftTime = assignment.getLeftTime();
                               content = assignment.content;
@@ -178,7 +181,8 @@ class _TabPageFinished extends State<TabPageFinished> {
                                 height: 24,
                                 fit: BoxFit.fill,
                               );
-                              deadLine = DateFormat('yyyy년 MM월 dd일 00시 00분')
+                              deadLine = video.deadLine;
+                              strDeadLine = DateFormat('yyyy년 MM월 dd일 HH시 mm분')
                                   .format(video.deadLine);
                               leftTime = video.getLeftTime();
                               state = video.watch;
@@ -220,6 +224,40 @@ class _TabPageFinished extends State<TabPageFinished> {
                                                 Padding(
                                                   padding:
                                                       const EdgeInsets.only(
+                                                          top: 14),
+                                                  child: Visibility(
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        const Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  right: 8.0),
+                                                          child: Icon(
+                                                            Icons.timer,
+                                                            color: Colors.red,
+                                                          ),
+                                                        ),
+                                                        SlideCountdownSeparated(
+                                                          duration: deadLine!
+                                                              .difference(
+                                                                  DateTime
+                                                                      .now()),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    visible: deadLine!.isAfter(
+                                                        DateTime.now()),
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
                                                     top: 14,
                                                   ),
                                                   child: Column(
@@ -233,7 +271,7 @@ class _TabPageFinished extends State<TabPageFinished> {
                                                             fontSize: 14),
                                                       ),
                                                       Text(
-                                                        '마감일: ' + deadLine!,
+                                                        '마감일: ' + strDeadLine!,
                                                         style: const TextStyle(
                                                             fontSize: 14),
                                                       ),
