@@ -18,19 +18,6 @@ class _PageIntroState extends State<PageIntro> {
   String? password;
 
   @override
-  void initState() {
-    super.initState();
-    _loadLogin();
-  }
-
-  _loadLogin() async {
-    SharedPreferences pref= await SharedPreferences.getInstance();
-    setState((){
-      pref.setString(keyUserId, "");
-      pref.setString(keyUserPw, "");
-    });
-  }
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
