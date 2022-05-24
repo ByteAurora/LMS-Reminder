@@ -286,115 +286,124 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                                       data: content,
                                                       onLinkTap: (String? url,
                                                           RenderContext
-                                                              renderContext,
+                                                          renderContext,
                                                           Map<String, String>
-                                                              attributes,
+                                                          attributes,
                                                           html_dom.Element?
-                                                              element) async {
-                                                        if (await Permission
+                                                          element) async {
+                                                        await Permission
                                                             .manageExternalStorage
-                                                            .request()
-                                                            .isDenied) {
+                                                            .request();
+                                                        await Permission
+                                                            .storage
+                                                            .request();
+
+                                                        if (await Permission.storage
+                                                            .isDenied ||
+                                                            await Permission
+                                                                .manageExternalStorage
+                                                                .isDenied) {
                                                           ScaffoldMessenger.of(
-                                                                  context)
+                                                              context)
                                                               .showSnackBar(
-                                                                  const SnackBar(
-                                                            content:
-                                                                Text('권한 거부됨'),
-                                                            duration: Duration(
-                                                                seconds: 1),
-                                                          ));
-                                                        } else {
-                                                          String decodeUrl = Uri
-                                                              .decodeComponent(
-                                                                  url!);
-                                                          String fileName = decodeUrl.substring(
-                                                              decodeUrl.indexOf(
-                                                                      '/0/') +
-                                                                  3,
-                                                              decodeUrl.indexOf(
-                                                                  '?forcedownload'));
-                                                          String fileExtension =
-                                                              fileName.substring(
-                                                                  fileName
-                                                                      .lastIndexOf(
-                                                                          '.'));
-                                                          fileName = fileName
-                                                              .substring(
-                                                                  0,
-                                                                  fileName
-                                                                      .lastIndexOf(
-                                                                          '.'));
-
-                                                          File file = File(
-                                                              '/storage/emulated/0/Download/' +
-                                                                  fileName +
-                                                                  fileExtension);
-
-                                                          int loop = 1;
-                                                          String filePath =
-                                                              '/storage/emulated/0/Download/' +
-                                                                  fileName +
-                                                                  fileExtension;
-
-                                                          String finalFileName =
-                                                              fileName +
-                                                                  fileExtension;
-                                                          while (file
-                                                              .existsSync()) {
-                                                            finalFileName = fileName +
-                                                                '(' +
-                                                                loop.toString() +
-                                                                ')' +
-                                                                fileExtension;
-                                                            filePath =
-                                                                '/storage/emulated/0/Download/' +
-                                                                    finalFileName;
-                                                            file =
-                                                                File(filePath);
-                                                            loop++;
-                                                          }
-
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .showSnackBar(
-                                                                  SnackBar(
-                                                            content: Text("'" +
-                                                                finalFileName +
-                                                                "' 다운로드 시작"),
-                                                            duration:
-                                                                const Duration(
+                                                              const SnackBar(
+                                                                content:
+                                                                Text(
+                                                                    '저장소 접근 권한이 필요합니다'),
+                                                                duration: Duration(
                                                                     seconds: 1),
-                                                          ));
-
-                                                          DioManager()
-                                                              .httpGetFile(
-                                                                  url!, file,
-                                                                  () {
-                                                            ScaffoldMessenger
-                                                                    .of(context)
-                                                                .showSnackBar(
-                                                              SnackBar(
-                                                                content: Text("'" +
-                                                                    finalFileName +
-                                                                    "' 다운로드 완료"),
-                                                                duration:
-                                                                    const Duration(
-                                                                        seconds:
-                                                                            3),
-                                                                action:
-                                                                    SnackBarAction(
-                                                                  label: '열기',
-                                                                  onPressed:
-                                                                      () {
-                                                                    OpenFile.open(
-                                                                        file.path);
-                                                                  },
-                                                                ),
-                                                              ),
-                                                            );
-                                                          });
+                                                              ));
+                                                          return;
                                                         }
+
+                                                        String decodeUrl =
+                                                        Uri.decodeComponent(
+                                                            url!);
+                                                        String fileName =
+                                                        decodeUrl.substring(
+                                                            decodeUrl.indexOf(
+                                                                '/0/') +
+                                                                3,
+                                                            decodeUrl.indexOf(
+                                                                '?forcedownload'));
+                                                        String fileExtension =
+                                                        fileName.substring(
+                                                            fileName
+                                                                .lastIndexOf(
+                                                                '.'));
+                                                        fileName =
+                                                            fileName.substring(
+                                                                0,
+                                                                fileName
+                                                                    .lastIndexOf(
+                                                                    '.'));
+
+                                                        File file = File(
+                                                            '/storage/emulated/0/Download/' +
+                                                                fileName +
+                                                                fileExtension);
+
+                                                        int loop = 1;
+                                                        String filePath =
+                                                            '/storage/emulated/0/Download/' +
+                                                                fileName +
+                                                                fileExtension;
+
+                                                        String finalFileName =
+                                                            fileName +
+                                                                fileExtension;
+                                                        while (
+                                                        file.existsSync()) {
+                                                          finalFileName =
+                                                              fileName +
+                                                                  '(' +
+                                                                  loop.toString() +
+                                                                  ')' +
+                                                                  fileExtension;
+                                                          filePath =
+                                                              '/storage/emulated/0/Download/' +
+                                                                  finalFileName;
+                                                          file = File(filePath);
+                                                          loop++;
+                                                        }
+
+                                                        ScaffoldMessenger.of(
+                                                            context)
+                                                            .showSnackBar(
+                                                            SnackBar(
+                                                              content: Text("'" +
+                                                                  finalFileName +
+                                                                  "' 다운로드 시작"),
+                                                              duration:
+                                                              const Duration(
+                                                                  seconds: 1),
+                                                            ));
+
+                                                        DioManager()
+                                                            .httpGetFile(
+                                                            url!, file, () {
+                                                          ScaffoldMessenger.of(
+                                                              context)
+                                                              .showSnackBar(
+                                                            SnackBar(
+                                                              content: Text("'" +
+                                                                  finalFileName +
+                                                                  "' 다운로드 완료"),
+                                                              duration:
+                                                              const Duration(
+                                                                  seconds:
+                                                                  3),
+                                                              action:
+                                                              SnackBarAction(
+                                                                label: '열기',
+                                                                onPressed: () {
+                                                                  OpenFile.open(
+                                                                      file.path);
+                                                                },
+                                                              ),
+                                                            ),
+                                                          );
+                                                        });
                                                       },
                                                     ),
                                                   )
