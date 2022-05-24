@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:html/dom.dart' as html_dom;
@@ -56,12 +57,13 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                       children: [
                                         Expanded(
                                           child: Padding(
-                                            padding: const EdgeInsets.only(right: 8.0),
+                                            padding: const EdgeInsets.only(
+                                                right: 8.0),
                                             child: Shimmer.fromColors(
                                               // 과목명[주차]
                                               baseColor: Colors.grey.shade400,
                                               highlightColor:
-                                              Colors.grey.shade300,
+                                                  Colors.grey.shade300,
                                               child: Container(
                                                 height: 24,
                                                 color: Colors.black,
@@ -79,7 +81,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                             // 과제, 동영상 아이콘
                                             baseColor: Colors.grey.shade400,
                                             highlightColor:
-                                            Colors.grey.shade300,
+                                                Colors.grey.shade300,
                                             child: Container(
                                               width: 40,
                                               height: 40,
@@ -94,7 +96,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                                 // 과제, 동영상 제목
                                                 baseColor: Colors.grey.shade400,
                                                 highlightColor:
-                                                Colors.grey.shade300,
+                                                    Colors.grey.shade300,
                                                 child: Container(
                                                   height: 16,
                                                   color: Colors.black,
@@ -252,8 +254,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                                       SlideCountdownSeparated(
                                                         duration: deadLine!
                                                             .difference(
-                                                                DateTime
-                                                                    .now()),
+                                                                DateTime.now()),
                                                       ),
                                                     ],
                                                   ),
@@ -292,57 +293,98 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                                       data: content,
                                                       onLinkTap: (String? url,
                                                           RenderContext
-                                                          renderContext,
+                                                              renderContext,
                                                           Map<String, String>
-                                                          attributes,
+                                                              attributes,
                                                           html_dom.Element?
-                                                          element) async {
-                                                        await Permission
-                                                            .manageExternalStorage
-                                                            .request();
-                                                        await Permission
-                                                            .storage
-                                                            .request();
+                                                              element) async {
+                                                        int sdkVersion =
+                                                            (await DeviceInfoPlugin()
+                                                                    .androidInfo)
+                                                                .version
+                                                                .sdkInt!;
 
-                                                        if (await Permission.storage
-                                                            .isDenied ||
-                                                            await Permission
-                                                                .manageExternalStorage
-                                                                .isDenied) {
-                                                          ScaffoldMessenger.of(
-                                                              context)
-                                                              .showSnackBar(
-                                                              const SnackBar(
-                                                                content:
-                                                                Text(
-                                                                    '저장소 접근 권한이 필요합니다'),
-                                                                duration: Duration(
-                                                                    seconds: 3),
-                                                              ));
-                                                          return;
+                                                        if (sdkVersion >= 30) {
+                                                          await Permission
+                                                              .manageExternalStorage
+                                                              .request();
+
+                                                          if (await Permission
+                                                              .manageExternalStorage
+                                                              .isDenied) {
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                                    SnackBar(
+                                                              content: const Text(
+                                                                  '저장소 접근 권한이 필요합니다'),
+                                                              duration:
+                                                                  const Duration(
+                                                                      seconds:
+                                                                          3),
+                                                              action:
+                                                                  SnackBarAction(
+                                                                      label:
+                                                                          '설정',
+                                                                      onPressed:
+                                                                          () {
+                                                                        openAppSettings();
+                                                                      }),
+                                                            ));
+                                                            return;
+                                                          }
+                                                        } else {
+                                                          await Permission
+                                                              .storage
+                                                              .request();
+
+                                                          if (await Permission
+                                                              .storage
+                                                              .isDenied) {
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                                    SnackBar(
+                                                              content: const Text(
+                                                                  '저장소 접근 권한이 필요합니다'),
+                                                              duration:
+                                                                  const Duration(
+                                                                      seconds:
+                                                                          3),
+                                                              action:
+                                                                  SnackBarAction(
+                                                                      label:
+                                                                          '설정',
+                                                                      onPressed:
+                                                                          () {
+                                                                        openAppSettings();
+                                                                      }),
+                                                            ));
+                                                            return;
+                                                          }
                                                         }
 
                                                         String decodeUrl =
-                                                        Uri.decodeComponent(
-                                                            url!);
+                                                            Uri.decodeComponent(
+                                                                url!);
                                                         String fileName =
-                                                        decodeUrl.substring(
-                                                            decodeUrl.indexOf(
-                                                                '/0/') +
-                                                                3,
-                                                            decodeUrl.indexOf(
-                                                                '?forcedownload'));
+                                                            decodeUrl.substring(
+                                                                decodeUrl.indexOf(
+                                                                        '/0/') +
+                                                                    3,
+                                                                decodeUrl.indexOf(
+                                                                    '?forcedownload'));
                                                         String fileExtension =
-                                                        fileName.substring(
-                                                            fileName
-                                                                .lastIndexOf(
-                                                                '.'));
+                                                            fileName.substring(
+                                                                fileName
+                                                                    .lastIndexOf(
+                                                                        '.'));
                                                         fileName =
                                                             fileName.substring(
                                                                 0,
                                                                 fileName
                                                                     .lastIndexOf(
-                                                                    '.'));
+                                                                        '.'));
 
                                                         File file = File(
                                                             '/storage/emulated/0/Download/' +
@@ -359,7 +401,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                                             fileName +
                                                                 fileExtension;
                                                         while (
-                                                        file.existsSync()) {
+                                                            file.existsSync()) {
                                                           finalFileName =
                                                               fileName +
                                                                   '(' +
@@ -374,57 +416,79 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                                         }
 
                                                         ScaffoldMessenger.of(
-                                                            context)
+                                                                context)
                                                             .showSnackBar(
-                                                            SnackBar(
-                                                              content: Text("'" +
-                                                                  finalFileName +
-                                                                  "' 다운로드 시작"),
-                                                              duration:
+                                                                SnackBar(
+                                                          content: Text("'" +
+                                                              finalFileName +
+                                                              "' 다운로드 시작"),
+                                                          duration:
                                                               const Duration(
                                                                   seconds: 1),
-                                                            ));
+                                                        ));
 
                                                         DioManager()
                                                             .httpGetFile(
-                                                            url!, file, () {
-                                                              if(file.existsSync()){
-                                                                ScaffoldMessenger.of(
-                                                                    context)
-                                                                    .showSnackBar(
-                                                                  SnackBar(
-                                                                    content: Text("'" +
-                                                                        finalFileName +
-                                                                        "' 다운로드 완료"),
-                                                                    duration:
+                                                                url!, file, () {
+                                                          if (file
+                                                              .existsSync()) {
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                              SnackBar(
+                                                                content: Text("'" +
+                                                                    finalFileName +
+                                                                    "' 다운로드 완료"),
+                                                                duration:
                                                                     const Duration(
                                                                         seconds:
-                                                                        3),
-                                                                    action:
+                                                                            3),
+                                                                action:
                                                                     SnackBarAction(
-                                                                      label: '열기',
-                                                                      onPressed: () {
-                                                                        OpenFile.open(
-                                                                            file.path);
-                                                                      },
-                                                                    ),
-                                                                  ),
-                                                                );
-                                                              } else{
-                                                                ScaffoldMessenger.of(
-                                                                    context)
-                                                                    .showSnackBar(
-                                                                  SnackBar(
-                                                                    content: Text("'" +
-                                                                        finalFileName +
-                                                                        "' 다운로드 실패"),
-                                                                    duration:
+                                                                  label: '열기',
+                                                                  onPressed:
+                                                                      () async {
+                                                                    if (await Permission
+                                                                        .accessMediaLocation
+                                                                        .isDenied) {
+                                                                      ScaffoldMessenger.of(
+                                                                              context)
+                                                                          .showSnackBar(
+                                                                              SnackBar(
+                                                                        content:
+                                                                            const Text('파일 접근 권한이 필요합니다'),
+                                                                        duration:
+                                                                            const Duration(seconds: 3),
+                                                                        action: SnackBarAction(
+                                                                            label: '설정',
+                                                                            onPressed: () {
+                                                                              openAppSettings();
+                                                                            }),
+                                                                      ));
+                                                                      return;
+                                                                    }
+
+                                                                    OpenFile.open(
+                                                                        file.path);
+                                                                  },
+                                                                ),
+                                                              ),
+                                                            );
+                                                          } else {
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                              SnackBar(
+                                                                content: Text("'" +
+                                                                    finalFileName +
+                                                                    "' 다운로드 실패"),
+                                                                duration:
                                                                     const Duration(
                                                                         seconds:
-                                                                        3),
-                                                                  ),
-                                                                );
-                                                              }
+                                                                            3),
+                                                              ),
+                                                            );
+                                                          }
                                                         });
                                                       },
                                                     ),

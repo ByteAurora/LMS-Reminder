@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:html/dom.dart' as html_dom;
@@ -55,7 +56,8 @@ class _TabPageFinished extends State<TabPageFinished> {
                                       children: [
                                         Expanded(
                                           child: Padding(
-                                            padding: const EdgeInsets.only(right: 8.0),
+                                            padding: const EdgeInsets.only(
+                                                right: 8.0),
                                             child: Shimmer.fromColors(
                                               // 과목명[주차]
                                               baseColor: Colors.grey.shade400,
@@ -300,28 +302,70 @@ class _TabPageFinished extends State<TabPageFinished> {
                                                               attributes,
                                                           html_dom.Element?
                                                               element) async {
-                                                        await Permission
-                                                            .manageExternalStorage
-                                                            .request();
-                                                        await Permission.storage
-                                                            .request();
+                                                        int sdkVersion =
+                                                            (await DeviceInfoPlugin()
+                                                                    .androidInfo)
+                                                                .version
+                                                                .sdkInt!;
 
-                                                        if (await Permission
-                                                                .storage
-                                                                .isDenied ||
-                                                            await Permission
-                                                                .manageExternalStorage
-                                                                .isDenied) {
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .showSnackBar(
-                                                                  const SnackBar(
-                                                            content: Text(
-                                                                '저장소 접근 권한이 필요합니다'),
-                                                            duration: Duration(
-                                                                seconds: 3),
-                                                          ));
-                                                          return;
+                                                        if (sdkVersion >= 30) {
+                                                          await Permission
+                                                              .manageExternalStorage
+                                                              .request();
+
+                                                          if (await Permission
+                                                              .manageExternalStorage
+                                                              .isDenied) {
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                                    SnackBar(
+                                                              content: const Text(
+                                                                  '저장소 접근 권한이 필요합니다'),
+                                                              duration:
+                                                                  const Duration(
+                                                                      seconds:
+                                                                          3),
+                                                              action:
+                                                                  SnackBarAction(
+                                                                      label:
+                                                                          '설정',
+                                                                      onPressed:
+                                                                          () {
+                                                                        openAppSettings();
+                                                                      }),
+                                                            ));
+                                                            return;
+                                                          }
+                                                        } else {
+                                                          await Permission
+                                                              .storage
+                                                              .request();
+
+                                                          if (await Permission
+                                                              .storage
+                                                              .isDenied) {
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                                    SnackBar(
+                                                              content: const Text(
+                                                                  '저장소 접근 권한이 필요합니다'),
+                                                              duration:
+                                                                  const Duration(
+                                                                      seconds:
+                                                                          3),
+                                                              action:
+                                                                  SnackBarAction(
+                                                                      label:
+                                                                          '설정',
+                                                                      onPressed:
+                                                                          () {
+                                                                        openAppSettings();
+                                                                      }),
+                                                            ));
+                                                            return;
+                                                          }
                                                         }
 
                                                         String decodeUrl =
@@ -407,7 +451,27 @@ class _TabPageFinished extends State<TabPageFinished> {
                                                                     SnackBarAction(
                                                                   label: '열기',
                                                                   onPressed:
-                                                                      () {
+                                                                      () async {
+                                                                    if (await Permission
+                                                                        .accessMediaLocation
+                                                                        .isDenied) {
+                                                                      ScaffoldMessenger.of(
+                                                                              context)
+                                                                          .showSnackBar(
+                                                                              SnackBar(
+                                                                        content:
+                                                                            const Text('파일 접근 권한이 필요합니다'),
+                                                                        duration:
+                                                                            const Duration(seconds: 3),
+                                                                        action: SnackBarAction(
+                                                                            label: '설정',
+                                                                            onPressed: () {
+                                                                              openAppSettings();
+                                                                            }),
+                                                                      ));
+                                                                      return;
+                                                                    }
+
                                                                     OpenFile.open(
                                                                         file.path);
                                                                   },

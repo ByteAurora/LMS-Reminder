@@ -52,6 +52,7 @@ dependencies:
   awesome_notifications: ^0.6.21
   shimmer: ^2.0.0
   slide_countdown: ^0.2.4
+  device_info_plus: ^3.2.3
 
 dev_dependencies:
   flutter_test:
