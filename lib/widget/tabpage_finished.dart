@@ -316,7 +316,7 @@ class _TabPageFinished extends State<TabPageFinished> {
                                                             Text(
                                                                 '저장소 접근 권한이 필요합니다'),
                                                             duration: Duration(
-                                                                seconds: 1),
+                                                                seconds: 3),
                                                           ));
                                                       return;
                                                     }
@@ -387,27 +387,43 @@ class _TabPageFinished extends State<TabPageFinished> {
                                                     DioManager()
                                                         .httpGetFile(
                                                         url!, file, () {
-                                                      ScaffoldMessenger.of(
-                                                          context)
-                                                          .showSnackBar(
-                                                        SnackBar(
-                                                          content: Text("'" +
-                                                              finalFileName +
-                                                              "' 다운로드 완료"),
-                                                          duration:
-                                                          const Duration(
-                                                              seconds:
-                                                              3),
-                                                          action:
-                                                          SnackBarAction(
-                                                            label: '열기',
-                                                            onPressed: () {
-                                                              OpenFile.open(
-                                                                  file.path);
-                                                            },
+                                                      if(file.existsSync()){
+                                                        ScaffoldMessenger.of(
+                                                            context)
+                                                            .showSnackBar(
+                                                          SnackBar(
+                                                            content: Text("'" +
+                                                                finalFileName +
+                                                                "' 다운로드 완료"),
+                                                            duration:
+                                                            const Duration(
+                                                                seconds:
+                                                                3),
+                                                            action:
+                                                            SnackBarAction(
+                                                              label: '열기',
+                                                              onPressed: () {
+                                                                OpenFile.open(
+                                                                    file.path);
+                                                              },
+                                                            ),
                                                           ),
-                                                        ),
-                                                      );
+                                                        );
+                                                      } else{
+                                                        ScaffoldMessenger.of(
+                                                            context)
+                                                            .showSnackBar(
+                                                          SnackBar(
+                                                            content: Text("'" +
+                                                                finalFileName +
+                                                                "' 다운로드 실패"),
+                                                            duration:
+                                                            const Duration(
+                                                                seconds:
+                                                                3),
+                                                          ),
+                                                        );
+                                                      }
                                                     });
                                                   },
                                                 ),
