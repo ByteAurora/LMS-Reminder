@@ -54,14 +54,19 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                   children: [
                                     Row(
                                       children: [
-                                        Shimmer.fromColors(
-                                          // 과목명[주차]
-                                          baseColor: Colors.grey.shade400,
-                                          highlightColor: Colors.grey.shade300,
-                                          child: Container(
-                                            width: 256,
-                                            height: 24,
-                                            color: Colors.black,
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(right: 8.0),
+                                            child: Shimmer.fromColors(
+                                              // 과목명[주차]
+                                              baseColor: Colors.grey.shade400,
+                                              highlightColor:
+                                              Colors.grey.shade300,
+                                              child: Container(
+                                                height: 24,
+                                                color: Colors.black,
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -74,25 +79,26 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                             // 과제, 동영상 아이콘
                                             baseColor: Colors.grey.shade400,
                                             highlightColor:
-                                                Colors.grey.shade300,
+                                            Colors.grey.shade300,
                                             child: Container(
                                               width: 40,
                                               height: 40,
                                               color: Colors.black,
                                             ),
                                           ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(left: 4),
-                                            child: Shimmer.fromColors(
-                                              // 과제, 동영상 제목
-                                              baseColor: Colors.grey.shade400,
-                                              highlightColor:
-                                                  Colors.grey.shade300,
-                                              child: Container(
-                                                width: 212,
-                                                height: 16,
-                                                color: Colors.black,
+                                          Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 4.0, right: 8.0),
+                                              child: Shimmer.fromColors(
+                                                // 과제, 동영상 제목
+                                                baseColor: Colors.grey.shade400,
+                                                highlightColor:
+                                                Colors.grey.shade300,
+                                                child: Container(
+                                                  height: 16,
+                                                  color: Colors.black,
+                                                ),
                                               ),
                                             ),
                                           ),
