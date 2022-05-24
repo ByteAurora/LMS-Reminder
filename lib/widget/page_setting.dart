@@ -291,10 +291,9 @@ class _PageSettingState extends State<PageSetting> {
                   child: Text("로그아웃"),
                   onPressed: () async {
                     final prefs = await SharedPreferences.getInstance();
-                    setState((){
-                      prefs.remove(keyUserId);
-                      prefs.remove(keyUserPw);
-                    });
+                    prefs.remove(keyUserId);
+                    prefs.remove(keyUserPw);
+
                     Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
                   },
                 ),

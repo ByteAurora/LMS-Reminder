@@ -153,18 +153,23 @@ class _PageLoginState extends State<PageLogin> {
                               alignment: Alignment.center,
                               child: ElevatedButton(
                                 onPressed: () async {
-                                  final prefs =
-                                      await SharedPreferences.getInstance();
-                                  prefs.setString(keyUserId, userID.text);
-                                  prefs.setString(keyUserPw, password.text);
-                                  keepID = prefs.getString(keyUserId);
-                                  keepPW = prefs.getString(keyUserPw);
-                                  if ((await LmsManager()
-                                      .login(keepID!, keepPW!))) {
-                                    Navigator.popAndPushNamed(context, '/main');
+                                  SharedPreferences prefs= await SharedPreferences.getInstance();
+                                  //입력된 값이 비어있지 않으면
+                                  if(userID.text.isNotEmpty && password.text.isNotEmpty){
+                                    //로그인 후 id와 password 값을 저장 
+                                    if ((await LmsManager()
+                                        .login(userID.text, password.text))) {
+                                      prefs.setString(keyUserId, userID.text);
+                                      prefs.setString(keyUserPw, password.text);
+                                      Navigator.popAndPushNamed(context, '/main');
+                                    }
+                                    else {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(content: Text("로그인 실패")));
+                                    }
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(content: Text("로그인 실패")));
+                                        SnackBar(content: Text("정보를 입력해주세요")));
                                   }
                                 },
                                 child: Text(
