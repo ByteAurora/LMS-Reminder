@@ -371,21 +371,32 @@ class _PageSettingState extends State<PageSetting> {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: Text('로그아웃'),
-                      content: Text('정말로 로그아웃 하시겠습니까?'),
+                      title: const Text('로그아웃'),
+                      content: const Text('정말로 로그아웃 하시겠습니까?'),
                       actions: [
-                        ElevatedButton(
-                            onPressed: () async {
-                              final prefs =
-                                  await SharedPreferences.getInstance();
-                              prefs.remove(keyUserId);
-                              prefs.remove(keyUserPw);
+                        InkWell(
+                          onTap: () {
+                            Navigator.of(context, rootNavigator: true).pop();
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text('취소'),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () async {
+                            final prefs = await SharedPreferences.getInstance();
+                            prefs.remove(keyUserId);
+                            prefs.remove(keyUserPw);
 
-                              Navigator.pushNamedAndRemoveUntil(
-                                  context, '/login', (route) => false);
-                            },
-                            child: Text('로그아웃')),
-                        ElevatedButton(onPressed: () {}, child: Text('취소')),
+                            Navigator.pushNamedAndRemoveUntil(
+                                context, '/login', (route) => false);
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text('로그아웃'),
+                          ),
+                        ),
                       ],
                     );
                   });

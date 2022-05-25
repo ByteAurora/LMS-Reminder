@@ -30,7 +30,7 @@ class _TabPageNotice extends State<TabPageNotice> {
             if (snapshot.hasData == true) {
               return ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: 6,
+                itemCount: 9,
                 itemBuilder: (context, index) {
                   return Card(
                     child: Row(

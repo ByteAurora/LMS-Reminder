@@ -41,7 +41,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
             if (snapshot.hasData == false) {
               return ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: 6,
+                itemCount: 9,
                 itemBuilder: (context, index) {
                   return Card(
                     child: Row(
