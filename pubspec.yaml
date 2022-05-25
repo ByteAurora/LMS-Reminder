@@ -53,6 +53,8 @@ dependencies:
   shimmer: ^2.0.0
   slide_countdown: ^0.2.4
   device_info_plus: ^3.2.3
+  url_launcher: ^6.1.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
