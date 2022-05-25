@@ -2,7 +2,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lms_reminder/manager/lms_manager.dart';
-import 'package:lms_reminder/sharedpreference_key.dart';
+import 'package:lms_reminder/sharedpreferences_key.dart';
 import 'package:lms_reminder/widget/app_main_stateful.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';

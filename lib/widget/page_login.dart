@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lms_reminder/manager/lms_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../sharedpreference_key.dart';
+import '../sharedpreferences_key.dart';
 
 class PageLogin extends StatefulWidget {
   const PageLogin({Key? key}) : super(key: key);

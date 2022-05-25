@@ -4,7 +4,7 @@ import 'package:introduction_screen/introduction_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
 
-import '../sharedpreference_key.dart';
+import '../sharedpreferences_key.dart';
 
 class PageTutorial extends StatefulWidget {
   const PageTutorial({Key? key}) : super(key: key);
