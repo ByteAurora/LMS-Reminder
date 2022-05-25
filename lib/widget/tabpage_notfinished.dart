@@ -43,63 +43,31 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: 6,
                 itemBuilder: (context, index) {
-                  return Row(
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 8.0),
-                                            child: Shimmer.fromColors(
-                                              // 과목명[주차]
-                                              baseColor: Colors.grey.shade400,
-                                              highlightColor:
-                                                  Colors.grey.shade300,
-                                              child: Container(
-                                                height: 24,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 8.0),
-                                      child: Row(
+                  return Card(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
                                         children: [
-                                          Shimmer.fromColors(
-                                            // 과제, 동영상 아이콘
-                                            baseColor: Colors.grey.shade400,
-                                            highlightColor:
-                                                Colors.grey.shade300,
-                                            child: Container(
-                                              width: 40,
-                                              height: 40,
-                                              color: Colors.black,
-                                            ),
-                                          ),
                                           Expanded(
                                             child: Padding(
                                               padding: const EdgeInsets.only(
-                                                  left: 4.0, right: 8.0),
+                                                  right: 8.0),
                                               child: Shimmer.fromColors(
-                                                // 과제, 동영상 제목
+                                                // 과목명[주차]
                                                 baseColor: Colors.grey.shade400,
                                                 highlightColor:
                                                     Colors.grey.shade300,
                                                 child: Container(
-                                                  height: 16,
+                                                  height: 24,
                                                   color: Colors.black,
                                                 ),
                                               ),
@@ -107,30 +75,64 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                           ),
                                         ],
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Shimmer.fromColors(
-                                // 남은시간 영역
-                                baseColor: Colors.grey.shade400,
-                                highlightColor: Colors.grey.shade300,
-                                child: Container(
-                                  width: 64,
-                                  height: 64,
-                                  decoration: const BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(64),
-                                    ),
-                                    color: Colors.black,
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 8.0),
+                                        child: Row(
+                                          children: [
+                                            Shimmer.fromColors(
+                                              // 과제, 동영상 아이콘
+                                              baseColor: Colors.grey.shade400,
+                                              highlightColor:
+                                                  Colors.grey.shade300,
+                                              child: Container(
+                                                width: 40,
+                                                height: 40,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 4.0, right: 8.0),
+                                                child: Shimmer.fromColors(
+                                                  // 과제, 동영상 제목
+                                                  baseColor: Colors.grey.shade400,
+                                                  highlightColor:
+                                                      Colors.grey.shade300,
+                                                  child: Container(
+                                                    height: 16,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ),
-                            ],
+                                Shimmer.fromColors(
+                                  // 남은시간 영역
+                                  baseColor: Colors.grey.shade400,
+                                  highlightColor: Colors.grey.shade300,
+                                  child: Container(
+                                    width: 64,
+                                    height: 64,
+                                    decoration: const BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(64),
+                                      ),
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   );
                 },
               );
