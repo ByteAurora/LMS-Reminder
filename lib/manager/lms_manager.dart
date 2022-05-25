@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:intl/intl.dart';
 import 'package:lms_reminder/manager/dio_manager.dart';
 import 'package:lms_reminder/model/assignment.dart';
 import 'package:lms_reminder/model/course.dart';
@@ -337,6 +338,14 @@ class LmsManager {
     for(var course in courseList) {
       noticeList.addAll(course.noticeList);
     }
+
+    noticeList.sort((obj1, obj2) {
+      DateTime value1 = DateFormat('yyyy-MM-dd').parse(obj1.date);
+      DateTime value2 = DateFormat('yyyy-MM-dd').parse(obj2.date);
+
+      return value2.compareTo(value1);
+    });
+
     return noticeList;
   }
 
