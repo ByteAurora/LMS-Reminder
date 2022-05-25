@@ -1,9 +1,10 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:html/dom.dart' as html_dom;
 import 'package:lms_reminder/manager/lms_manager.dart';
-import 'package:lms_reminder/model/course.dart';
 import 'package:lms_reminder/model/notice.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../manager/lms_manager.dart';
 
@@ -147,20 +148,30 @@ class _TabPageNotice extends State<TabPageNotice> {
                             noticeAuthor = notice.author;
                             noticeDate = notice.date;
                             noticeCourse = notice.course.title;
+
                             ///공지사항 출력
                             return ExpansionTile(
                               title: Text(noticeTitle),
-                              subtitle: Text("["+noticeDate +"]" + noticeCourse,
+                              subtitle: Text(
+                                "[" + noticeDate + "]" + noticeCourse,
                                 style: TextStyle(color: Colors.grey),
                               ),
-
                               children: <Widget>[
                                 Padding(
                                   padding: EdgeInsets.all(10),
                                   child: Column(
                                     children: <Widget>[
                                       Text("작성자: " + noticeAuthor),
-                                      Text(noticeContent),
+                                      Html(
+                                        data: noticeContent,
+                                        onLinkTap: (String? url,
+                                            RenderContext renderContext,
+                                            Map<String, String> attributes,
+                                            html_dom.Element? element) async {
+                                          await launchUrl(Uri.parse(url!),
+                                              mode: LaunchMode.inAppWebView);
+                                        },
+                                      ),
                                     ],
                                   ),
                                 ),

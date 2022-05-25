@@ -57,7 +57,7 @@ class Notice {
           .getElementsByClassName('ubboard')[0]
           .getElementsByTagName('div')[1]
           .getElementsByClassName('content')[0]
-          .text;
+          .innerHtml.trim().replaceAll('<br>', '').replaceAll('<p></p>', '');
 
       courseNoticeList.add(notice);
     });
