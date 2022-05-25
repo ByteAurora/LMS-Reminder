@@ -46,7 +46,6 @@ class Notice {
       notice.title = noticeElement.getElementsByTagName('td')[1].text.trim();
       notice.author = noticeElement.getElementsByTagName('td')[2].text.trim();
       notice.date = noticeElement.getElementsByTagName('td')[3].text.trim();
-
       Response response = await DioManager().httpGet(
           options: Options(), useExistCookie: true, subUrl: notice.url);
       html_dom.Document detailDocument =
@@ -58,13 +57,15 @@ class Notice {
           .getElementsByClassName('ubboard')[0]
           .getElementsByTagName('div')[1]
           .getElementsByClassName('content')[0]
-          .text;
+          .innerHtml.trim().replaceAll('<br>', '').replaceAll('<p></p>', '');
 
       courseNoticeList.add(notice);
     });
 
     return courseNoticeList;
   }
+
+
 
   /// Notice 생성자.
   Notice(Course? course) {

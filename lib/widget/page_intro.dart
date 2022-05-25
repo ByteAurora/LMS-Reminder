@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../manager/lms_manager.dart';
-import '../sharedpreference_key.dart';
+import '../sharedpreferences_key.dart';
 
 class PageIntro extends StatefulWidget {
   const PageIntro({Key? key}) : super(key: key);

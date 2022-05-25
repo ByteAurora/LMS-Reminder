@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:html/dom.dart' as html_dom;
 import 'package:lms_reminder/manager/lms_manager.dart';
-import 'package:lms_reminder/model/assignment.dart';
 import 'package:lms_reminder/model/notice.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../manager/lms_manager.dart';
 
@@ -23,70 +25,39 @@ class _TabPageNotice extends State<TabPageNotice> {
     return Scaffold(
       body: Center(
         child: FutureBuilder(
-          future: LmsManager().getNoticeList(),
+          future: LmsManager().getAllNoticeList(),
           builder: (context, snapshot) {
             if (snapshot.hasData == false) {
               return ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: 1,
+                itemCount: 9,
                 itemBuilder: (context, index) {
-                  return Row(
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 8.0),
-                                            child: Shimmer.fromColors(
-                                              // 과목명[주차]
-                                              baseColor: Colors.grey.shade400,
-                                              highlightColor:
-                                                  Colors.grey.shade300,
-                                              child: Container(
-                                                height: 24,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 8.0),
-                                      child: Row(
+                  return Card(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
                                         children: [
-                                          Shimmer.fromColors(
-                                            // 과제, 동영상 아이콘
-                                            baseColor: Colors.grey.shade400,
-                                            highlightColor:
-                                                Colors.grey.shade300,
-                                            child: Container(
-                                              width: 40,
-                                              height: 40,
-                                              color: Colors.black,
-                                            ),
-                                          ),
                                           Expanded(
                                             child: Padding(
                                               padding: const EdgeInsets.only(
-                                                  left: 4.0, right: 8.0),
+                                                  right: 8.0),
                                               child: Shimmer.fromColors(
-                                                // 과제, 동영상 제목
+                                                //제목 
                                                 baseColor: Colors.grey.shade400,
                                                 highlightColor:
                                                     Colors.grey.shade300,
                                                 child: Container(
-                                                  height: 16,
+                                                  height: 33,
                                                   color: Colors.black,
                                                 ),
                                               ),
@@ -94,30 +65,40 @@ class _TabPageNotice extends State<TabPageNotice> {
                                           ),
                                         ],
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Shimmer.fromColors(
-                                // 남은시간 영역
-                                baseColor: Colors.grey.shade400,
-                                highlightColor: Colors.grey.shade300,
-                                child: Container(
-                                  width: 64,
-                                  height: 64,
-                                  decoration: const BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(64),
-                                    ),
-                                    color: Colors.black,
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(top: 15.0),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 230.0),
+                                                child: Shimmer.fromColors(
+                                                  //부제목
+                                                  baseColor:
+                                                      Colors.grey.shade400,
+                                                  highlightColor:
+                                                      Colors.grey.shade300,
+                                                  child: Container(
+                                                    height: 16,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   );
                 },
               );
@@ -136,48 +117,42 @@ class _TabPageNotice extends State<TabPageNotice> {
                           itemCount: todoList.length,
                           itemBuilder: (context, index) {
                             String? noticeTitle;
-                            String? auther;
+                            String? noticeContent;
+                            String? noticeAuthor;
+                            String? noticeDate;
+                            String? noticeCourse;
                             Notice notice = todoList.elementAt(index) as Notice;
                             noticeTitle = notice.title;
+                            noticeContent = notice.content;
+                            noticeAuthor = notice.author;
+                            noticeDate = notice.date;
+                            noticeCourse = notice.course.title;
 
+                            ///공지사항 출력
                             return Card(
-                              child: Row(
+                              child: ExpansionTile(
+                                title: Text(noticeTitle),
+                                subtitle: Text(
+                                  "[" + noticeDate + "]" + noticeCourse,
+                                  style: TextStyle(color: Colors.grey),
+                                ),
                                 children: <Widget>[
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                      noticeTitle!,
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 18,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      auther!,
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 18,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                  Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Column(
+                                      children: <Widget>[
+                                        Text("작성자: " + noticeAuthor),
+                                        Html(
+                                          data: noticeContent,
+                                          onLinkTap: (String? url,
+                                              RenderContext renderContext,
+                                              Map<String, String> attributes,
+                                              html_dom.Element? element) async {
+                                            await launchUrl(Uri.parse(url!),
+                                                mode: LaunchMode.inAppWebView);
+                                          },
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],

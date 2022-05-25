@@ -28,10 +28,10 @@ const keyNotifyAssignmentBefore6Hours = 'KEY_NOTIFY_ASSIGNMENT_BEFORE_6_HOURS';
 const keyNotifyAssignmentBefore1Day = 'KEY_NOTIFY_ASSIGNMENT_BEFORE_1_DAY';
 
 /// 과제 마감 3일 전 알림 (true, false)
-const keyNotifyAssignmentBefore3Day = 'KEY_NOTIFY_ASSIGNMENT_BEFORE_3_DAYS';
+const keyNotifyAssignmentBefore3Days = 'KEY_NOTIFY_ASSIGNMENT_BEFORE_3_DAYS';
 
 /// 과제 마감 5일 전 알림 (true, false)
-const keyNotifyAssignmentBefore5Day = 'KEY_NOTIFY_ASSIGNMENT_BEFORE_5_DAYS';
+const keyNotifyAssignmentBefore5Days = 'KEY_NOTIFY_ASSIGNMENT_BEFORE_5_DAYS';
 
 /// 사용자 아이디 저장값 (string)
 const keyUserId = 'KEY_USER_ID';

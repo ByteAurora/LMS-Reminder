@@ -2,7 +2,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lms_reminder/manager/lms_manager.dart';
-import 'package:lms_reminder/sharedpreference_key.dart';
+import 'package:lms_reminder/sharedpreferences_key.dart';
 import 'package:lms_reminder/widget/app_main_stateful.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
@@ -28,7 +28,7 @@ void callbackDispatcher() {
                 content: NotificationContent(
                     id: 0,
                     channelKey: 'update_activities',
-                    wakeUpScreen: true,
+                    wakeUpScreen: false,
                     summary: '업데이트',
                     title: 'LMS에서 과제와 동영상을 확인하고 있습니다',
                     backgroundColor: Colors.redAccent,
@@ -73,12 +73,22 @@ void callbackDispatcher() {
               Workmanager().registerOneOffTask(schedule.id!, schedule.id!,
                   existingWorkPolicy: ExistingWorkPolicy.replace,
                   initialDelay: scheduleDate!.difference(currentTime),
+
                   inputData: schedule!.toMap());
             }
 
+            AwesomeNotifications().createNotification(
+                content: NotificationContent(
+                    id: 0,
+                    channelKey: 'update_activities',
+                    wakeUpScreen: false,
+                    summary: '업데이트',
+                    title: 'LMS 데이터 업데이트 완료',
+                    backgroundColor: Colors.redAccent,
+                    notificationLayout: NotificationLayout.Default));
             // 데이터 업데이트 Notification 제거
-            AwesomeNotifications()
-                .dismissNotificationsByChannelKey('update_activities');
+            // AwesomeNotifications()
+            //     .dismissNotificationsByChannelKey('update_activities');
           } else {
             // 로그인 실패 Notification 표시
             AwesomeNotifications().createNotification(
@@ -118,33 +128,56 @@ void callbackDispatcher() {
           if (state == null || state == false) {
             break;
           }
+
+          // 만약 해당 알림 종류(6시간, 1일, 3일, 5일)에 대해서 설정에서 활성화 되어있지 않을 경우 알림을 실행하지 않도록 break
+          if (schedule.activityLeftTime == '6시간') {
+            bool? state = prefs.getBool(keyNotifyAssignmentBefore6Hours);
+            if (state == null || state == false) {
+              break;
+            }
+          } else if (schedule.activityLeftTime == '1일') {
+            bool? state = prefs.getBool(keyNotifyAssignmentBefore1Day);
+            if (state == null || state == false) {
+              break;
+            }
+          } else if (schedule.activityLeftTime == '3일') {
+            bool? state = prefs.getBool(keyNotifyAssignmentBefore3Days);
+            if (state == null || state == false) {
+              break;
+            }
+          } else if (schedule.activityLeftTime == '5일') {
+            bool? state = prefs.getBool(keyNotifyAssignmentBefore5Days);
+            if (state == null || state == false) {
+              break;
+            }
+          }
         } else if (schedule.activityType == 'video') {
           bool? state = prefs.getBool(keyNotifyVideo);
           if (state == null || state == false) {
             break;
           }
-        }
 
-        // 만약 해당 알림 종류(6시간, 1일, 3일, 5일)에 대해서 설정에서 활성화 되어있지 않을 경우 알림을 실행하지 않도록 break
-        if (schedule.activityLeftTime == '6시간') {
-          bool? state = prefs.getBool(keyNotifyAssignmentBefore6Hours);
-          if (state == null || state == false) {
-            break;
-          }
-        } else if (schedule.activityLeftTime == '1일') {
-          bool? state = prefs.getBool(keyNotifyAssignmentBefore1Day);
-          if (state == null || state == false) {
-            break;
-          }
-        } else if (schedule.activityLeftTime == '3일') {
-          bool? state = prefs.getBool(keyNotifyAssignmentBefore3Day);
-          if (state == null || state == false) {
-            break;
-          }
-        } else if (schedule.activityLeftTime == '5일') {
-          bool? state = prefs.getBool(keyNotifyAssignmentBefore5Day);
-          if (state == null || state == false) {
-            break;
+          // 만약 해당 알림 종류(6시간, 1일, 3일, 5일)에 대해서 설정에서 활성화 되어있지 않을 경우 알림을 실행하지 않도록 break
+          if (schedule.activityLeftTime == '6시간') {
+            bool? state = prefs.getBool(keyNotifyVideoBefore6Hours);
+            if (state == null || state == false) {
+              break;
+            }
+          } else if (schedule.activityLeftTime == '1일') {
+            bool? state = prefs.getBool(keyNotifyVideoBefore1Day);
+            if (state == null || state == false) {
+              break;
+            }
+          } else if (schedule.activityLeftTime == '3일') {
+            bool? state = prefs.getBool(keyNotifyVideoBefore3Days);
+            if (state == null || state == false) {
+              break;
+            }
+          } else if (schedule.activityLeftTime == '5일') {
+            bool? state = prefs.getBool(keyNotifyVideoBefore5Days);
+            if (state == null || state == false) {
+              break;
+            }
           }
         }
 
@@ -157,7 +190,6 @@ void callbackDispatcher() {
             content: NotificationContent(
                 id: id,
                 channelKey: 'alert_lefttime',
-                groupKey: 'alert_lefttime_group',
                 wakeUpScreen: true,
                 autoDismissible: false,
                 summary: (schedule.courseTitle! + ' [' + schedule.week! + ']'),
@@ -197,8 +229,8 @@ void main() async {
     prefs.setBool(keyNotifyAssignment, true);
     prefs.setBool(keyNotifyAssignmentBefore6Hours, true);
     prefs.setBool(keyNotifyAssignmentBefore1Day, true);
-    prefs.setBool(keyNotifyAssignmentBefore3Day, true);
-    prefs.setBool(keyNotifyAssignmentBefore5Day, true);
+    prefs.setBool(keyNotifyAssignmentBefore3Days, true);
+    prefs.setBool(keyNotifyAssignmentBefore5Days, true);
     prefs.setString(keyUserId, '');
     prefs.setString(keyUserPw, '');
     prefs.setBool(keyTutorialShowed, false);
@@ -224,7 +256,6 @@ void main() async {
       null,
       [
         NotificationChannel(
-            channelGroupKey: 'update_activities_group',
             channelKey: 'update_activities',
             channelName: 'LMS 활동 목록 업데이트',
             channelDescription: 'LMS에서 과제와 동영상 업데이트 중 보내는 알림',
@@ -232,21 +263,12 @@ void main() async {
             ledColor: Colors.white,
             importance: NotificationImportance.Low),
         NotificationChannel(
-            channelGroupKey: 'alert_lefttime_group',
             channelKey: 'alert_lefttime',
             channelName: '마감 전 알림',
             channelDescription: '과제나 동영상 마감 전 띄워주는 알림',
             defaultColor: const Color(0xFF9D50DD),
             ledColor: Colors.white,
             importance: NotificationImportance.High),
-      ],
-      channelGroups: [
-        NotificationChannelGroup(
-            channelGroupkey: 'update_activities_group',
-            channelGroupName: 'LMS 활동 목록 업데이트 그룹'),
-        NotificationChannelGroup(
-            channelGroupkey: 'alert_lefttime_group',
-            channelGroupName: '마감 전 알림 그룹'),
       ],
       debug: true);
 
