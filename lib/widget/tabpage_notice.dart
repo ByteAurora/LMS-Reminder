@@ -1,6 +1,7 @@
+
 import 'package:flutter/material.dart';
 import 'package:lms_reminder/manager/lms_manager.dart';
-import 'package:lms_reminder/model/assignment.dart';
+import 'package:lms_reminder/model/course.dart';
 import 'package:lms_reminder/model/notice.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -23,12 +24,12 @@ class _TabPageNotice extends State<TabPageNotice> {
     return Scaffold(
       body: Center(
         child: FutureBuilder(
-          future: LmsManager().getNoticeList(),
+          future: LmsManager().getAllNoticeList(),
           builder: (context, snapshot) {
             if (snapshot.hasData == false) {
               return ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: 1,
+                itemCount: 6,
                 itemBuilder: (context, index) {
                   return Row(
                     children: [
@@ -136,52 +137,34 @@ class _TabPageNotice extends State<TabPageNotice> {
                           itemCount: todoList.length,
                           itemBuilder: (context, index) {
                             String? noticeTitle;
-                            String? auther;
+                            String? noticeContent;
+                            String? noticeAuthor;
+                            String? noticeDate;
+                            String? noticeCourse;
                             Notice notice = todoList.elementAt(index) as Notice;
                             noticeTitle = notice.title;
-
-                            return Card(
-                              child: Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                      noticeTitle!,
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 18,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      auther!,
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 18,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                            noticeContent = notice.content;
+                            noticeAuthor = notice.author;
+                            noticeDate = notice.date;
+                            noticeCourse = notice.course.title;
+                            ///공지사항 출력
+                            return ExpansionTile(
+                              title: Text(noticeTitle),
+                              subtitle: Text("["+noticeDate +"]" + noticeCourse,
+                                style: TextStyle(color: Colors.grey),
                               ),
+
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.all(10),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Text("작성자: " + noticeAuthor),
+                                      Text(noticeContent),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             );
                           },
                         ),

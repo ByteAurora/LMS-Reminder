@@ -332,6 +332,14 @@ class LmsManager {
     return resultList;
   }
 
+  Future<List<Notice>> getAllNoticeList() async {
+    List<Notice> noticeList = List.empty(growable: true);
+    for(var course in courseList) {
+      noticeList.addAll(course.noticeList);
+    }
+    return noticeList;
+  }
+
   /// Course, Lecture, Assignment, Video를 반환하는 함수.
   Future refreshAllData() async {
     await getCourseList();
