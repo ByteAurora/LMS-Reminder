@@ -27,6 +27,11 @@ Future<void> main() async {
   await LmsManager().getVideoList();
   print('영상 불러오기: ' + stopWatch.elapsed.inMilliseconds.toString() + "ms");
 
+  stopWatch.reset();
+  stopWatch.start();
+  await LmsManager().getNoticeList();
+  print('공지불러오기: ' + stopWatch.elapsed.inMilliseconds.toString() + "ms");
+
   for (var course in LmsManager().courseList) {
     print(
         '[과목] ${course.title}[${course.classNumber}] (교수: ${course.professor})');
@@ -48,6 +53,10 @@ Future<void> main() async {
         print('             - ${video.requiredWatchTime}');
         print('             - ${video.totalWatchTime}');
       }
+    }
+    for(var notice in course.noticeList){
+      print('       [공지] ${notice.title}');
+      print('              ${notice.author}');
     }
   }
 }
