@@ -28,7 +28,7 @@ void callbackDispatcher() {
                 content: NotificationContent(
                     id: 0,
                     channelKey: 'update_activities',
-                    wakeUpScreen: true,
+                    wakeUpScreen: false,
                     summary: '업데이트',
                     title: 'LMS에서 과제와 동영상을 확인하고 있습니다',
                     backgroundColor: Colors.redAccent,
@@ -73,12 +73,22 @@ void callbackDispatcher() {
               Workmanager().registerOneOffTask(schedule.id!, schedule.id!,
                   existingWorkPolicy: ExistingWorkPolicy.replace,
                   initialDelay: scheduleDate!.difference(currentTime),
+
                   inputData: schedule!.toMap());
             }
 
+            AwesomeNotifications().createNotification(
+                content: NotificationContent(
+                    id: 0,
+                    channelKey: 'update_activities',
+                    wakeUpScreen: false,
+                    summary: '업데이트',
+                    title: 'LMS 데이터 업데이트 완료',
+                    backgroundColor: Colors.redAccent,
+                    notificationLayout: NotificationLayout.Default));
             // 데이터 업데이트 Notification 제거
-            AwesomeNotifications()
-                .dismissNotificationsByChannelKey('update_activities');
+            // AwesomeNotifications()
+            //     .dismissNotificationsByChannelKey('update_activities');
           } else {
             // 로그인 실패 Notification 표시
             AwesomeNotifications().createNotification(
@@ -118,33 +128,56 @@ void callbackDispatcher() {
           if (state == null || state == false) {
             break;
           }
+
+          // 만약 해당 알림 종류(6시간, 1일, 3일, 5일)에 대해서 설정에서 활성화 되어있지 않을 경우 알림을 실행하지 않도록 break
+          if (schedule.activityLeftTime == '6시간') {
+            bool? state = prefs.getBool(keyNotifyAssignmentBefore6Hours);
+            if (state == null || state == false) {
+              break;
+            }
+          } else if (schedule.activityLeftTime == '1일') {
+            bool? state = prefs.getBool(keyNotifyAssignmentBefore1Day);
+            if (state == null || state == false) {
+              break;
+            }
+          } else if (schedule.activityLeftTime == '3일') {
+            bool? state = prefs.getBool(keyNotifyAssignmentBefore3Days);
+            if (state == null || state == false) {
+              break;
+            }
+          } else if (schedule.activityLeftTime == '5일') {
+            bool? state = prefs.getBool(keyNotifyAssignmentBefore5Days);
+            if (state == null || state == false) {
+              break;
+            }
+          }
         } else if (schedule.activityType == 'video') {
           bool? state = prefs.getBool(keyNotifyVideo);
           if (state == null || state == false) {
             break;
           }
-        }
 
-        // 만약 해당 알림 종류(6시간, 1일, 3일, 5일)에 대해서 설정에서 활성화 되어있지 않을 경우 알림을 실행하지 않도록 break
-        if (schedule.activityLeftTime == '6시간') {
-          bool? state = prefs.getBool(keyNotifyAssignmentBefore6Hours);
-          if (state == null || state == false) {
-            break;
-          }
-        } else if (schedule.activityLeftTime == '1일') {
-          bool? state = prefs.getBool(keyNotifyAssignmentBefore1Day);
-          if (state == null || state == false) {
-            break;
-          }
-        } else if (schedule.activityLeftTime == '3일') {
-          bool? state = prefs.getBool(keyNotifyAssignmentBefore3Day);
-          if (state == null || state == false) {
-            break;
-          }
-        } else if (schedule.activityLeftTime == '5일') {
-          bool? state = prefs.getBool(keyNotifyAssignmentBefore5Day);
-          if (state == null || state == false) {
-            break;
+          // 만약 해당 알림 종류(6시간, 1일, 3일, 5일)에 대해서 설정에서 활성화 되어있지 않을 경우 알림을 실행하지 않도록 break
+          if (schedule.activityLeftTime == '6시간') {
+            bool? state = prefs.getBool(keyNotifyVideoBefore6Hours);
+            if (state == null || state == false) {
+              break;
+            }
+          } else if (schedule.activityLeftTime == '1일') {
+            bool? state = prefs.getBool(keyNotifyVideoBefore1Day);
+            if (state == null || state == false) {
+              break;
+            }
+          } else if (schedule.activityLeftTime == '3일') {
+            bool? state = prefs.getBool(keyNotifyVideoBefore3Days);
+            if (state == null || state == false) {
+              break;
+            }
+          } else if (schedule.activityLeftTime == '5일') {
+            bool? state = prefs.getBool(keyNotifyVideoBefore5Days);
+            if (state == null || state == false) {
+              break;
+            }
           }
         }
 
@@ -197,8 +230,8 @@ void main() async {
     prefs.setBool(keyNotifyAssignment, true);
     prefs.setBool(keyNotifyAssignmentBefore6Hours, true);
     prefs.setBool(keyNotifyAssignmentBefore1Day, true);
-    prefs.setBool(keyNotifyAssignmentBefore3Day, true);
-    prefs.setBool(keyNotifyAssignmentBefore5Day, true);
+    prefs.setBool(keyNotifyAssignmentBefore3Days, true);
+    prefs.setBool(keyNotifyAssignmentBefore5Days, true);
     prefs.setString(keyUserId, '');
     prefs.setString(keyUserPw, '');
     prefs.setBool(keyTutorialShowed, false);
@@ -216,7 +249,7 @@ void main() async {
     'update_activities',
     existingWorkPolicy: ExistingWorkPolicy.keep,
     initialDelay: const Duration(seconds: 0),
-    frequency: const Duration(hours: 4),
+    frequency: const Duration(hours: 1),
   );
 
   // Awesome Notification 초기화
