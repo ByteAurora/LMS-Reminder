@@ -30,14 +30,14 @@ class _TabPageNotice extends State<TabPageNotice> {
             if (snapshot.hasData == false) {
               return ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: 9,
+                itemCount: 12,
                 itemBuilder: (context, index) {
                   return Card(
                     child: Row(
                       children: [
                         Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.all(16.0),
+                            padding: const EdgeInsets.only(left: 16, top: 14.0, bottom: 14.0, right: 16),
                             child: Row(
                               children: [
                                 Expanded(
@@ -57,7 +57,7 @@ class _TabPageNotice extends State<TabPageNotice> {
                                                 highlightColor:
                                                     Colors.grey.shade300,
                                                 child: Container(
-                                                  height: 33,
+                                                  height: 22,
                                                   color: Colors.black,
                                                 ),
                                               ),
@@ -67,13 +67,13 @@ class _TabPageNotice extends State<TabPageNotice> {
                                       ),
                                       Padding(
                                         padding:
-                                            const EdgeInsets.only(top: 15.0),
+                                            const EdgeInsets.only(top: 4.0),
                                         child: Row(
                                           children: [
                                             Expanded(
                                               child: Padding(
                                                 padding: const EdgeInsets.only(
-                                                    right: 230.0),
+                                                    right: 96.0),
                                                 child: Shimmer.fromColors(
                                                   //부제목
                                                   baseColor:
@@ -81,7 +81,7 @@ class _TabPageNotice extends State<TabPageNotice> {
                                                   highlightColor:
                                                       Colors.grey.shade300,
                                                   child: Container(
-                                                    height: 16,
+                                                    height: 18,
                                                     color: Colors.black,
                                                   ),
                                                 ),
@@ -134,11 +134,11 @@ class _TabPageNotice extends State<TabPageNotice> {
                                 title: Text(noticeTitle),
                                 subtitle: Text(
                                   "[" + noticeDate + "]" + noticeCourse,
-                                  style: TextStyle(color: Colors.grey),
+                                  style: const TextStyle(color: Colors.grey),
                                 ),
                                 children: <Widget>[
                                   Padding(
-                                    padding: EdgeInsets.all(10),
+                                    padding: const EdgeInsets.all(10),
                                     child: Column(
                                       children: <Widget>[
                                         Text("작성자: " + noticeAuthor),
