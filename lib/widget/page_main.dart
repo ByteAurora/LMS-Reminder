@@ -67,7 +67,7 @@ class _PageMainState extends State<PageMain>
         children: <Widget>[
           TabPageNotFinished(notifyParent: refresh,),
           TabPageFinished(notifyParent: refresh,),
-          TabPageNotice(),
+          TabPageNotice(notifyParent: refresh,),
         ],
         controller: tabController,
       ),
