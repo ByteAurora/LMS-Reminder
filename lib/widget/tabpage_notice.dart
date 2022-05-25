@@ -27,7 +27,7 @@ class _TabPageNotice extends State<TabPageNotice> {
         child: FutureBuilder(
           future: LmsManager().getAllNoticeList(),
           builder: (context, snapshot) {
-            if (snapshot.hasData == false) {
+            if (snapshot.hasData == true) {
               return ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: 6,
@@ -52,12 +52,12 @@ class _TabPageNotice extends State<TabPageNotice> {
                                               padding: const EdgeInsets.only(
                                                   right: 8.0),
                                               child: Shimmer.fromColors(
-                                                // 과목명[주차]
+                                                //제목 
                                                 baseColor: Colors.grey.shade400,
                                                 highlightColor:
                                                     Colors.grey.shade300,
                                                 child: Container(
-                                                  height: 24,
+                                                  height: 33,
                                                   color: Colors.black,
                                                 ),
                                               ),
@@ -67,26 +67,15 @@ class _TabPageNotice extends State<TabPageNotice> {
                                       ),
                                       Padding(
                                         padding:
-                                            const EdgeInsets.only(top: 8.0),
+                                            const EdgeInsets.only(top: 15.0),
                                         child: Row(
                                           children: [
-                                            Shimmer.fromColors(
-                                              // 과제, 동영상 아이콘
-                                              baseColor: Colors.grey.shade400,
-                                              highlightColor:
-                                                  Colors.grey.shade300,
-                                              child: Container(
-                                                width: 40,
-                                                height: 40,
-                                                color: Colors.black,
-                                              ),
-                                            ),
                                             Expanded(
                                               child: Padding(
                                                 padding: const EdgeInsets.only(
-                                                    left: 4.0, right: 8.0),
+                                                    right: 230.0),
                                                 child: Shimmer.fromColors(
-                                                  // 과제, 동영상 제목
+                                                  //부제목
                                                   baseColor:
                                                       Colors.grey.shade400,
                                                   highlightColor:
@@ -102,21 +91,6 @@ class _TabPageNotice extends State<TabPageNotice> {
                                         ),
                                       ),
                                     ],
-                                  ),
-                                ),
-                                Shimmer.fromColors(
-                                  // 남은시간 영역
-                                  baseColor: Colors.grey.shade400,
-                                  highlightColor: Colors.grey.shade300,
-                                  child: Container(
-                                    width: 64,
-                                    height: 64,
-                                    decoration: const BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(64),
-                                      ),
-                                      color: Colors.black,
-                                    ),
                                   ),
                                 ),
                               ],
