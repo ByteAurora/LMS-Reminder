@@ -252,7 +252,7 @@ class _PageSettingState extends State<PageSetting> {
                     style: optionTextStyle,
                   ),
                   subtitle: Text(
-                    "동영상 알림을 받습니다.",
+                    "동영상 알림을 받습니다",
                     style: optionSummaryTextStyle,
                   ),
                   value: notifyVideo,
