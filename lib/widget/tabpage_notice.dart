@@ -27,7 +27,7 @@ class _TabPageNotice extends State<TabPageNotice> {
         child: FutureBuilder(
           future: LmsManager().getAllNoticeList(),
           builder: (context, snapshot) {
-            if (snapshot.hasData == true) {
+            if (snapshot.hasData == false) {
               return ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: 9,
