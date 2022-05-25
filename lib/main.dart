@@ -190,7 +190,6 @@ void callbackDispatcher() {
             content: NotificationContent(
                 id: id,
                 channelKey: 'alert_lefttime',
-                groupKey: 'alert_lefttime_group',
                 wakeUpScreen: true,
                 autoDismissible: false,
                 summary: (schedule.courseTitle! + ' [' + schedule.week! + ']'),
@@ -249,7 +248,7 @@ void main() async {
     'update_activities',
     existingWorkPolicy: ExistingWorkPolicy.keep,
     initialDelay: const Duration(seconds: 0),
-    frequency: const Duration(hours: 1),
+    frequency: const Duration(hours: 4),
   );
 
   // Awesome Notification 초기화
@@ -257,7 +256,6 @@ void main() async {
       null,
       [
         NotificationChannel(
-            channelGroupKey: 'update_activities_group',
             channelKey: 'update_activities',
             channelName: 'LMS 활동 목록 업데이트',
             channelDescription: 'LMS에서 과제와 동영상 업데이트 중 보내는 알림',
@@ -265,21 +263,12 @@ void main() async {
             ledColor: Colors.white,
             importance: NotificationImportance.Low),
         NotificationChannel(
-            channelGroupKey: 'alert_lefttime_group',
             channelKey: 'alert_lefttime',
             channelName: '마감 전 알림',
             channelDescription: '과제나 동영상 마감 전 띄워주는 알림',
             defaultColor: const Color(0xFF9D50DD),
             ledColor: Colors.white,
             importance: NotificationImportance.High),
-      ],
-      channelGroups: [
-        NotificationChannelGroup(
-            channelGroupkey: 'update_activities_group',
-            channelGroupName: 'LMS 활동 목록 업데이트 그룹'),
-        NotificationChannelGroup(
-            channelGroupkey: 'alert_lefttime_group',
-            channelGroupName: '마감 전 알림 그룹'),
       ],
       debug: true);
 
