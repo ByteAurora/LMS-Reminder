@@ -14,8 +14,7 @@ class ScreenTutorial extends StatefulWidget {
 }
 
 class _ScreenTutorialState extends State<ScreenTutorial> {
-  /// 튜토리얼을 완료했을 경우
-  /// 다시 튜토리얼을 실행하지 않도록 판단하는 키값(keyNotificationId)를 true로 바꾸는 함수.
+  /// 튜토리얼을 완료했을 경우 다시 튜토리얼을 실행하지 않도록 판단하는 키값(keyNotificationId)를 true로 바꾸는 함수.
   Future<void> tutorialGraduate() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool(keyTutorialShowed, true);
@@ -24,7 +23,7 @@ class _ScreenTutorialState extends State<ScreenTutorial> {
   @override
   Widget build(BuildContext context) {
     const pageDecoration = PageDecoration(
-        //페이지마다 디자인설정
+        // 페이지마다 디자인 설정.
         titleTextStyle: TextStyle(
             fontSize: 1.0, fontWeight: FontWeight.w700, color: Colors.white),
         bodyPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
@@ -36,8 +35,7 @@ class _ScreenTutorialState extends State<ScreenTutorial> {
     return IntroductionScreen(
       pages: [
         PageViewModel(
-          //튜토리얼 첫번쨰 페이지
-
+          // 튜토리얼 첫번쨰 페이지.
           title: " .",
           body: "LMS 리마인더로 수강중인 강좌의 강의 및 과제를 쉽게 확인해보세요",
           image: Image.asset("resource/image/image_tutorial_01.png",
@@ -45,7 +43,7 @@ class _ScreenTutorialState extends State<ScreenTutorial> {
           decoration: pageDecoration,
         ),
         PageViewModel(
-          //튜토리얼 두번쨰 페이지
+          // 튜토리얼 두번쨰 페이지.
           title: ".",
           body: "아직 시청하지 않은 강의나 제출하지 않은 과제가 있으면 LMS 리마인더가 알려줍니다",
           image: Image.asset("resource/image/image_tutorial_02.png",
@@ -53,7 +51,7 @@ class _ScreenTutorialState extends State<ScreenTutorial> {
           decoration: pageDecoration,
         ),
         PageViewModel(
-          //튜토리얼 세번쨰 페이지
+          // 튜토리얼 세번쨰 페이지.
           title: ".",
           body: "수강중인 강좌의 중요한 공지사항을 확인해보세요",
           image: Image.asset("resource/image/image_tutorial_03.png",
@@ -77,20 +75,22 @@ class _ScreenTutorialState extends State<ScreenTutorial> {
         Navigator.popAndPushNamed(context, '/login');
       },
       globalBackgroundColor: Colors.white,
-      next: Image.asset("resource/image/icon_next.png", // 넥스트(>모양)색
+      next: Image.asset("resource/image/icon_next.png", // 넥스트(>모양)색.
           color: const Color.fromARGB(0xff, 070, 070, 070),
           width: 15,
           height: 15),
       dotsDecorator: DotsDecorator(
-          size: const Size.square(10.0),
-          activeSize: const Size(20.0, 10.0),
-          activeColor: const Color.fromARGB(0xff, 070, 070, 070),
-          //선택된 탭
-          color: const Color.fromARGB(0xff, 235, 235, 235),
-          //안선택된 탭
-          spacing: const EdgeInsets.symmetric(horizontal: 3.0),
-          activeShape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(25.0))),
+        size: const Size.square(10.0),
+        activeSize: const Size(20.0, 10.0),
+        activeColor: const Color.fromARGB(0xff, 070, 070, 070),
+        // 선택된 탭.
+        color: const Color.fromARGB(0xff, 235, 235, 235),
+        // 선택되지 않은 탭.
+        spacing: const EdgeInsets.symmetric(horizontal: 3.0),
+        activeShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(25.0),
+        ),
+      ),
     );
   }
 }
