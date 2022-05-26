@@ -199,7 +199,7 @@ class _TabPageFinished extends State<TabPageFinished> {
                             if (leftTime == '마감') {
                               leftTimeCircleColor = Colors.grey;
                             } else if (leftTime == 'D-1' ||
-                                leftTime.contains('D')) {
+                                !leftTime.contains('D')) {
                               leftTimeCircleColor = Colors.redAccent;
                             } else {
                               leftTimeCircleColor = Colors.lightBlueAccent;
