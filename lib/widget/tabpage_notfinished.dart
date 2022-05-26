@@ -592,6 +592,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
 
   void showSnackBar(String text, int second,
       {String? actionText, Function()? onPressed}) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content: Text(text),
