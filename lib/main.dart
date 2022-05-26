@@ -9,8 +9,7 @@ import 'package:workmanager/workmanager.dart';
 
 import 'model/schedule.dart';
 
-/// WorkManager를 이용하여 Background Service를 실행하기 위한 함수.
-/// 실행 시 전달된 작업의 키값을 확인하여 어떤 작업인지 구분.
+/// WorkManager를 이용하여 Background Service를 실행하기 위한 함수. 실행 시 전달된 작업의 키값(매개변수 task)을 확인하여 어떤 작업인지 구분.
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     switch (task) {

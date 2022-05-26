@@ -17,7 +17,7 @@ class _ScreenIntroState extends State<ScreenIntro> {
   String? userID;
   String? password;
   double? _deviceWidth,
-      _deviceHeight; //사용자의 화면크기 비율을 정하기 위해, 사용자 화면 크기를 가져오면 변수.
+      _deviceHeight; // 사용자의 화면크기 비율을 정하기 위해, 사용자 화면 크기를 저장하는 변수.
 
   Future<void> initIntro() async {
     final prefs = await SharedPreferences.getInstance();
@@ -26,24 +26,24 @@ class _ScreenIntroState extends State<ScreenIntro> {
     bool? tutorialShowed = prefs.getBool(keyTutorialShowed);
 
     if (!tutorialShowed!) {
-      //튜토리얼을 본적이 없을 경우
-      Navigator.popAndPushNamed(context, '/tutorial'); //튜토리얼 페이지로 이동
+      // 튜토리얼을 본적이 없을 경우.
+      Navigator.popAndPushNamed(context, '/tutorial'); // 튜토리얼 페이지로 이동.
     } else {
-      //튜토리얼을 완료 경우
+      // 튜토리얼을 완료 경우.
       if (!((userID == null || userID == "") &&
           (password == null || password == ""))) {
-        // 저장된 아이디나 비밀번호가 있을 경우
+        // 저장된 아이디나 비밀번호가 있을 경우.
         if ((await LmsManager().login(userID!, password!))) {
-          // 저장된 값으로 로그인 진행
-          Navigator.popAndPushNamed(context, '/main'); //자동로그인후 메인으로 이동
+          // 저장된 값으로 로그인 진행.
+          Navigator.popAndPushNamed(context, '/main'); // 자동로그인후 메인으로 이동.
         } else {
-          //저장된 ID/PW로 로그인이 실패할 경우
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text("로그인 실패"))); //로그인 실패 팝업
-          Navigator.popAndPushNamed(context, '/login'); // 로그인 페이지로 이동
+          // 저장된 ID/PW로 로그인이 실패할 경우.
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("로그인 실패"))); // 로그인 실패 팝업.
+          Navigator.popAndPushNamed(context, '/login'); // 로그인 페이지로 이동.
         }
       } else {
-        //저장된 ID/PW가 없을 경우
+        // 저장된 ID/PW가 없을 경우.
         Navigator.popAndPushNamed(context, '/login');
       }
     }
@@ -52,7 +52,7 @@ class _ScreenIntroState extends State<ScreenIntro> {
   @override
   void initState() {
     Timer(const Duration(seconds: 1), () {
-      //로고 보여주는시간 3초
+      // 로고 보여주는시간 1초.
       initIntro();
     });
     super.initState();
@@ -74,12 +74,13 @@ class _ScreenIntroState extends State<ScreenIntro> {
           height: _deviceHeight,
           decoration: const BoxDecoration(
             image: DecorationImage(
-                colorFilter: ColorFilter.mode(Colors.black12, BlendMode.darken),
-                fit: BoxFit.fitHeight,
-                image: AssetImage('resource/image/login_bg.png')), // 배경 이미지
+              colorFilter: ColorFilter.mode(Colors.black12, BlendMode.darken),
+              fit: BoxFit.fitHeight,
+              image: AssetImage('resource/image/login_bg.png'),
+            ), // 배경 이미지.
           ),
           child: Column(
-            //절대값 Expanded안에 작은 위젯(Container>ClipRRect>image)을 넣기 위함.
+            // 절대값 Expanded안에 작은 위젯(Container>ClipRRect>image)을 넣기 위함.
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Hero(

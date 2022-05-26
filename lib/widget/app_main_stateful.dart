@@ -36,7 +36,7 @@ class _AppMainStatefulState extends State<AppMainStateful>
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // 디버그 라벨 표시 여부
+      // 디버그 라벨 표시 여부.
       debugShowCheckedModeBanner: widget.showDebugLabel!,
 
       // AppBar에 표시될 문구.
@@ -51,13 +51,13 @@ class _AppMainStatefulState extends State<AppMainStateful>
       // 화면 이동을 위한 route.
       initialRoute: '/intro',
       routes: {
-        '/intro': (context) => ScreenIntro(),
-        '/tutorial': (context) => ScreenTutorial(),
+        '/intro': (context) => const ScreenIntro(),
+        '/tutorial': (context) => const ScreenTutorial(),
         '/login': (context) => const ScreenLogin(),
         '/main': (context) => const ScreenMain(
               appBarTitle: 'LMS 리마인더',
             ),
-        '/main/setting': (context) => ScreenSetting(),
+        '/main/setting': (context) => const ScreenSetting(),
       },
     );
   }
