@@ -155,7 +155,7 @@ class _TabPageFinished extends State<TabPageFinished> {
                             String? courseTitle;
                             String? weekTitle;
                             String? activityTitle;
-                            Image? activityImage;
+                            Icon? activityIcon;
                             DateTime? deadLine;
                             String? strDeadLine;
                             String? leftTime;
@@ -176,24 +176,12 @@ class _TabPageFinished extends State<TabPageFinished> {
 
                             if (finishedList.elementAt(index).runtimeType ==
                                 Assignment) {
-                              activityImage = const Image(
-                                image: AssetImage(
-                                    'resource/image/icon_assignment.png'),
-                                width: 24,
-                                height: 24,
-                                fit: BoxFit.fill,
-                              );
+                              activityIcon = const Icon(Icons.assignment, size: 24.0, color: Colors.lightGreen,);
                               content =
                                   (finishedList.elementAt(index) as Assignment)
                                       .content;
                             } else {
-                              activityImage = const Image(
-                                image:
-                                    AssetImage('resource/image/icon_video.png'),
-                                width: 24,
-                                height: 24,
-                                fit: BoxFit.fill,
-                              );
+                              activityIcon = const Icon(Icons.ondemand_video, size: 24.0, color: Colors.red,);
                             }
 
                             if (leftTime == '마감') {
@@ -507,7 +495,7 @@ class _TabPageFinished extends State<TabPageFinished> {
                                                             top: 8.0),
                                                     child: Row(
                                                       children: [
-                                                        activityImage,
+                                                        activityIcon,
                                                         Padding(
                                                           padding:
                                                               const EdgeInsets
