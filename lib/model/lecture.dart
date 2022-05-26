@@ -40,8 +40,6 @@ class Lecture {
             'href="https://learn.hoseo.ac.kr'.length,
         temp.indexOf('">'));
 
-    print(course.title);
-
     document
         .getElementById('region-main')!
         .getElementsByTagName('div')[0]
