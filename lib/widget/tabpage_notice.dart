@@ -133,7 +133,7 @@ class _TabPageNotice extends State<TabPageNotice> {
                               child: ExpansionTile(
                                 title: Text(noticeTitle),
                                 subtitle: Text(
-                                  "[" + noticeDate + "]" + noticeCourse,
+                                  "[" + noticeDate + "] " + noticeCourse,
                                   style: const TextStyle(color: Colors.grey),
                                 ),
                                 children: <Widget>[
