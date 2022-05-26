@@ -68,13 +68,13 @@ void callbackDispatcher() {
               print(
                   '[${schedule.courseTitle}] "${schedule.activityTitle}" 예약됨: ' +
                       DateFormat('yyyy-MM-dd HH:mm').format(currentTime
-                          .add(scheduleDate!.difference(currentTime))));
+                          .add(scheduleDate.difference(currentTime))));
 
               Workmanager().registerOneOffTask(schedule.id!, schedule.id!,
                   existingWorkPolicy: ExistingWorkPolicy.replace,
-                  initialDelay: scheduleDate!.difference(currentTime),
+                  initialDelay: scheduleDate.difference(currentTime),
 
-                  inputData: schedule!.toMap());
+                  inputData: schedule.toMap());
             }
 
             AwesomeNotifications().createNotification(
