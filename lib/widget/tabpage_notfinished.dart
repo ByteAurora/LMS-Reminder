@@ -263,7 +263,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                                     ),
                                                   ],
                                                 ),
-                                                visible: deadLine!.isAfter(
+                                                visible: deadLine.isAfter(
                                                     DateTime.now()),
                                               ),
                                             ),
@@ -414,7 +414,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
 
                                                     DioManager()
                                                         .httpGetFile(
-                                                        url!, file, () {
+                                                        url, file, () {
                                                       if (!file
                                                           .existsSync()) {
                                                         showSnackBar(
