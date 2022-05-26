@@ -39,7 +39,7 @@ Future<void> main() async {
       print('   [주차] ${week.title}(${week.date})');
       for (var assignment in week.assignmentList) {
         print('       [과제] ${assignment.title}');
-        print('             - ${assignment.submit ? '제출완료' : '미제출'}');
+        print('             - ${assignment.done ? '제출완료' : '미제출'}');
         print('             - ${assignment.deadLine.toString()}');
         print('             - ${assignment.grade}');
         print('             - ${assignment.content}');
@@ -47,7 +47,7 @@ Future<void> main() async {
       }
       for (var video in week.videoList) {
         print('       [영상] ${video.title}');
-        print('             - ${video.watch ? '출석' : '결석'}');
+        print('             - ${video.done ? '출석' : '결석'}');
         print('             - ${video.enableTime.toString()}');
         print('             - ${video.deadLine.toString()}');
         print('             - ${video.requiredWatchTime}');
