@@ -111,6 +111,17 @@ class Week {
             video.enableTime = DateTime.parse(videoInfo.substring(0, 19));
             video.deadLine = DateTime.parse(videoInfo.substring(22));
 
+            video.videoLength = element2
+                .getElementsByTagName('div')[0]
+                .getElementsByClassName('mod-indent-outer')[0]
+                .getElementsByTagName('div')[1]
+                .getElementsByClassName('activityinstance')[0]
+                .getElementsByClassName('displayoptions')[0]
+                .getElementsByClassName('text-info')[0]
+                .text
+                .trim()
+                .replaceAll(', ', '');
+
             videoList.add(video);
           });
         }

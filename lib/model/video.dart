@@ -9,6 +9,9 @@ class Video extends Activity {
   /// 출석인정 요구시간.
   String? _requiredWatchTime;
 
+  /// 동영상 길이.
+  String? _videoLength;
+
   /// 총 시청시간.
   String? _totalWatchTime;
 
@@ -46,14 +49,12 @@ class Video extends Activity {
           video.title = tdList[1].text.trim();
           video.requiredWatchTime = tdList[2].text.trim();
           video.done = tdList[4].text.contains('O');
-
-          if (video.done) {
-            video.totalWatchTime = tdList[3]
-                .innerHtml
-                .substring(0, tdList[3].innerHtml.indexOf('<'))
-                .trim();
-          } else {
-            video.totalWatchTime = "O0:00";
+          video.totalWatchTime = tdList[3]
+              .innerHtml
+              .substring(0, tdList[3].innerHtml.indexOf('<'))
+              .trim();
+          if (video.totalWatchTime == '-') {
+            video.totalWatchTime = '미시청';
           }
 
           weekVideoList!.add(video);
@@ -69,14 +70,13 @@ class Video extends Activity {
         video.title = tdList[0].text.trim();
         video.requiredWatchTime = tdList[1].text.trim();
         video.done = tdList[3].text.contains('O');
+        video.totalWatchTime = tdList[2]
+            .innerHtml
+            .substring(0, tdList[2].innerHtml.indexOf('<'))
+            .trim();
 
-        if (video.done) {
-          video.totalWatchTime = tdList[2]
-              .innerHtml
-              .substring(0, tdList[2].innerHtml.indexOf('<'))
-              .trim();
-        } else {
-          video.totalWatchTime = "O0:00";
+        if (video.totalWatchTime == '-') {
+          video.totalWatchTime = '미시청';
         }
 
         weekVideoList!.add(video);
@@ -115,5 +115,11 @@ class Video extends Activity {
 
   set enableTime(DateTime value) {
     _enableTime = value;
+  }
+
+  String get videoLength => _videoLength!;
+
+  set videoLength(String value) {
+    _videoLength = value;
   }
 }

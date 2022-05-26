@@ -17,6 +17,7 @@ import '../manager/dio_manager.dart';
 import '../manager/lms_manager.dart';
 import '../model/activity.dart';
 import '../model/assignment.dart';
+import '../model/video.dart';
 
 class TabPageNotFinished extends StatefulWidget {
   final Function() notifyParent;
@@ -163,6 +164,8 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                             Color? leftTimeCircleColor;
                             bool? done;
                             String? content;
+                            String? videoLength;
+                            String? totalWatchTime;
 
                             Activity activity =
                                 notFinishedList.elementAt(index) as Activity;
@@ -177,12 +180,24 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
 
                             if (notFinishedList.elementAt(index).runtimeType ==
                                 Assignment) {
-                              activityIcon = const Icon(Icons.assignment, size: 24.0, color: Colors.lightGreen,);
-                              content =
-                                  (notFinishedList.elementAt(index) as Assignment)
-                                      .content;
+                              activityIcon = const Icon(
+                                Icons.assignment,
+                                size: 24.0,
+                                color: Colors.lightGreen,
+                              );
+                              content = (notFinishedList.elementAt(index)
+                                      as Assignment)
+                                  .content;
                             } else {
-                              activityIcon = const Icon(Icons.ondemand_video, size: 24.0, color: Colors.red,);
+                              Video video =
+                                  notFinishedList.elementAt(index) as Video;
+                              activityIcon = const Icon(
+                                Icons.ondemand_video,
+                                size: 24.0,
+                                color: Colors.red,
+                              );
+                              videoLength = video.videoLength;
+                              totalWatchTime = video.totalWatchTime;
                             }
 
                             if (leftTime == 'D-1' || !leftTime.contains('D')) {
@@ -269,6 +284,23 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                                         style: const TextStyle(
                                                             fontSize: 14),
                                                       ),
+                                                      if (videoLength !=
+                                                          null) ...[
+                                                        Text(
+                                                          '동영상 길이: ' +
+                                                              videoLength,
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 14),
+                                                        ),
+                                                        Text(
+                                                          '시청 시간: ' +
+                                                              totalWatchTime!,
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 14),
+                                                        ),
+                                                      ],
                                                     ],
                                                   ),
                                                 ),
