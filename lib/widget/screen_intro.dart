@@ -51,7 +51,7 @@ class _ScreenIntroState extends State<ScreenIntro> {
 
   @override
   void initState() {
-    Timer(const Duration(seconds: 1), () {
+    Timer(const Duration(seconds: 2), () {
       // 로고 보여주는시간 1초.
       initIntro();
     });
