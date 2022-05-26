@@ -30,7 +30,7 @@ Future<void> main() async {
 
       String sectionName =
           element.getElementsByClassName('hidden sectionname')[0].text;
-      week.weekTitle = sectionName.substring(0, sectionName.indexOf(" "));
+      week.title = sectionName.substring(0, sectionName.indexOf(" "));
       week.date = sectionName.substring(
           sectionName.indexOf("[") + 1, sectionName.indexOf("]"));
 

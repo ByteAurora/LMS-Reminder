@@ -6,6 +6,7 @@ import 'package:lms_reminder/model/course.dart';
 import 'package:lms_reminder/model/schedule.dart';
 import 'package:lms_reminder/model/week.dart';
 
+import '../model/activity.dart';
 import '../model/notice.dart';
 import '../model/video.dart';
 
@@ -181,7 +182,7 @@ class LmsManager {
             video.requiredWatchTime = videos
                 .elementAt(week.videoList.indexOf(video))
                 .requiredWatchTime;
-            video.watch = videos.elementAt(week.videoList.indexOf(video)).watch;
+            video.done = videos.elementAt(week.videoList.indexOf(video)).done;
           }
         }
       }
@@ -202,14 +203,14 @@ class LmsManager {
     for (var course in courseList) {
       for (var week in course.weekList) {
         for (Assignment assignment in week.assignmentList) {
-          if (assignment.submit == false &&
+          if (assignment.done == false &&
               assignment.deadLine.isAfter(currentTime)) {
             // 해당 과제를 제출하지 않았고 마감일이 지나지 않은 과제일 경우.
             notFinishedActivityList.add(assignment);
           }
         }
         for (Video video in week.videoList) {
-          if (video.watch == false && video.deadLine.isAfter(currentTime)) {
+          if (video.done == false && video.deadLine.isAfter(currentTime)) {
             // 해당 동영상을 시청하지 않았고 마감일이 지나지 않은 동영상일 경우.
             notFinishedActivityList.add(video);
           }
@@ -218,23 +219,8 @@ class LmsManager {
     }
 
     // 활동들을 현재로부터 마감일까지 남은 시간을 비교하여 정렬해주는 부분.
-    notFinishedActivityList.sort((obj1, obj2) {
-      DateTime? dateTime1;
-      DateTime? dateTime2;
-
-      if (obj1.runtimeType == Assignment) {
-        dateTime1 = (obj1 as Assignment).deadLine;
-      } else {
-        dateTime1 = (obj1 as Video).deadLine;
-      }
-
-      if (obj2.runtimeType == Assignment) {
-        dateTime2 = (obj2 as Assignment).deadLine;
-      } else {
-        dateTime2 = (obj2 as Video).deadLine;
-      }
-
-      return dateTime1.compareTo(dateTime2);
+    notFinishedActivityList.sort((activity1, activity2) {
+      return activity1.deadLine.compareTo(activity2.deadLine);
     });
 
     return notFinishedActivityList;
@@ -253,14 +239,14 @@ class LmsManager {
     for (var course in courseList) {
       for (var week in course.weekList) {
         for (Assignment assignment in week.assignmentList) {
-          if (assignment.submit) {
+          if (assignment.done) {
             finishedActivityList.add(assignment);
           } else if (assignment.deadLine.isBefore(currentTime)) {
             finishedActivityList.add(assignment);
           }
         }
         for (Video video in week.videoList) {
-          if (video.watch) {
+          if (video.done) {
             finishedActivityList.add(video);
           } else if (video.deadLine.isBefore(currentTime)) {
             finishedActivityList.add(video);
@@ -270,46 +256,22 @@ class LmsManager {
     }
 
     // 활동들을 현재로부터 마감일까지 남은 시간을 비교하여 정렬해주는 부분. 이미 마감된 활동들은 주차를 기준으로 정렬.
-    finishedActivityList.sort((obj1, obj2) {
-      String value1 = "";
-      String value2 = "";
+    finishedActivityList.sort((activity1, activity2) {
+      String activity1LeftTime = (activity1 as Activity).getLeftTime();
+      String activity2LeftTime = (activity2 as Activity).getLeftTime();
 
-      if (obj1.runtimeType == Assignment) {
-        value1 = (obj1 as Assignment).getLeftTime();
-      } else {
-        value1 = (obj1 as Video).getLeftTime();
+      if (activity1LeftTime == '마감' && activity2LeftTime == '마감') {
+        return int.parse((activity2).week.title.replaceAll('주차', ''))
+            .compareTo(
+                int.parse((activity1).week.title.replaceAll('주차', '')));
       }
 
-      if (obj2.runtimeType == Assignment) {
-        value2 = (obj2 as Assignment).getLeftTime();
-      } else {
-        value2 = (obj2 as Video).getLeftTime();
+      if (activity1LeftTime != '마감' && activity2LeftTime != '마감') {
+        return int.parse(activity1LeftTime.replaceAll('D-', ''))
+            .compareTo(int.parse(activity2LeftTime.replaceAll('D-', '')));
       }
 
-      if (value1 == '마감' && value2 == '마감') {
-        int iValue1;
-        int iValue2;
-
-        if (obj1.runtimeType == Assignment) {
-          iValue1 = int.parse(
-              (obj1 as Assignment).week.weekTitle.replaceAll('주차', ''));
-        } else {
-          iValue1 =
-              int.parse((obj1 as Video).week.weekTitle.replaceAll('주차', ''));
-        }
-
-        if (obj2.runtimeType == Assignment) {
-          iValue2 = int.parse(
-              (obj2 as Assignment).week.weekTitle.replaceAll('주차', ''));
-        } else {
-          iValue2 =
-              int.parse((obj2 as Video).week.weekTitle.replaceAll('주차', ''));
-        }
-
-        return iValue2.compareTo(iValue1);
-      }
-
-      return value1.compareTo(value2);
+      return activity1LeftTime.compareTo(activity2LeftTime);
     });
 
     return finishedActivityList;
@@ -326,19 +288,23 @@ class LmsManager {
         for (var assignment in week.assignmentList) {
           if (assignment.deadLine
               .isAfter(currentTime.add(const Duration(hours: 6)))) {
-            beforeDeadLineActivityList.add(assignment.toSchedule('6시간'));
+            beforeDeadLineActivityList
+                .add(assignment.toSchedule('6시간'));
           }
           if (assignment.deadLine
               .isAfter(currentTime.add(const Duration(days: 1)))) {
-            beforeDeadLineActivityList.add(assignment.toSchedule('1일'));
+            beforeDeadLineActivityList
+                .add(assignment.toSchedule('1일'));
           }
           if (assignment.deadLine
               .isAfter(currentTime.add(const Duration(days: 3)))) {
-            beforeDeadLineActivityList.add(assignment.toSchedule('3일'));
+            beforeDeadLineActivityList
+                .add(assignment.toSchedule('3일'));
           }
           if (assignment.deadLine
               .isAfter(currentTime.add(const Duration(days: 5)))) {
-            beforeDeadLineActivityList.add(assignment.toSchedule('5일'));
+            beforeDeadLineActivityList
+                .add(assignment.toSchedule('5일'));
           }
         }
 

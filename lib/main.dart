@@ -14,15 +14,16 @@ void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     switch (task) {
       case 'update_activities':
-        // 활동 목록 업데이트 작업일 경우
+        // 활동 목록 업데이트 작업일 경우.
         final prefs = await SharedPreferences.getInstance();
         String? userId = prefs.getString(keyUserId);
         String? userPw = prefs.getString(keyUserPw);
 
         if (userId != null && userId != '' && userPw != null && userPw != '') {
-          // 로그인 성공한 사용자 데이터가 있을 경우
+          // 로그인 성공한 사용자 데이터가 있을 경우.
+
           if (await LmsManager().login(userId, userPw)) {
-            // 데이터 업데이트 Notification 표시
+            // 데이터 업데이트 Notification 표시.
             AwesomeNotifications().createNotification(
                 content: NotificationContent(
                     id: 0,
@@ -34,17 +35,17 @@ void callbackDispatcher() {
                     notificationLayout: NotificationLayout.ProgressBar,
                     autoDismissible: true));
 
-            // LMS에서 데이터 불러오기
+            // LMS에서 데이터 불러오기.
             await LmsManager().reloadAllDataFromLms();
 
-            // WorkManager 추가 전 초기화
+            // WorkManager 추가 전 초기화.
             await Workmanager().initialize(
               callbackDispatcher,
               isInDebugMode: false,
             );
 
-            // 이전에 설정된 모든 알림 제거 - 사용자가 바뀌었을 경우도 있기 때문에 WorkManager의 replace만으로는 해결 불가
-            // 추후 WorkManager에 사용자 ID값도 전달하여 ID가 달라졌을 경우에만 취소하도록 구현 필요
+            // 이전에 설정된 모든 알림 제거 - 사용자가 바뀌었을 경우도 있기 때문에 WorkManager의 replace만으로는 해결 불가.
+            // 추후 WorkManager에 사용자 ID값도 전달하여 ID가 달라졌을 경우에만 취소하도록 구현 필요.
             Workmanager().cancelByTag('activity_notification');
 
             DateTime currentTime = DateTime.now();
@@ -89,6 +90,7 @@ void callbackDispatcher() {
                     title: 'LMS 데이터 업데이트 완료',
                     backgroundColor: Colors.redAccent,
                     notificationLayout: NotificationLayout.Default));
+
             // 데이터 업데이트 Notification 제거
             // AwesomeNotifications()
             //     .dismissNotificationsByChannelKey('update_activities');
@@ -111,13 +113,13 @@ void callbackDispatcher() {
         }
         break;
       default:
-        // Notification 아이디 구분을 위해 SharedPreferences에 마지막 ID값 불러오기 후 증가된 값 저장
+        // Notification 아이디 구분을 위해 SharedPreferences에 마지막 ID값 불러오기 후 증가된 값 저장.
         SharedPreferences prefs = await SharedPreferences.getInstance();
 
-        // 저장된 데이터를 Schedule 값으로 변경
+        // 저장된 데이터를 Schedule 값으로 변경.
         Schedule schedule = Schedule.fromMap(inputData!);
 
-        // 만약 이미 제출한 과제에 대한 알림이 설정에서 활성화 되어있지 않을 경우 알림을 실행하지 않도록 break
+        // 만약 이미 제출한 과제에 대한 알림이 설정에서 활성화 되어있지 않을 경우 알림을 실행하지 않도록 break.
         if (schedule.activityState!) {
           bool? state = prefs.getBool(keyNotifyFinishedActivities);
           if (state == null || state == false) {
@@ -125,14 +127,14 @@ void callbackDispatcher() {
           }
         }
 
-        // 만약 해당 알림의 활동(과제, 동영상)에 대해서 설정에서 활성화 되어있지 않을 경우 알림을 실행하지 않도록 break
+        // 만약 해당 알림의 활동(과제, 동영상)에 대해서 설정에서 활성화 되어있지 않을 경우 알림을 실행하지 않도록 break.
         if (schedule.activityType == 'assignment') {
           bool? state = prefs.getBool(keyNotifyAssignment);
           if (state == null || state == false) {
             break;
           }
 
-          // 만약 해당 알림 종류(6시간, 1일, 3일, 5일)에 대해서 설정에서 활성화 되어있지 않을 경우 알림을 실행하지 않도록 break
+          // 만약 해당 알림 종류(6시간, 1일, 3일, 5일)에 대해서 설정에서 활성화 되어있지 않을 경우 알림을 실행하지 않도록 break.
           if (schedule.activityLeftTime == '6시간') {
             bool? state = prefs.getBool(keyNotifyAssignmentBefore6Hours);
             if (state == null || state == false) {
@@ -160,7 +162,7 @@ void callbackDispatcher() {
             break;
           }
 
-          // 만약 해당 알림 종류(6시간, 1일, 3일, 5일)에 대해서 설정에서 활성화 되어있지 않을 경우 알림을 실행하지 않도록 break
+          // 만약 해당 알림 종류(6시간, 1일, 3일, 5일)에 대해서 설정에서 활성화 되어있지 않을 경우 알림을 실행하지 않도록 break.
           if (schedule.activityLeftTime == '6시간') {
             bool? state = prefs.getBool(keyNotifyVideoBefore6Hours);
             if (state == null || state == false) {

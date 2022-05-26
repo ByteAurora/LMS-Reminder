@@ -11,7 +11,7 @@ class Week {
   Course? _course;
 
   /// 주차제목(ex. '1주차').
-  String? _weekTitle;
+  String? _title;
 
   /// 기간.
   String? _date;
@@ -55,7 +55,7 @@ class Week {
 
         String fullWeekTitle =
             element.getElementsByClassName('hidden sectionname')[0].text;
-        week.weekTitle = fullWeekTitle.substring(0, fullWeekTitle.indexOf(" "));
+        week.title = fullWeekTitle.substring(0, fullWeekTitle.indexOf(" "));
         week.date = fullWeekTitle.substring(
             fullWeekTitle.indexOf("[") + 1, fullWeekTitle.indexOf("]"));
 
@@ -129,10 +129,10 @@ class Week {
     _course = course;
   }
 
-  String get weekTitle => _weekTitle!;
+  String get title => _title!;
 
-  set weekTitle(String value) {
-    _weekTitle = value;
+  set title(String value) {
+    _title = value;
   }
 
   Course get course => _course!;

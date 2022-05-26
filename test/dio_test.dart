@@ -36,7 +36,7 @@ Future<void> main() async {
     print(
         '[강좌] ${course.title}[${course.classNumber}] (교수: ${course.professor})');
     for (var week in course.weekList) {
-      print('   [주차] ${week.weekTitle}(${week.date})');
+      print('   [주차] ${week.title}(${week.date})');
       for (var assignment in week.assignmentList) {
         print('       [과제] ${assignment.title}');
         print('             - ${assignment.submit ? '제출완료' : '미제출'}');

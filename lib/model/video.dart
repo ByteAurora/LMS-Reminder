@@ -1,24 +1,11 @@
-import 'dart:convert';
-
-import 'package:crypto/crypto.dart';
 import 'package:html/dom.dart' as html_dom;
 import 'package:html/parser.dart' as html_parser;
-import 'package:intl/intl.dart';
-import 'package:lms_reminder/model/schedule.dart';
+import 'package:lms_reminder/model/activity.dart';
 
 import 'week.dart';
 
 /// 동영상 강의 정보를 관리하는 클래스.
-class Video {
-  /// 주차.
-  Week? _week;
-
-  /// 영상 제목.
-  String? _title;
-
-  /// 시청 상태.
-  bool? _watch;
-
+class Video extends Activity {
   /// 출석인정 요구시간.
   String? _requiredWatchTime;
 
@@ -27,9 +14,6 @@ class Video {
 
   /// 활성화 시간.
   DateTime? _enableTime;
-
-  /// 출석마감 시간.
-  DateTime? _deadLine;
 
   /// 전달된 html에서 동영상 정보를 추출하여 반환하는 함수.
   static List<List<Video>> parseVideoListFromHtml(String html) {
@@ -61,9 +45,9 @@ class Video {
           Video video = Video();
           video.title = tdList[1].text.trim();
           video.requiredWatchTime = tdList[2].text.trim();
-          video.watch = tdList[4].text.contains('O');
+          video.done = tdList[4].text.contains('O');
 
-          if (video.watch) {
+          if (video.done) {
             video.totalWatchTime = tdList[3]
                 .innerHtml
                 .substring(0, tdList[3].innerHtml.indexOf('<'))
@@ -84,9 +68,9 @@ class Video {
         Video video = Video();
         video.title = tdList[0].text.trim();
         video.requiredWatchTime = tdList[1].text.trim();
-        video.watch = tdList[3].text.contains('O');
+        video.done = tdList[3].text.contains('O');
 
-        if (video.watch) {
+        if (video.done) {
           video.totalWatchTime = tdList[2]
               .innerHtml
               .substring(0, tdList[2].innerHtml.indexOf('<'))
@@ -109,60 +93,13 @@ class Video {
   }
 
   /// Video 생성자.
-  Video({Week? week}) {
-    _week = week;
-  }
-
-  /// 영상 출석 마감까지 남은 시간을 반환해주는 함수.
-  String getLeftTime() {
-    DateTime currentTime = DateTime.now();
-    if (deadLine.isBefore(currentTime)) {
-      return '마감';
+  Video({Week? week}) : super('video') {
+    if (week != null) {
+      this.week = week;
     }
-
-    String result = "";
-    Duration leftTime = deadLine.difference(currentTime);
-
-    if (leftTime.inMinutes < 1440) {
-      String hour = (leftTime.inMinutes ~/ 60).toString().length == 1
-          ? '0' + (leftTime.inMinutes ~/ 60).toString()
-          : (leftTime.inMinutes ~/ 60).toString();
-      String minute = (leftTime.inMinutes % 60).toInt().toString().length == 1
-          ? '0' + (leftTime.inMinutes % 60).toString()
-          : (leftTime.inMinutes % 60).toString();
-      return hour + ":" + minute;
-    }
-
-    result = leftTime.inDays.toString();
-
-    return 'D-' + result;
-  }
-
-  DateTime get deadLine => _deadLine!;
-
-  set deadLine(DateTime value) {
-    _deadLine = value;
-  }
-
-  Week get week => _week!;
-
-  set week(Week value) {
-    _week = value;
-  }
-
-  String get title => _title!;
-
-  set title(String value) {
-    _title = value;
   }
 
   String get requiredWatchTime => _requiredWatchTime!;
-
-  bool get watch => _watch!;
-
-  set watch(bool value) {
-    _watch = value;
-  }
 
   String get totalWatchTime => _totalWatchTime!;
 
@@ -178,17 +115,5 @@ class Video {
 
   set enableTime(DateTime value) {
     _enableTime = value;
-  }
-
-  Schedule toSchedule(String leftTime) {
-    return Schedule(
-        sha256.convert(utf8.encode(title + leftTime)).toString(),
-        'video',
-        week.weekTitle,
-        week.course.title,
-        title,
-        DateFormat('yyyy-MM-dd HH:mm').format(deadLine),
-        leftTime,
-        watch);
   }
 }

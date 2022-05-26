@@ -15,8 +15,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../manager/dio_manager.dart';
 import '../manager/lms_manager.dart';
+import '../model/activity.dart';
 import '../model/assignment.dart';
-import '../model/video.dart';
 
 class TabPageNotFinished extends StatefulWidget {
   final Function() notifyParent;
@@ -140,8 +140,8 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                 },
               );
             } else {
-              List<dynamic> todoList = (snapshot.data as List<dynamic>);
-              if (todoList.isEmpty) {
+              List<dynamic> notFinishedList = (snapshot.data as List<dynamic>);
+              if (notFinishedList.isEmpty) {
                 return const Text('할일이 없습니다!');
               } else {
                 return Column(
@@ -151,26 +151,32 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                         onRefresh: _refreshAllData,
                         child: ListView.builder(
                           scrollDirection: Axis.vertical,
-                          itemCount: todoList.length,
+                          itemCount: notFinishedList.length,
                           itemBuilder: (context, index) {
                             String? courseTitle;
-                            String? week;
+                            String? weekTitle;
                             String? activityTitle;
                             Image? activityImage;
                             DateTime? deadLine;
                             String? strDeadLine;
                             String? leftTime;
                             Color? leftTimeCircleColor;
-                            bool? state;
+                            bool? done;
                             String? content;
 
-                            if (todoList.elementAt(index).runtimeType ==
+                            Activity activity =
+                                notFinishedList.elementAt(index) as Activity;
+                            courseTitle = activity.week.course.title;
+                            weekTitle = activity.week.title;
+                            activityTitle = activity.title;
+                            deadLine = activity.deadLine;
+                            strDeadLine = DateFormat('yyyy년 MM월 dd일 HH시 mm분')
+                                .format(activity.deadLine);
+                            leftTime = activity.getLeftTime();
+                            done = activity.done;
+
+                            if (notFinishedList.elementAt(index).runtimeType ==
                                 Assignment) {
-                              Assignment assignment =
-                                  todoList.elementAt(index) as Assignment;
-                              courseTitle = assignment.week.course.title;
-                              week = assignment.week.weekTitle;
-                              activityTitle = assignment.title;
                               activityImage = const Image(
                                 image: AssetImage(
                                     'resource/image/icon_assignment.png'),
@@ -178,17 +184,10 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                 height: 24,
                                 fit: BoxFit.fill,
                               );
-                              deadLine = assignment.deadLine;
-                              strDeadLine = DateFormat('yyyy년 MM월 dd일 HH시 mm분')
-                                  .format(assignment.deadLine);
-                              leftTime = assignment.getLeftTime();
-                              content = assignment.content;
-                              state = assignment.submit;
+                              content = (notFinishedList.elementAt(index)
+                                      as Assignment)
+                                  .content;
                             } else {
-                              Video video = todoList.elementAt(index) as Video;
-                              courseTitle = video.week.course.title;
-                              week = video.week.weekTitle;
-                              activityTitle = video.title;
                               activityImage = const Image(
                                 image:
                                     AssetImage('resource/image/icon_video.png'),
@@ -196,17 +195,9 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                 height: 24,
                                 fit: BoxFit.fill,
                               );
-                              deadLine = video.deadLine;
-                              strDeadLine = DateFormat('yyyy년 MM월 dd일 HH시 mm분')
-                                  .format(video.deadLine);
-                              leftTime = video.getLeftTime();
-                              state = video.watch;
                             }
 
-                            if (leftTime == '마감') {
-                              leftTimeCircleColor = Colors.grey;
-                            } else if (leftTime == 'D-1' ||
-                                !leftTime.contains('D')) {
+                            if (leftTime == 'D-1' || !leftTime.contains('D')) {
                               leftTimeCircleColor = Colors.redAccent;
                             } else {
                               leftTimeCircleColor = Colors.lightBlueAccent;
@@ -281,7 +272,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                                             .start,
                                                     children: <Widget>[
                                                       Text(
-                                                        '주차: ' + week!,
+                                                        '주차: ' + weekTitle!,
                                                         style: const TextStyle(
                                                             fontSize: 14),
                                                       ),
@@ -415,8 +406,9 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                                                 "' 다운로드 시작",
                                                             1);
 
-                                                        DioManager().downloadFileFromUrl(
-                                                            url, file, () {
+                                                        DioManager()
+                                                            .downloadFileFromUrl(
+                                                                url, file, () {
                                                           // 파일이 성공적으로 다운로드 되었을 경우.
                                                           showSnackBar(
                                                               "'" +
@@ -467,7 +459,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                               ],
                                             ),
                                           ),
-                                          dialogType: state!
+                                          dialogType: done!
                                               ? DialogType.SUCCES
                                               : DialogType.ERROR,
                                           animType: AnimType.SCALE,
@@ -498,7 +490,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                                         ),
                                                       ),
                                                       Text(
-                                                        " [" + week + "]",
+                                                        " [" + weekTitle + "]",
                                                         style: const TextStyle(
                                                           fontWeight:
                                                               FontWeight.bold,
