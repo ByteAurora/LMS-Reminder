@@ -57,9 +57,9 @@ class _PageSettingState extends State<PageSetting> {
       notifyAssignment1daySwitch =
           (prefs.getBool(keyNotifyAssignmentBefore1Day) ?? false);
       notifyAssignment3daysSwitch =
-          (prefs.getBool(keyNotifyVideoBefore3Days) ?? false);
+          (prefs.getBool(keyNotifyAssignmentBefore3Days) ?? false);
       notifyAssignment5daysSwitch =
-          (prefs.getBool(keyNotifyVideoBefore5Days) ?? false);
+          (prefs.getBool(keyNotifyAssignmentBefore5Days) ?? false);
       notifyVideo = (prefs.getBool(keyNotifyVideo) ?? false);
       notifyVideo6Hours = (prefs.getBool(keyNotifyVideoBefore6Hours) ?? false);
       notifyVideo1day = (prefs.getBool(keyNotifyVideoBefore1Day) ?? false);
