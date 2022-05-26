@@ -28,8 +28,19 @@ class Lecture {
 
     html_dom.Document document = html_parser.parse(html);
 
-    String temp = document.getElementById('section-0')!.getElementsByClassName('content')[0].getElementsByClassName('section img-text')[0].getElementsByClassName('activity ubboard modtype_ubboard')[0].getElementsByTagName('div')[4].innerHtml;
-    course.noticeListUrl = temp.substring(temp.indexOf('href="https://learn.hoseo.ac.kr') + 'href="https://learn.hoseo.ac.kr'.length, temp.indexOf('">'));
+    String temp = document
+        .getElementById('section-0')!
+        .getElementsByClassName('content')[0]
+        .getElementsByClassName('section img-text')[0]
+        .getElementsByClassName('activity ubboard modtype_ubboard')[0]
+        .getElementsByTagName('div')[4]
+        .innerHtml;
+    course.noticeListUrl = temp.substring(
+        temp.indexOf('href="https://learn.hoseo.ac.kr') +
+            'href="https://learn.hoseo.ac.kr'.length,
+        temp.indexOf('">'));
+
+    print(course.title);
 
     document
         .getElementById('region-main')!
@@ -57,9 +68,8 @@ class Lecture {
             .getElementsByClassName('section img-text');
 
         if (activities.isNotEmpty) {
-          activities[0]
-              .getElementsByClassName('activity assign modtype_assign ')
-              .forEach((element2) {
+          for (var element2 in activities[0]
+              .getElementsByClassName('activity assign modtype_assign ')) {
             Assignment assignment = Assignment(lecture);
 
             html_dom.Element assignmentElement = element2
@@ -67,6 +77,10 @@ class Lecture {
                 .getElementsByClassName('mod-indent-outer')[0]
                 .getElementsByTagName('div')[1]
                 .getElementsByClassName('activityinstance')[0];
+
+            if (assignmentElement.getElementsByTagName('a').isEmpty) {
+              continue;
+            }
 
             assignment.title = assignmentElement
                 .getElementsByTagName('a')[0]
@@ -78,7 +92,7 @@ class Lecture {
                 .replaceAll('https://learn.hoseo.ac.kr', '');
 
             assignmentList.add(assignment);
-          });
+          }
 
           activities[0]
               .getElementsByClassName('activity vod modtype_vod ')
