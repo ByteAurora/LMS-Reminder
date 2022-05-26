@@ -44,6 +44,10 @@ void callbackDispatcher() {
               isInDebugMode: false,
             );
 
+            // 이전에 설정된 모든 알림 제거 - 사용자가 바뀌었을 경우도 있기 때문에 WorkManager의 replace만으로는 해결 불가
+            // 추후 WorkManager에 사용자 ID값도 전달하여 ID가 달라졌을 경우에만 취소하도록 구현 필요
+            Workmanager().cancelByTag('activity_notification');
+
             DateTime currentTime = DateTime.now();
 
             for (var schedule in LmsManager().getBeforeDeadLineList()) {
@@ -71,9 +75,9 @@ void callbackDispatcher() {
                           .add(scheduleDate.difference(currentTime))));
 
               Workmanager().registerOneOffTask(schedule.id!, schedule.id!,
+                  tag: 'activity_notification',
                   existingWorkPolicy: ExistingWorkPolicy.replace,
                   initialDelay: scheduleDate.difference(currentTime),
-
                   inputData: schedule.toMap());
             }
 
