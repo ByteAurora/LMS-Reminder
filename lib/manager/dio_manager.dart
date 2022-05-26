@@ -62,8 +62,8 @@ class DioManager {
   }
 
   /// 전달된 url로부터 파일을 다운로드하는 함수.
-  Future httpFile(
-      String url, File file, VoidCallback ifDownloadSuccessful) async {
+  Future downloadFileFromUrl(String url, File file, VoidCallback ifDownloadSuccessful,
+      VoidCallback ifDownloadFails) async {
     try {
       Response response = await DioManager().httpGet(
         options: Options(
@@ -77,10 +77,15 @@ class DioManager {
       var randomAccessFile = file.openSync(mode: FileMode.write);
       randomAccessFile.writeFromSync(response.data);
       await randomAccessFile.close();
+
+      if (await file.exists()) {
+        ifDownloadSuccessful.call();
+      } else {
+        ifDownloadFails.call();
+      }
     } catch (e) {
       print(e);
+      ifDownloadFails.call();
     }
-
-    ifDownloadSuccessful.call();
   }
 }

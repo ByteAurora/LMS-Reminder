@@ -53,7 +53,8 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                               children: [
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
@@ -76,7 +77,8 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                         ],
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.only(top: 8.0),
+                                        padding:
+                                            const EdgeInsets.only(top: 8.0),
                                         child: Row(
                                           children: [
                                             Shimmer.fromColors(
@@ -96,7 +98,8 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                                     left: 4.0, right: 8.0),
                                                 child: Shimmer.fromColors(
                                                   // 과제, 동영상 제목
-                                                  baseColor: Colors.grey.shade400,
+                                                  baseColor:
+                                                      Colors.grey.shade400,
                                                   highlightColor:
                                                       Colors.grey.shade300,
                                                   child: Container(
@@ -213,195 +216,195 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                               child: InkWell(
                                 onTap: () {
                                   AwesomeDialog(
-                                      context: context,
-                                      headerAnimationLoop: false,
-                                      body: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Column(
-                                          children: <Widget>[
-                                            Text(
-                                              courseTitle!,
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 22,
-                                              ),
-                                            ),
-                                            Text(
-                                              activityTitle!,
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                              const EdgeInsets.only(
-                                                  top: 14),
-                                              child: Visibility(
-                                                child: Row(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .center,
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .center,
-                                                  children: [
-                                                    const Padding(
-                                                      padding:
-                                                      EdgeInsets.only(
-                                                          right: 8.0),
-                                                      child: Icon(
-                                                        Icons.timer,
-                                                        color: Colors.red,
-                                                      ),
-                                                    ),
-                                                    SlideCountdownSeparated(
-                                                      duration: deadLine!
-                                                          .difference(
-                                                          DateTime
-                                                              .now()),
-                                                    ),
-                                                  ],
+                                          context: context,
+                                          headerAnimationLoop: false,
+                                          body: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Column(
+                                              children: <Widget>[
+                                                Text(
+                                                  courseTitle!,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 22,
+                                                  ),
                                                 ),
-                                                visible: deadLine.isAfter(
-                                                    DateTime.now()),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                              const EdgeInsets.only(
-                                                top: 14,
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment
-                                                    .start,
-                                                children: <Widget>[
-                                                  Text(
-                                                    '주차: ' + week!,
-                                                    style: const TextStyle(
-                                                        fontSize: 14),
+                                                Text(
+                                                  activityTitle!,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16,
                                                   ),
-                                                  Text(
-                                                    '마감일: ' + strDeadLine!,
-                                                    style: const TextStyle(
-                                                        fontSize: 14),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 14),
+                                                  child: Visibility(
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        const Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  right: 8.0),
+                                                          child: Icon(
+                                                            Icons.timer,
+                                                            color: Colors.red,
+                                                          ),
+                                                        ),
+                                                        SlideCountdownSeparated(
+                                                          duration: deadLine!
+                                                              .difference(
+                                                                  DateTime
+                                                                      .now()),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    visible: deadLine.isAfter(
+                                                        DateTime.now()),
                                                   ),
-                                                ],
-                                              ),
-                                            ),
-                                            if (content != null)
-                                              Padding(
-                                                padding:
-                                                const EdgeInsets.only(
-                                                    top: 8.0,
-                                                    left: 8.0,
-                                                    right: 8.0),
-                                                child: Html(
-                                                  data: content,
-                                                  onLinkTap: (String? url,
-                                                      RenderContext
-                                                      renderContext,
-                                                      Map<String, String>
-                                                      attributes,
-                                                      html_dom.Element?
-                                                      element) async {
-                                                    await Permission.storage
-                                                        .request();
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                    top: 14,
+                                                  ),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: <Widget>[
+                                                      Text(
+                                                        '주차: ' + week!,
+                                                        style: const TextStyle(
+                                                            fontSize: 14),
+                                                      ),
+                                                      Text(
+                                                        '마감일: ' + strDeadLine!,
+                                                        style: const TextStyle(
+                                                            fontSize: 14),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                if (content != null)
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 8.0,
+                                                            left: 8.0,
+                                                            right: 8.0),
+                                                    child: Html(
+                                                      data: content,
+                                                      onLinkTap: (String? url,
+                                                          RenderContext
+                                                              renderContext,
+                                                          Map<String, String>
+                                                              attributes,
+                                                          html_dom.Element?
+                                                              element) async {
+                                                        await Permission.storage
+                                                            .request();
 
-                                                    if (await Permission
-                                                        .storage.isDenied) {
-                                                      ScaffoldMessenger.of(
-                                                          context)
-                                                          .showSnackBar(
-                                                          SnackBar(
+                                                        if (await Permission
+                                                            .storage.isDenied) {
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                                  SnackBar(
                                                             content: const Text(
                                                                 '저장소 접근 권한이 필요합니다'),
                                                             duration:
-                                                            const Duration(
-                                                                seconds: 3),
+                                                                const Duration(
+                                                                    seconds: 3),
                                                             action:
-                                                            SnackBarAction(
-                                                                label: '설정',
-                                                                onPressed:
-                                                                    () {
-                                                                  openAppSettings();
-                                                                }),
+                                                                SnackBarAction(
+                                                                    label: '설정',
+                                                                    onPressed:
+                                                                        () {
+                                                                      openAppSettings();
+                                                                    }),
                                                           ));
-                                                      return;
-                                                    }
+                                                          return;
+                                                        }
 
-                                                    if ((await DeviceInfoPlugin()
-                                                        .androidInfo)
-                                                        .version
-                                                        .sdkInt! >=
-                                                        30) {
-                                                      await Permission
-                                                          .manageExternalStorage
-                                                          .request();
+                                                        if ((await DeviceInfoPlugin()
+                                                                    .androidInfo)
+                                                                .version
+                                                                .sdkInt! >=
+                                                            30) {
+                                                          await Permission
+                                                              .manageExternalStorage
+                                                              .request();
 
-                                                      if (await Permission
-                                                          .manageExternalStorage
-                                                          .isDenied) {
-                                                        showSnackBar(
-                                                            '저장소 관리 권한이 필요합니다',
-                                                            3,
-                                                            actionText:
-                                                            '설정',
-                                                            onPressed: () {
+                                                          if (await Permission
+                                                              .manageExternalStorage
+                                                              .isDenied) {
+                                                            showSnackBar(
+                                                                '저장소 관리 권한이 필요합니다',
+                                                                3,
+                                                                actionText:
+                                                                    '설정',
+                                                                onPressed: () {
                                                               openAppSettings();
                                                             });
-                                                        return;
-                                                      }
-                                                    }
+                                                            return;
+                                                          }
+                                                        }
 
-                                                    String decodeUrl =
-                                                    Uri.decodeComponent(
-                                                        url!);
-                                                    String fileName =
-                                                    decodeUrl.substring(
-                                                        decodeUrl.indexOf(
-                                                            '/0/') +
-                                                            3,
-                                                        decodeUrl.indexOf(
-                                                            '?forcedownload'));
-                                                    String fileExtension =
-                                                    fileName.substring(
-                                                        fileName
-                                                            .lastIndexOf(
-                                                            '.'));
-                                                    fileName =
-                                                        fileName.substring(
-                                                            0,
-                                                            fileName
-                                                                .lastIndexOf(
-                                                                '.'));
+                                                        String decodeUrl =
+                                                            Uri.decodeComponent(
+                                                                url!);
+                                                        String fileName =
+                                                            decodeUrl.substring(
+                                                                decodeUrl.indexOf(
+                                                                        '/0/') +
+                                                                    3,
+                                                                decodeUrl.indexOf(
+                                                                    '?forcedownload'));
+                                                        String fileExtension =
+                                                            fileName.substring(
+                                                                fileName
+                                                                    .lastIndexOf(
+                                                                        '.'));
+                                                        fileName =
+                                                            fileName.substring(
+                                                                0,
+                                                                fileName
+                                                                    .lastIndexOf(
+                                                                        '.'));
 
-                                                    File file = File(
-                                                        '/storage/emulated/0/Download/' +
+                                                        File file = File(
+                                                            '/storage/emulated/0/Download/' +
+                                                                fileName +
+                                                                fileExtension);
+
+                                                        int loop = 1;
+                                                        String filePath =
+                                                            '/storage/emulated/0/Download/' +
+                                                                fileName +
+                                                                fileExtension;
+
+                                                        String finalFileName =
                                                             fileName +
-                                                            fileExtension);
-
-                                                    int loop = 1;
-                                                    String filePath =
-                                                        '/storage/emulated/0/Download/' +
-                                                            fileName +
-                                                            fileExtension;
-
-                                                    String finalFileName =
-                                                        fileName +
-                                                            fileExtension;
-                                                    while (
-                                                    file.existsSync()) {
-                                                      finalFileName =
-                                                          fileName +
-                                                              '(' +
-                                                              loop.toString() +
-                                                              ')' +
-                                                              fileExtension;
-                                                      filePath =
-                                                          '/storage/emulated/0/Download/' +
-                                                              finalFileName;
+                                                                fileExtension;
+                                                        while (
+                                                            file.existsSync()) {
+                                                          finalFileName =
+                                                              fileName +
+                                                                  '(' +
+                                                                  loop.toString() +
+                                                                  ')' +
+                                                                  fileExtension;
+                                                          filePath =
+                                                              '/storage/emulated/0/Download/' +
+                                                                  finalFileName;
                                                           file = File(filePath);
                                                           loop++;
                                                         }
@@ -412,18 +415,9 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                                                 "' 다운로드 시작",
                                                             1);
 
-                                                        DioManager().httpFile(
+                                                        DioManager().downloadFileFromUrl(
                                                             url, file, () {
-                                                          if (!file
-                                                              .existsSync()) {
-                                                            showSnackBar(
-                                                                "'" +
-                                                                    finalFileName +
-                                                                    "' 다운로드 실패",
-                                                                2);
-                                                            return;
-                                                          }
-
+                                                          // 파일이 성공적으로 다운로드 되었을 경우.
                                                           showSnackBar(
                                                               "'" +
                                                                   finalFileName +
@@ -443,35 +437,42 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                                                   '파일을 열 수 있는 앱이 없습니다',
                                                                   2,
                                                                   actionText:
-                                                                  '검색',
+                                                                      '검색',
                                                                   onPressed:
                                                                       () async {
-                                                                    String
+                                                                String
                                                                     playStoreUrl =
-                                                                        'https://play.google.com/store/search?q=open ' +
-                                                                            fileExtension.replaceAll(
-                                                                                '.',
-                                                                                '') +
-                                                                            '&c=apps';
-                                                                    await launchUrl(
-                                                                        Uri.parse(
-                                                                            playStoreUrl));
-                                                                  });
+                                                                    'https://play.google.com/store/search?q=open ' +
+                                                                        fileExtension.replaceAll(
+                                                                            '.',
+                                                                            '') +
+                                                                        '&c=apps';
+                                                                await launchUrl(
+                                                                    Uri.parse(
+                                                                        playStoreUrl));
+                                                              });
                                                             }
                                                           });
-                                                    });
-                                                  },
-                                                ),
-                                              )
-                                          ],
-                                        ),
-                                      ),
-                                      dialogType: state!
-                                          ? DialogType.SUCCES
-                                          : DialogType.ERROR,
-                                      animType: AnimType.SCALE,
-                                      btnOkText: '확인',
-                                      btnOkOnPress: () {})
+                                                        }, () {
+                                                          // 파일 다운로드에 실패했을 경우.
+                                                          showSnackBar(
+                                                              "'" +
+                                                                  finalFileName +
+                                                                  "' 다운로드 실패",
+                                                              2);
+                                                        });
+                                                      },
+                                                    ),
+                                                  )
+                                              ],
+                                            ),
+                                          ),
+                                          dialogType: state!
+                                              ? DialogType.SUCCES
+                                              : DialogType.ERROR,
+                                          animType: AnimType.SCALE,
+                                          btnOkText: '확인',
+                                          btnOkOnPress: () {})
                                       .show();
                                 },
                                 child: Row(
@@ -484,7 +485,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                             Expanded(
                                               child: Column(
                                                 crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   Row(
                                                     children: [
@@ -492,7 +493,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                                         courseTitle,
                                                         style: const TextStyle(
                                                           fontWeight:
-                                                          FontWeight.bold,
+                                                              FontWeight.bold,
                                                           fontSize: 18,
                                                         ),
                                                       ),
@@ -500,7 +501,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                                         " [" + week + "]",
                                                         style: const TextStyle(
                                                           fontWeight:
-                                                          FontWeight.bold,
+                                                              FontWeight.bold,
                                                           fontSize: 14,
                                                         ),
                                                       ),
@@ -508,22 +509,22 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                                   ),
                                                   Padding(
                                                     padding:
-                                                    const EdgeInsets.only(
-                                                        top: 8.0),
+                                                        const EdgeInsets.only(
+                                                            top: 8.0),
                                                     child: Row(
                                                       children: [
                                                         activityImage,
                                                         Padding(
                                                           padding:
-                                                          const EdgeInsets
-                                                              .only(
-                                                              left: 4),
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  left: 4),
                                                           child: Text(
                                                             activityTitle,
                                                             style:
-                                                            const TextStyle(
-                                                                fontSize:
-                                                                12),
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        12),
                                                           ),
                                                         ),
                                                       ],
@@ -536,7 +537,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                               decoration: BoxDecoration(
                                                 color: leftTimeCircleColor,
                                                 borderRadius:
-                                                const BorderRadius.all(
+                                                    const BorderRadius.all(
                                                   Radius.circular(64),
                                                 ),
                                                 boxShadow: [
@@ -598,9 +599,9 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
           duration: Duration(seconds: second),
           action: (actionText != null && onPressed != null)
               ? SnackBarAction(
-            label: actionText,
-            onPressed: onPressed,
-          )
+                  label: actionText,
+                  onPressed: onPressed,
+                )
               : null),
     );
   }

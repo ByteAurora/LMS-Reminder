@@ -52,7 +52,8 @@ class _TabPageFinished extends State<TabPageFinished> {
                               children: [
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
@@ -75,7 +76,8 @@ class _TabPageFinished extends State<TabPageFinished> {
                                         ],
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.only(top: 8.0),
+                                        padding:
+                                            const EdgeInsets.only(top: 8.0),
                                         child: Row(
                                           children: [
                                             Shimmer.fromColors(
@@ -95,7 +97,8 @@ class _TabPageFinished extends State<TabPageFinished> {
                                                     left: 4.0, right: 8.0),
                                                 child: Shimmer.fromColors(
                                                   // 과제, 동영상 제목
-                                                  baseColor: Colors.grey.shade400,
+                                                  baseColor:
+                                                      Colors.grey.shade400,
                                                   highlightColor:
                                                       Colors.grey.shade300,
                                                   child: Container(
@@ -411,18 +414,9 @@ class _TabPageFinished extends State<TabPageFinished> {
                                                                 "' 다운로드 시작",
                                                             1);
 
-                                                        DioManager().httpFile(
+                                                        DioManager().downloadFileFromUrl(
                                                             url, file, () {
-                                                          if (!file
-                                                              .existsSync()) {
-                                                            showSnackBar(
-                                                                "'" +
-                                                                    finalFileName +
-                                                                    "' 다운로드 실패",
-                                                                2);
-                                                            return;
-                                                          }
-
+                                                          // 파일이 성공적으로 다운로드 되었을 경우.
                                                           showSnackBar(
                                                               "'" +
                                                                   finalFileName +
@@ -458,6 +452,13 @@ class _TabPageFinished extends State<TabPageFinished> {
                                                               });
                                                             }
                                                           });
+                                                        }, () {
+                                                          // 파일 다운로드에 실패했을 경우.
+                                                          showSnackBar(
+                                                              "'" +
+                                                                  finalFileName +
+                                                                  "' 다운로드 실패",
+                                                              2);
                                                         });
                                                       },
                                                     ),
