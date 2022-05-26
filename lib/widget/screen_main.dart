@@ -5,18 +5,16 @@ import 'package:lms_reminder/widget/tabpage_notice.dart';
 
 import '../manager/lms_manager.dart';
 
-class PageMain extends StatefulWidget {
+class ScreenMain extends StatefulWidget {
   final String? appBarTitle;
 
-  const PageMain(
-      {Key? key, required this.appBarTitle})
-      : super(key: key);
+  const ScreenMain({Key? key, required this.appBarTitle}) : super(key: key);
 
   @override
-  State<PageMain> createState() => _PageMainState();
+  State<ScreenMain> createState() => _ScreenMainState();
 }
 
-class _PageMainState extends State<PageMain>
+class _ScreenMainState extends State<ScreenMain>
     with SingleTickerProviderStateMixin {
   TabController? tabController;
 
@@ -54,7 +52,6 @@ class _PageMainState extends State<PageMain>
           IconButton(
             onPressed: () {
               Navigator.pushNamed(context, '/main/setting');
-              LmsManager().getNotFinishedList();
             },
             icon: const Icon(
               Icons.settings,
@@ -116,7 +113,7 @@ class _PageMainState extends State<PageMain>
   }
 
   Future initializeData() async {
-    await LmsManager().refreshAllData();
+    await LmsManager().reloadAllDataFromLms();
     refresh();
   }
 

@@ -3,61 +3,72 @@ import 'package:intl/intl.dart';
 import 'package:lms_reminder/manager/dio_manager.dart';
 import 'package:lms_reminder/model/assignment.dart';
 import 'package:lms_reminder/model/course.dart';
-import 'package:lms_reminder/model/lecture.dart';
 import 'package:lms_reminder/model/schedule.dart';
+import 'package:lms_reminder/model/week.dart';
 
 import '../model/notice.dart';
 import '../model/video.dart';
 
-/// LMS에서 데이터 불러오기 및 불러온 데이터를 관리하는 클래스.
+/// LMS에 로그인 및 강좌, 주차, 공지사항, 과제, 동영상 리스트를 불러오는 역할을 담당하는 Manager 클래스.
 class LmsManager {
   /// Singleton Pattern 구현을 위한 객체.
   static final LmsManager _instance = LmsManager._constructor();
 
-  /// 과목 리스트.
-  List<Course> courseList = List.empty(growable: true);
+  factory LmsManager() {
+    return _instance;
+  }
 
-  /// 데이터 로딩 상태.
-  static bool isLoading = false;
-
+  /// LmsManager 생성자.
   LmsManager._constructor() {
     DioManager().init(
       BaseOptions(
+          // DioManager에서 사용할 기본 URL.
           baseUrl: 'https://learn.hoseo.ac.kr',
+          // Cookie를 가져오기 위해 redirect를 false 할 경우 발생하는 Response Code 오류 방지를 위한 함수.
           validateStatus: (statusCode) {
             return statusCode! < 500;
           }),
     );
   }
 
-  factory LmsManager() {
-    return _instance;
-  }
+  /// 데이터 로딩 상태.
+  static bool isLoading = false;
 
-  /// LMS 로그인.
+  /// 강좌 리스트.
+  List<Course> courseList = List.empty(growable: true);
+
+  /// 매개변수로 전달된 username, password를 사용하여 LMS에 로그인하는 함수.
   Future<bool> login(String username, String password) async {
     isLoading = true;
-    // 로그인 요청 전송
+
+    // 로그인 요청 전송.
     Response response = await DioManager().httpPost(
         Options(
             followRedirects: false,
             contentType: 'application/x-www-form-urlencoded'),
+
+        // POST 전송 시 LMS에서는 username, password를 form 형식으로 전송.
         '/login/index.php',
+
+        // 로그인 시 사용하는 URL.
         {'username': username, 'password': password});
 
-    // Cookie 값 저장
+    // 반환되는 MoodleSession 값 중 두 번째 값을 이용해야 LMS 로그인 가능.
+    // MoodleSession 개수를 확인하기 위한 지역변수.
     int moodleSessionCount = 0;
     for (var element in response.headers['set-cookie']!) {
       if (element.contains("MoodleSession")) {
         if (moodleSessionCount == 0) {
           moodleSessionCount++;
         } else if (moodleSessionCount == 1) {
+          // MoodleSession에서 추출한 cookie를 DioManager에 등록.
           DioManager().cookie = element.substring(0, element.indexOf(";"));
           break;
         }
       }
     }
 
+    // 추출한 cookie를 이용하여 로그인 여부 확인.
     bool result = (await DioManager()
             .httpGet(options: Options(), useExistCookie: true, subUrl: ''))
         .data
@@ -78,21 +89,21 @@ class LmsManager {
         .contains('예정');
   }
 
-  /// LMS 내 강좌 목록 불러오기.
-  Future getCourseList() async {
+  /// LMS에서 강좌 리스트를 불러오는 함수.
+  Future getCourseListFromLms() async {
     isLoading = true;
-    courseList = Course.parseCoursesFromHtml((await DioManager()
+    courseList = Course.parseCourseListFromHtml((await DioManager()
             .httpGet(options: Options(), useExistCookie: true, subUrl: ''))
         .data
         .toString());
     isLoading = false;
   }
 
-  /// LMS 내 공지사항 불러오기.
-  Future getNoticeList() async {
+  /// LMS에서 강좌별 공지사항 리스트를 불러오는 함수. 공지사항은 각각에 해당하는 강좌 객체 안에 리스트로 저장.
+  Future getNoticeListFromLms() async {
     isLoading = true;
     for (var course in courseList) {
-      List<Notice> noticeList = await Notice.praseNoticeFromHtml(
+      List<Notice> noticeList = await Notice.praseNoticeListFromHtml(
           course,
           (await DioManager().httpGet(
                   options: Options(),
@@ -101,16 +112,17 @@ class LmsManager {
               .data
               .toString());
 
+      // 불러온 공지사항을 해당 강좌 객체 안에 리스트로 저장.
       course.noticeList = noticeList;
     }
     isLoading = false;
   }
 
-  /// LMS 내 강의 목록 불러오기
-  Future getLectureList() async {
+  /// LMS에서 주차 리스트를 불러오는 함수. 주차는 각가에 해당하는 강좌 객체 안에 리스트로 저장.
+  Future getWeekListFromLms() async {
     isLoading = true;
     for (var course in courseList) {
-      course.lectureList = Lecture.parseLecturesFromHtml(
+      course.weekList = Week.parseWeekListFromHtml(
           course,
           (await DioManager().httpGet(
                   options: Options(), useExistCookie: true, subUrl: course.url))
@@ -120,12 +132,12 @@ class LmsManager {
     isLoading = false;
   }
 
-  /// LMS 내 과제 목록 불러오기
-  Future getAssignmentList() async {
+  /// LMS에서 각 주차에 속하는 과제들을 불러오는 함수. 과제는 각 주차 객체 안에 리스트로 저장.
+  Future getAssignmentListFromLms() async {
     isLoading = true;
     for (var course in courseList) {
-      for (var lecture in course.lectureList) {
-        for (var assignment in lecture.assignmentList) {
+      for (var week in course.weekList) {
+        for (var assignment in week.assignmentList) {
           await assignment.update(this);
         }
       }
@@ -133,14 +145,16 @@ class LmsManager {
     isLoading = false;
   }
 
-  /// LMS 내 동영상 강의 목록 불러오기
-  Future getVideoList() async {
+  /// LMS에서 각 주차에 속하는 동영상들을 불러오는 함수. 동영상은 각 주차 객체 안에 리스트로 저장.
+  Future getVideoListFromLms() async {
     isLoading = true;
     for (var course in courseList) {
+      // 강좌 객체에 저장된 id 값을 이용하여 해당 강좌의 온라인 출석부 링크로 변환.
       String videoListUrl = '/report/ubcompletion/user_progress_a.php?' +
           course.url.substring(course.url.indexOf('id='));
 
-      List<List<Video>> videoGroupedByLecture = Video.parseVideosFromHtml(
+      // 동영상을 주차별로 그룹화한 리스트.
+      List<List<Video>> videoGroupByWeek = Video.parseVideoListFromHtml(
           (await DioManager().httpGet(
                   options: Options(),
                   useExistCookie: true,
@@ -148,24 +162,26 @@ class LmsManager {
               .data
               .toString());
 
-      for (var lecture in course.lectureList) {
-        List<Video> videos = videoGroupedByLecture
-            .elementAt(course.lectureList.indexOf(lecture));
+      for (var week in course.weekList) {
+        // 한 주차에 속한 동영상 리스트.
+        List<Video> videos =
+            videoGroupByWeek.elementAt(course.weekList.indexOf(week));
 
+        // 아래 if문 과정을 거치면 출석부 영상에 있는 영상 즉, 출석과 관련된 영상만 리스트에 추가되며 출석과 관련이 없는 영상은 리스트에 추가되지 않음.
         if (videos.isEmpty) {
-          lecture.videoList = List.empty(growable: true);
+          // 해당 주차에 속한 동영상 리스트이 없을 경우 해당 주차의 동영상 리스트를 빈 리스트로 설정.
+          week.videoList = List.empty(growable: true);
         } else {
-          for (var video in lecture.videoList) {
-            video.title =
-                videos.elementAt(lecture.videoList.indexOf(video)).title;
-            video.totalWatchTime = videos
-                .elementAt(lecture.videoList.indexOf(video))
-                .totalWatchTime;
+          // 해당 주차에 속한 동영상 리스트이 있을 경우
+          for (var video in week.videoList) {
+            // 주차에 미리 저장되어있던 video 객체에 온라인 출석부에서 가져온 Video 값 대입.
+            video.title = videos.elementAt(week.videoList.indexOf(video)).title;
+            video.totalWatchTime =
+                videos.elementAt(week.videoList.indexOf(video)).totalWatchTime;
             video.requiredWatchTime = videos
-                .elementAt(lecture.videoList.indexOf(video))
+                .elementAt(week.videoList.indexOf(video))
                 .requiredWatchTime;
-            video.watch =
-                videos.elementAt(lecture.videoList.indexOf(video)).watch;
+            video.watch = videos.elementAt(week.videoList.indexOf(video)).watch;
           }
         }
       }
@@ -173,30 +189,36 @@ class LmsManager {
     isLoading = false;
   }
 
-  /// 미제출 과제 및 미시청 영상을 반환하는 함수.
-  Future<List<dynamic>> getNotFinishedList() async {
+  /// 미제출 과제 및 미시청 동영상을 반환하는 함수. (미제출, 미시청한 활동이더라도 마감일이 자난 활동은 반환하지 않음)
+  Future<List<dynamic>> getNotFinishedActivityList() async {
     if (!await checkLoginState()) {}
 
-    List<dynamic> todoList = List.empty(growable: true);
+    // 미제출 과제 및 미시청 동영상 리스트.
+    List<dynamic> notFinishedActivityList = List.empty(growable: true);
 
+    // 해당 활동(과제, 동영상)이 마감된 활동인지 확인을 위해 현재 시간을 가지고 있는 지역변수.
     DateTime currentTime = DateTime.now();
+
     for (var course in courseList) {
-      for (var lecture in course.lectureList) {
-        for (Assignment assignment in lecture.assignmentList) {
+      for (var week in course.weekList) {
+        for (Assignment assignment in week.assignmentList) {
           if (assignment.submit == false &&
               assignment.deadLine.isAfter(currentTime)) {
-            todoList.add(assignment);
+            // 해당 과제를 제출하지 않았고 마감일이 지나지 않은 과제일 경우.
+            notFinishedActivityList.add(assignment);
           }
         }
-        for (Video video in lecture.videoList) {
+        for (Video video in week.videoList) {
           if (video.watch == false && video.deadLine.isAfter(currentTime)) {
-            todoList.add(video);
+            // 해당 동영상을 시청하지 않았고 마감일이 지나지 않은 동영상일 경우.
+            notFinishedActivityList.add(video);
           }
         }
       }
     }
 
-    todoList.sort((obj1, obj2) {
+    // 활동들을 현재로부터 마감일까지 남은 시간을 비교하여 정렬해주는 부분.
+    notFinishedActivityList.sort((obj1, obj2) {
       DateTime? dateTime1;
       DateTime? dateTime2;
 
@@ -215,37 +237,40 @@ class LmsManager {
       return dateTime1.compareTo(dateTime2);
     });
 
-    return todoList;
+    return notFinishedActivityList;
   }
 
-  /// 제출 과제 및 시청 동영상을 반환하는 함수.
-  Future<List<dynamic>> getFinishedList() async {
+  /// 제출 과제 및 시청 동영상을 반환하는 함수. (미제출, 미시청한 활동이라도 마감일이 지났을 경우 함께 반환)
+  Future<List<dynamic>> getFinishedActivityList() async {
     if (!await checkLoginState()) {}
 
-    List<dynamic> toDoneList = List.empty(growable: true);
+    // 제출된 과제 및 시청한 동영상 리스트.
+    List<dynamic> finishedActivityList = List.empty(growable: true);
 
+    // 해당 활동(과제, 동영상)이 마감된 활동인지 확인을 위해 현재 시간을 가지고 있는 지역변수.
     DateTime currentTime = DateTime.now();
 
     for (var course in courseList) {
-      for (var lecture in course.lectureList) {
-        for (Assignment assignment in lecture.assignmentList) {
+      for (var week in course.weekList) {
+        for (Assignment assignment in week.assignmentList) {
           if (assignment.submit) {
-            toDoneList.add(assignment);
+            finishedActivityList.add(assignment);
           } else if (assignment.deadLine.isBefore(currentTime)) {
-            toDoneList.add(assignment);
+            finishedActivityList.add(assignment);
           }
         }
-        for (Video video in lecture.videoList) {
+        for (Video video in week.videoList) {
           if (video.watch) {
-            toDoneList.add(video);
+            finishedActivityList.add(video);
           } else if (video.deadLine.isBefore(currentTime)) {
-            toDoneList.add(video);
+            finishedActivityList.add(video);
           }
         }
       }
     }
 
-    toDoneList.sort((obj1, obj2) {
+    // 활동들을 현재로부터 마감일까지 남은 시간을 비교하여 정렬해주는 부분. 이미 마감된 활동들은 주차를 기준으로 정렬.
+    finishedActivityList.sort((obj1, obj2) {
       String value1 = "";
       String value2 = "";
 
@@ -266,19 +291,19 @@ class LmsManager {
         int iValue2;
 
         if (obj1.runtimeType == Assignment) {
-          iValue1 =
-              int.parse((obj1 as Assignment).lecture.week.replaceAll('주차', ''));
+          iValue1 = int.parse(
+              (obj1 as Assignment).week.weekTitle.replaceAll('주차', ''));
         } else {
           iValue1 =
-              int.parse((obj1 as Video).lecture.week.replaceAll('주차', ''));
+              int.parse((obj1 as Video).week.weekTitle.replaceAll('주차', ''));
         }
 
         if (obj2.runtimeType == Assignment) {
-          iValue2 =
-              int.parse((obj2 as Assignment).lecture.week.replaceAll('주차', ''));
+          iValue2 = int.parse(
+              (obj2 as Assignment).week.weekTitle.replaceAll('주차', ''));
         } else {
           iValue2 =
-              int.parse((obj2 as Video).lecture.week.replaceAll('주차', ''));
+              int.parse((obj2 as Video).week.weekTitle.replaceAll('주차', ''));
         }
 
         return iValue2.compareTo(iValue1);
@@ -287,74 +312,85 @@ class LmsManager {
       return value1.compareTo(value2);
     });
 
-    return toDoneList;
+    return finishedActivityList;
   }
 
-  /// 마감일이 지나지 않은 항목들을 반환하는 함수.
-  List<Schedule> getBeforeDeadLineList() {
-    List<Schedule> resultList = List.empty(growable: true);
+  /// 마감일이 지나지 않은 항목들을 반환하는 함수. (알림 설정이 필요한 활동 리스트이 필요할 때 사용)
+  List<Schedule> getBeforeDeadLineActivityList() {
+    List<Schedule> beforeDeadLineActivityList = List.empty(growable: true);
 
     DateTime currentTime = DateTime.now();
 
     for (var course in courseList) {
-      for (var lecture in course.lectureList) {
-        for (var assignment in lecture.assignmentList) {
-          if (assignment.deadLine.isAfter(currentTime.add(const Duration(hours: 6)))) {
-            resultList.add(assignment.toSchedule('6시간'));
+      for (var week in course.weekList) {
+        for (var assignment in week.assignmentList) {
+          if (assignment.deadLine
+              .isAfter(currentTime.add(const Duration(hours: 6)))) {
+            beforeDeadLineActivityList.add(assignment.toSchedule('6시간'));
           }
-          if (assignment.deadLine.isAfter(currentTime.add(const Duration(days: 1)))) {
-            resultList.add(assignment.toSchedule('1일'));
+          if (assignment.deadLine
+              .isAfter(currentTime.add(const Duration(days: 1)))) {
+            beforeDeadLineActivityList.add(assignment.toSchedule('1일'));
           }
-          if (assignment.deadLine.isAfter(currentTime.add(const Duration(days: 3)))) {
-            resultList.add(assignment.toSchedule('3일'));
+          if (assignment.deadLine
+              .isAfter(currentTime.add(const Duration(days: 3)))) {
+            beforeDeadLineActivityList.add(assignment.toSchedule('3일'));
           }
-          if (assignment.deadLine.isAfter(currentTime.add(const Duration(days: 5)))) {
-            resultList.add(assignment.toSchedule('5일'));
+          if (assignment.deadLine
+              .isAfter(currentTime.add(const Duration(days: 5)))) {
+            beforeDeadLineActivityList.add(assignment.toSchedule('5일'));
           }
         }
 
-        for (var video in lecture.videoList) {
-          if (video.deadLine.isAfter(currentTime.add(const Duration(hours: 6)))) {
-            resultList.add(video.toSchedule('6시간'));
+        for (var video in week.videoList) {
+          if (video.deadLine
+              .isAfter(currentTime.add(const Duration(hours: 6)))) {
+            beforeDeadLineActivityList.add(video.toSchedule('6시간'));
           }
-          if (video.deadLine.isAfter(currentTime.add(const Duration(days: 1)))) {
-            resultList.add(video.toSchedule('1일'));
+          if (video.deadLine
+              .isAfter(currentTime.add(const Duration(days: 1)))) {
+            beforeDeadLineActivityList.add(video.toSchedule('1일'));
           }
-          if (video.deadLine.isAfter(currentTime.add(const Duration(days: 3)))) {
-            resultList.add(video.toSchedule('3일'));
+          if (video.deadLine
+              .isAfter(currentTime.add(const Duration(days: 3)))) {
+            beforeDeadLineActivityList.add(video.toSchedule('3일'));
           }
-          if (video.deadLine.isAfter(currentTime.add(const Duration(days: 5)))) {
-            resultList.add(video.toSchedule('5일'));
+          if (video.deadLine
+              .isAfter(currentTime.add(const Duration(days: 5)))) {
+            beforeDeadLineActivityList.add(video.toSchedule('5일'));
           }
         }
       }
     }
 
-    return resultList;
+    return beforeDeadLineActivityList;
   }
 
-  Future<List<Notice>> getAllNoticeList() async {
+  /// LMS에서 불러왔던 강좌별 공지들을 하나의 리스트로 만들어 반환해주는 함수.
+  Future<List<Notice>> getNoticeList() async {
+    // 모든 강좌별 공지들을 하나로 모은 리스트.
     List<Notice> noticeList = List.empty(growable: true);
-    for(var course in courseList) {
+    for (var course in courseList) {
       noticeList.addAll(course.noticeList);
     }
 
-    noticeList.sort((obj1, obj2) {
-      DateTime value1 = DateFormat('yyyy-MM-dd').parse(obj1.date);
-      DateTime value2 = DateFormat('yyyy-MM-dd').parse(obj2.date);
+    // 리스트에 포함된 공지사항들을 날짜순으로 정렬하는 부분.
+    noticeList.sort((notice1, notice2) {
+      DateTime notice1Date = DateFormat('yyyy-MM-dd').parse(notice1.date);
+      DateTime notice2Date = DateFormat('yyyy-MM-dd').parse(notice2.date);
 
-      return value2.compareTo(value1);
+      return notice2Date.compareTo(notice1Date);
     });
 
     return noticeList;
   }
 
-  /// Course, Lecture, Assignment, Video를 반환하는 함수.
-  Future refreshAllData() async {
-    await getCourseList();
-    await getLectureList();
-    await getNoticeList();
-    await getAssignmentList();
-    await getVideoList();
+  /// 모든 강좌, 주차, 공지사항, 과제, 동영상 데이터를 LMS로부터 업데이트하는 함수.
+  Future reloadAllDataFromLms() async {
+    await getCourseListFromLms();
+    await getWeekListFromLms();
+    await getNoticeListFromLms();
+    await getAssignmentListFromLms();
+    await getVideoListFromLms();
   }
 }

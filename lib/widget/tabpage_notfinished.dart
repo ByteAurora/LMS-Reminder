@@ -36,7 +36,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
     return Scaffold(
       body: Center(
         child: FutureBuilder(
-          future: LmsManager().getNotFinishedList(),
+          future: LmsManager().getNotFinishedActivityList(),
           builder: (context, snapshot) {
             if (snapshot.hasData == false) {
               return ListView.builder(
@@ -62,7 +62,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                               padding: const EdgeInsets.only(
                                                   right: 8.0),
                                               child: Shimmer.fromColors(
-                                                // 과목명[주차]
+                                                // 강좌명[주차]
                                                 baseColor: Colors.grey.shade400,
                                                 highlightColor:
                                                     Colors.grey.shade300,
@@ -165,8 +165,8 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                 Assignment) {
                               Assignment assignment =
                                   todoList.elementAt(index) as Assignment;
-                              courseTitle = assignment.lecture.course.title;
-                              week = assignment.lecture.week;
+                              courseTitle = assignment.week.course.title;
+                              week = assignment.week.weekTitle;
                               activityTitle = assignment.title;
                               activityImage = const Image(
                                 image: AssetImage(
@@ -183,8 +183,8 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                               state = assignment.submit;
                             } else {
                               Video video = todoList.elementAt(index) as Video;
-                              courseTitle = video.lecture.course.title;
-                              week = video.lecture.week;
+                              courseTitle = video.week.course.title;
+                              week = video.week.weekTitle;
                               activityTitle = video.title;
                               activityImage = const Image(
                                 image:
@@ -402,41 +402,40 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
                                                       filePath =
                                                           '/storage/emulated/0/Download/' +
                                                               finalFileName;
-                                                      file = File(filePath);
-                                                      loop++;
-                                                    }
+                                                          file = File(filePath);
+                                                          loop++;
+                                                        }
 
-                                                    showSnackBar(
-                                                        "'" +
-                                                            finalFileName +
-                                                            "' 다운로드 시작",
-                                                        1);
-
-                                                    DioManager()
-                                                        .httpGetFile(
-                                                        url, file, () {
-                                                      if (!file
-                                                          .existsSync()) {
                                                         showSnackBar(
                                                             "'" +
                                                                 finalFileName +
-                                                                "' 다운로드 실패",
-                                                            2);
-                                                        return;
-                                                      }
+                                                                "' 다운로드 시작",
+                                                            1);
 
-                                                      showSnackBar(
-                                                          "'" +
-                                                              finalFileName +
-                                                              "' 다운로드 완료",
-                                                          3,
-                                                          actionText: '열기',
-                                                          onPressed:
-                                                              () async {
+                                                        DioManager().httpFile(
+                                                            url, file, () {
+                                                          if (!file
+                                                              .existsSync()) {
+                                                            showSnackBar(
+                                                                "'" +
+                                                                    finalFileName +
+                                                                    "' 다운로드 실패",
+                                                                2);
+                                                            return;
+                                                          }
+
+                                                          showSnackBar(
+                                                              "'" +
+                                                                  finalFileName +
+                                                                  "' 다운로드 완료",
+                                                              3,
+                                                              actionText: '열기',
+                                                              onPressed:
+                                                                  () async {
                                                             if ((await OpenFile
-                                                                .open(file
-                                                                .path))
-                                                                .type ==
+                                                                        .open(file
+                                                                            .path))
+                                                                    .type ==
                                                                 ResultType
                                                                     .noAppToOpen) {
                                                               // 해당 파일을 실행할 수 있는 앱이 없을 경우
@@ -586,7 +585,7 @@ class _TabPageNotFinished extends State<TabPageNotFinished> {
   }
 
   Future<void> _refreshAllData() async {
-    await LmsManager().refreshAllData();
+    await LmsManager().reloadAllDataFromLms();
     widget.notifyParent();
   }
 

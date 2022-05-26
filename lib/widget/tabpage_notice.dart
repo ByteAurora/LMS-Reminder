@@ -25,7 +25,7 @@ class _TabPageNotice extends State<TabPageNotice> {
     return Scaffold(
       body: Center(
         child: FutureBuilder(
-          future: LmsManager().getAllNoticeList(),
+          future: LmsManager().getNoticeList(),
           builder: (context, snapshot) {
             if (snapshot.hasData == false) {
               return ListView.builder(
@@ -173,7 +173,7 @@ class _TabPageNotice extends State<TabPageNotice> {
   }
 
   Future<void> _refreshAllData() async {
-    await LmsManager().refreshAllData();
+    await LmsManager().reloadAllDataFromLms();
     widget.notifyParent();
   }
 }

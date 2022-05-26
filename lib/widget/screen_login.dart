@@ -4,14 +4,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../sharedpreferences_key.dart';
 
-class PageLogin extends StatefulWidget {
-  const PageLogin({Key? key}) : super(key: key);
+class ScreenLogin extends StatefulWidget {
+  const ScreenLogin({Key? key}) : super(key: key);
 
   @override
-  State<PageLogin> createState() => _PageLoginState();
+  State<ScreenLogin> createState() => _ScreenLoginState();
 }
 
-class _PageLoginState extends State<PageLogin>
+class _ScreenLoginState extends State<ScreenLogin>
     with SingleTickerProviderStateMixin {
   ScrollController?
       _scrollController; // 스크롤컨트롤러 : 후에 키보드창이떴을때, 스크롤을 위로해줘서 유저경험(UX)를 향상시키기 위함.

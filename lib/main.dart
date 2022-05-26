@@ -36,7 +36,7 @@ void callbackDispatcher() {
                     autoDismissible: true));
 
             // LMS에서 데이터 불러오기
-            await LmsManager().refreshAllData();
+            await LmsManager().reloadAllDataFromLms();
 
             // WorkManager 추가 전 초기화
             await Workmanager().initialize(
@@ -50,7 +50,7 @@ void callbackDispatcher() {
 
             DateTime currentTime = DateTime.now();
 
-            for (var schedule in LmsManager().getBeforeDeadLineList()) {
+            for (var schedule in LmsManager().getBeforeDeadLineActivityList()) {
               DateTime deadLine = DateFormat('yyyy-MM-dd HH:mm')
                   .parse(schedule.activityDeadLine!);
               DateTime? scheduleDate;
@@ -196,7 +196,8 @@ void callbackDispatcher() {
                 channelKey: 'alert_lefttime',
                 wakeUpScreen: true,
                 autoDismissible: false,
-                summary: (schedule.courseTitle! + ' [' + schedule.week! + ']'),
+                summary:
+                    (schedule.courseTitle! + ' [' + schedule.weekTitle! + ']'),
                 title: (schedule.activityType == 'assignment'
                         ? '[과제]   '
                         : '[동영상]   ') +

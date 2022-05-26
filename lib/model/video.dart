@@ -6,12 +6,12 @@ import 'package:html/parser.dart' as html_parser;
 import 'package:intl/intl.dart';
 import 'package:lms_reminder/model/schedule.dart';
 
-import 'lecture.dart';
+import 'week.dart';
 
 /// 동영상 강의 정보를 관리하는 클래스.
 class Video {
   /// 주차.
-  Lecture? _lecture;
+  Week? _week;
 
   /// 영상 제목.
   String? _title;
@@ -31,8 +31,8 @@ class Video {
   /// 출석마감 시간.
   DateTime? _deadLine;
 
-  /// 전달된 html에서 영상 정보를 추출하여 반환하는 함수.
-  static List<List<Video>> parseVideosFromHtml(String html) {
+  /// 전달된 html에서 동영상 정보를 추출하여 반환하는 함수.
+  static List<List<Video>> parseVideoListFromHtml(String html) {
     List<List<Video>> courseVideoList = List.empty(growable: true);
 
     html_dom.Document document = html_parser.parse(html);
@@ -109,8 +109,8 @@ class Video {
   }
 
   /// Video 생성자.
-  Video({Lecture? lecture}) {
-    _lecture = lecture;
+  Video({Week? week}) {
+    _week = week;
   }
 
   /// 영상 출석 마감까지 남은 시간을 반환해주는 함수.
@@ -144,10 +144,10 @@ class Video {
     _deadLine = value;
   }
 
-  Lecture get lecture => _lecture!;
+  Week get week => _week!;
 
-  set lecture(Lecture value) {
-    _lecture = value;
+  set week(Week value) {
+    _week = value;
   }
 
   String get title => _title!;
@@ -182,11 +182,13 @@ class Video {
 
   Schedule toSchedule(String leftTime) {
     return Schedule(
-        sha256.convert(utf8.encode(title+leftTime)).toString(),
+        sha256.convert(utf8.encode(title + leftTime)).toString(),
         'video',
-        lecture.week,
-        lecture.course.title,
+        week.weekTitle,
+        week.course.title,
         title,
-        DateFormat('yyyy-MM-dd HH:mm').format(deadLine), leftTime, watch);
+        DateFormat('yyyy-MM-dd HH:mm').format(deadLine),
+        leftTime,
+        watch);
   }
 }

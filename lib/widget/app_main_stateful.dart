@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:lms_reminder/widget/page_intro.dart';
-import 'package:lms_reminder/widget/page_login.dart';
-import 'package:lms_reminder/widget/page_main.dart';
-import 'package:lms_reminder/widget/page_setting.dart';
-import 'package:lms_reminder/widget/page_tutorial.dart';
-
-import '../manager/lms_manager.dart';
+import 'package:lms_reminder/widget/screen_intro.dart';
+import 'package:lms_reminder/widget/screen_login.dart';
+import 'package:lms_reminder/widget/screen_main.dart';
+import 'package:lms_reminder/widget/screen_setting.dart';
+import 'package:lms_reminder/widget/screen_tutorial.dart';
 
 /// 최상위 Stateful Widget.
 class AppMainStateful extends StatefulWidget {
@@ -53,14 +51,13 @@ class _AppMainStatefulState extends State<AppMainStateful>
       // 화면 이동을 위한 route.
       initialRoute: '/intro',
       routes: {
-        '/intro': (context) => PageIntro(),
-        '/tutorial': (context) => PageTutorial(),
-        '/login': (context) => PageLogin(
-            ),
-        '/main': (context) => PageMain(
+        '/intro': (context) => ScreenIntro(),
+        '/tutorial': (context) => ScreenTutorial(),
+        '/login': (context) => const ScreenLogin(),
+        '/main': (context) => const ScreenMain(
               appBarTitle: 'LMS 리마인더',
             ),
-        '/main/setting': (context) => PageSetting(),
+        '/main/setting': (context) => ScreenSetting(),
       },
     );
   }

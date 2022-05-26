@@ -1,8 +1,8 @@
 import 'package:html/dom.dart' as html_dom;
 import 'package:html/parser.dart' as html_parser;
 
-import 'lecture.dart';
 import 'notice.dart';
+import 'week.dart';
 
 /// 강좌 정보를 관리하는 클래스.
 class Course {
@@ -15,20 +15,20 @@ class Course {
   /// 분반.
   String? _classNumber;
 
-  /// 강좌 URL.
+  /// 해당 강좌의 세부정보 URL.
   String? _url;
 
-  /// 강좌 공지사항 목록 URL.
+  /// 해당 강좌의 공지사항 목록 URL.
   String? _noticeListUrl;
 
-  /// 해당 강좌의 주차별 강의 목록.
-  List<Lecture>? _lectureList;
+  /// 해당 강좌의 주차 목록.
+  List<Week>? _weekList;
 
   /// 해당 강좌의 공지사항 목록.
   List<Notice>? _noticeList;
 
-  /// 전달된 html에서 강좌 정보를 추출하여 반환하는 함수.
-  static List<Course> parseCoursesFromHtml(String html) {
+  /// 전달된 html에서 강좌 목록을 추출하여 반환하는 함수.
+  static List<Course> parseCourseListFromHtml(String html) {
     List<Course> courseList = List.empty(growable: true);
 
     html_dom.Document document = html_parser.parse(html);
@@ -80,10 +80,10 @@ class Course {
     _title = value;
   }
 
-  List<Lecture> get lectureList => _lectureList!;
+  List<Week> get weekList => _weekList!;
 
-  set lectureList(List<Lecture> value) {
-    _lectureList = value;
+  set weekList(List<Week> value) {
+    _weekList = value;
   }
 
   List<Notice> get noticeList => _noticeList!;

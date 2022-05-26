@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 class DioManager {
   /// Singleton Pattern 구현을 위한 객체.
   static final DioManager _instance = DioManager._constructor();
-  Dio? dio;
-  String? cookie;
 
   DioManager._constructor();
 
@@ -16,19 +14,28 @@ class DioManager {
     return _instance;
   }
 
+  /// 재사용되는 Dio 객체.
+  Dio? dio;
+
+  /// 재사용할 cookie 값.
+  String? cookie;
+
   /// DioManager 초기화.
   void init(BaseOptions options) {
+    // dio 객체가 null일 경우 새로운 Dio 객체 생성.
     dio ??= Dio();
 
+    // 매개변수로 전달된 기본 옵션을 dio 객체에 할당.
     dio!.options = options;
   }
 
   /// http post 요청을 전송하는 함수.
   Future<Response> httpPost(
       Options options, String subUrl, Map<String, String> data) async {
+    // Dio 객체가 null일 경우 Exception 발생.
     if (dio == null) {
       throw Exception(
-          'Dio object is not initialized. Use HttpManager.init() to initializer dio object.');
+          'Dio object is not initialized. Use DioManager.init() to initialize dio object.');
     }
 
     return await dio!.post(subUrl, data: data, options: options);
@@ -39,12 +46,14 @@ class DioManager {
       {required Options options,
       bool useExistCookie = false,
       required String subUrl}) async {
+    // Dio 객체가 null일 경우 Exception 발생.
     if (dio == null) {
       throw Exception(
-          'Dio object is not initialized. Use HttpManager.init() to initializer dio object.');
+          'Dio object is not initialized. Use DioManager.init() to initialize dio object.');
     }
 
     if (useExistCookie && cookie != null) {
+      // 이미 존재하는 cookie를 사용하면서 해당 cookie가 null이 아닐 경우 header에 해당 cookie 추가.
       options.headers ??= <String, String>{};
       options.headers!['cookie'] = cookie;
     }
@@ -52,7 +61,9 @@ class DioManager {
     return await dio!.get(subUrl, options: options);
   }
 
-  Future httpGetFile(String url, File file, VoidCallback callback) async {
+  /// 전달된 url로부터 파일을 다운로드하는 함수.
+  Future httpFile(
+      String url, File file, VoidCallback ifDownloadSuccessful) async {
     try {
       Response response = await DioManager().httpGet(
         options: Options(
@@ -69,6 +80,7 @@ class DioManager {
     } catch (e) {
       print(e);
     }
-    callback.call();
+
+    ifDownloadSuccessful.call();
   }
 }

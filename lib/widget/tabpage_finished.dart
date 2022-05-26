@@ -35,7 +35,7 @@ class _TabPageFinished extends State<TabPageFinished> {
     return Scaffold(
       body: Center(
         child: FutureBuilder(
-          future: LmsManager().getFinishedList(),
+          future: LmsManager().getFinishedActivityList(),
           builder: (context, snapshot) {
             if (snapshot.hasData == false) {
               return ListView.builder(
@@ -61,7 +61,7 @@ class _TabPageFinished extends State<TabPageFinished> {
                                               padding: const EdgeInsets.only(
                                                   right: 8.0),
                                               child: Shimmer.fromColors(
-                                                // 과목명[주차]
+                                                // 강좌명[주차]
                                                 baseColor: Colors.grey.shade400,
                                                 highlightColor:
                                                     Colors.grey.shade300,
@@ -164,8 +164,8 @@ class _TabPageFinished extends State<TabPageFinished> {
                                 Assignment) {
                               Assignment assignment =
                                   todoList.elementAt(index) as Assignment;
-                              courseTitle = assignment.lecture.course.title;
-                              week = assignment.lecture.week;
+                              courseTitle = assignment.week.course.title;
+                              week = assignment.week.weekTitle;
                               activityTitle = assignment.title;
                               activityImage = const Image(
                                 image: AssetImage(
@@ -182,8 +182,8 @@ class _TabPageFinished extends State<TabPageFinished> {
                               state = assignment.submit;
                             } else {
                               Video video = todoList.elementAt(index) as Video;
-                              courseTitle = video.lecture.course.title;
-                              week = video.lecture.week;
+                              courseTitle = video.week.course.title;
+                              week = video.week.weekTitle;
                               activityTitle = video.title;
                               activityImage = const Image(
                                 image:
@@ -411,9 +411,8 @@ class _TabPageFinished extends State<TabPageFinished> {
                                                                 "' 다운로드 시작",
                                                             1);
 
-                                                        DioManager()
-                                                            .httpGetFile(
-                                                                url, file, () {
+                                                        DioManager().httpFile(
+                                                            url, file, () {
                                                           if (!file
                                                               .existsSync()) {
                                                             showSnackBar(
@@ -585,7 +584,7 @@ class _TabPageFinished extends State<TabPageFinished> {
   }
 
   Future<void> _refreshAllData() async {
-    await LmsManager().refreshAllData();
+    await LmsManager().reloadAllDataFromLms();
     widget.notifyParent();
   }
 

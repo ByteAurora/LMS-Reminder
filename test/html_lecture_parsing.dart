@@ -5,9 +5,9 @@ import 'package:html/dom.dart' as html_dom;
 import 'package:html/parser.dart' as html_parser;
 import 'package:lms_reminder/model/assignment.dart';
 import 'package:lms_reminder/model/course.dart';
-import 'package:lms_reminder/model/lecture.dart';
+import 'package:lms_reminder/model/week.dart';
 
-/// Html에서 Lecture 관련 정보 파싱 테스트.
+/// Html에서 Week 관련 정보 파싱 테스트.
 Future<void> main() async {
   // 테스트할 강의목록 html 경로
   String filePath =
@@ -26,12 +26,12 @@ Future<void> main() async {
       .getElementsByTagName('li')
       .forEach((element) {
     if (element.className.contains("section main clearfix")) {
-      Lecture lecture = Lecture(Course());
+      Week week = Week(Course());
 
       String sectionName =
           element.getElementsByClassName('hidden sectionname')[0].text;
-      lecture.week = sectionName.substring(0, sectionName.indexOf(" "));
-      lecture.date = sectionName.substring(
+      week.weekTitle = sectionName.substring(0, sectionName.indexOf(" "));
+      week.date = sectionName.substring(
           sectionName.indexOf("[") + 1, sectionName.indexOf("]"));
 
       List<html_dom.Element> activities = element
@@ -42,7 +42,7 @@ Future<void> main() async {
         activities[0]
             .getElementsByClassName('activity assign modtype_assign ')
             .forEach((element2) {
-          Assignment assignment = Assignment(lecture);
+          Assignment assignment = Assignment(week);
 
           html_dom.Element assignmentElement = element2
               .getElementsByTagName('div')[0]

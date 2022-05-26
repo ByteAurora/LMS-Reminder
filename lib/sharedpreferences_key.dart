@@ -1,5 +1,3 @@
-import 'package:shared_preferences/shared_preferences.dart';
-
 /// 제출 or 시청 완료된 활동도 알림 (true, false)
 const keyNotifyFinishedActivities = 'KEY_NOTIFY_FINISHED_ACTIVITIES';
 

@@ -5,13 +5,13 @@ import 'package:lms_reminder/model/video.dart';
 
 import 'course.dart';
 
-/// 주차별 강의 정보를 관리하는 클래스.
-class Lecture {
-  /// 과목.
+/// 주차정보를 관리하는 클래스.
+class Week {
+  /// 강좌.
   Course? _course;
 
-  /// 주차.
-  String? _week;
+  /// 주차제목(ex. '1주차').
+  String? _weekTitle;
 
   /// 기간.
   String? _date;
@@ -19,26 +19,27 @@ class Lecture {
   /// 과제 목록.
   List<Assignment>? _assignmentList;
 
-  /// 동영상 강의 목록.
+  /// 동영상 목록.
   List<Video>? _videoList;
 
-  /// 전달된 html에서 주차별 강의 정보를 추출하여 반환하는 함수.
-  static List<Lecture> parseLecturesFromHtml(Course course, String html) {
-    List<Lecture> lectureList = List.empty(growable: true);
+  /// 전달된 html에서 주차 목록을 추출하여 반환하는 함수.
+  static List<Week> parseWeekListFromHtml(Course course, String html) {
+    List<Week> weekList = List.empty(growable: true);
 
     html_dom.Document document = html_parser.parse(html);
 
-    String temp = document
+    String tempForNoticeUrl = document
         .getElementById('section-0')!
         .getElementsByClassName('content')[0]
         .getElementsByClassName('section img-text')[0]
         .getElementsByClassName('activity ubboard modtype_ubboard')[0]
         .getElementsByTagName('div')[4]
         .innerHtml;
-    course.noticeListUrl = temp.substring(
-        temp.indexOf('href="https://learn.hoseo.ac.kr') +
+
+    course.noticeListUrl = tempForNoticeUrl.substring(
+        tempForNoticeUrl.indexOf('href="https://learn.hoseo.ac.kr') +
             'href="https://learn.hoseo.ac.kr'.length,
-        temp.indexOf('">'));
+        tempForNoticeUrl.indexOf('">'));
 
     document
         .getElementById('region-main')!
@@ -50,13 +51,13 @@ class Lecture {
         .getElementsByTagName('li')
         .forEach((element) {
       if (element.className.contains("section main clearfix")) {
-        Lecture lecture = Lecture(course);
+        Week week = Week(course);
 
-        String sectionName =
+        String fullWeekTitle =
             element.getElementsByClassName('hidden sectionname')[0].text;
-        lecture.week = sectionName.substring(0, sectionName.indexOf(" "));
-        lecture.date = sectionName.substring(
-            sectionName.indexOf("[") + 1, sectionName.indexOf("]"));
+        week.weekTitle = fullWeekTitle.substring(0, fullWeekTitle.indexOf(" "));
+        week.date = fullWeekTitle.substring(
+            fullWeekTitle.indexOf("[") + 1, fullWeekTitle.indexOf("]"));
 
         List<Assignment> assignmentList = List.empty(growable: true);
         List<Video> videoList = List.empty(growable: true);
@@ -68,7 +69,7 @@ class Lecture {
         if (activities.isNotEmpty) {
           for (var element2 in activities[0]
               .getElementsByClassName('activity assign modtype_assign ')) {
-            Assignment assignment = Assignment(lecture);
+            Assignment assignment = Assignment(week);
 
             html_dom.Element assignmentElement = element2
                 .getElementsByTagName('div')[0]
@@ -95,9 +96,9 @@ class Lecture {
           activities[0]
               .getElementsByClassName('activity vod modtype_vod ')
               .forEach((element2) {
-            Video video = Video(lecture: lecture);
+            Video video = Video(week: week);
 
-            String videoTerm = element2
+            String videoInfo = element2
                 .getElementsByTagName('div')[0]
                 .getElementsByClassName('mod-indent-outer')[0]
                 .getElementsByTagName('div')[1]
@@ -107,31 +108,31 @@ class Lecture {
                 .text
                 .trim();
 
-            video.enableTime = DateTime.parse(videoTerm.substring(0, 19));
-            video.deadLine = DateTime.parse(videoTerm.substring(22));
+            video.enableTime = DateTime.parse(videoInfo.substring(0, 19));
+            video.deadLine = DateTime.parse(videoInfo.substring(22));
 
             videoList.add(video);
           });
         }
-        lecture.assignmentList = assignmentList;
-        lecture.videoList = videoList;
+        week.assignmentList = assignmentList;
+        week.videoList = videoList;
 
-        lectureList.add(lecture);
+        weekList.add(week);
       }
     });
 
-    return lectureList;
+    return weekList;
   }
 
-  /// Lecture 생성자.
-  Lecture(Course course) {
+  /// Week 생성자.
+  Week(Course course) {
     _course = course;
   }
 
-  String get week => _week!;
+  String get weekTitle => _weekTitle!;
 
-  set week(String value) {
-    _week = value;
+  set weekTitle(String value) {
+    _weekTitle = value;
   }
 
   Course get course => _course!;

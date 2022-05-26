@@ -6,18 +6,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../manager/lms_manager.dart';
 import '../sharedpreferences_key.dart';
 
-class PageIntro extends StatefulWidget {
-  const PageIntro({Key? key}) : super(key: key);
+class ScreenIntro extends StatefulWidget {
+  const ScreenIntro({Key? key}) : super(key: key);
 
   @override
-  State<PageIntro> createState() => _PageIntroState();
+  State<ScreenIntro> createState() => _ScreenIntroState();
 }
 
-class _PageIntroState extends State<PageIntro> {
+class _ScreenIntroState extends State<ScreenIntro> {
   String? userID;
   String? password;
   double? _deviceWidth,
-      _deviceheight; //사용자의 화면크기 비율을 정하기 위해, 사용자 화면 크기를 가져오면 변수.
+      _deviceHeight; //사용자의 화면크기 비율을 정하기 위해, 사용자 화면 크기를 가져오면 변수.
 
   Future<void> initIntro() async {
     final prefs = await SharedPreferences.getInstance();
@@ -51,8 +51,9 @@ class _PageIntroState extends State<PageIntro> {
 
   @override
   void initState() {
-    Timer(Duration(seconds: 3),(){ //로고 보여주는시간 3초
-    initIntro();
+    Timer(const Duration(seconds: 1), () {
+      //로고 보여주는시간 3초
+      initIntro();
     });
     super.initState();
   }
@@ -60,7 +61,7 @@ class _PageIntroState extends State<PageIntro> {
   @override
   void didChangeDependencies() {
     _deviceWidth = MediaQuery.of(context).size.width;
-    _deviceheight = MediaQuery.of(context).size.height;
+    _deviceHeight = MediaQuery.of(context).size.height;
     super.didChangeDependencies();
   }
 
@@ -70,7 +71,7 @@ class _PageIntroState extends State<PageIntro> {
       body: Center(
         child: Container(
           width: _deviceWidth,
-          height: _deviceheight,
+          height: _deviceHeight,
           decoration: const BoxDecoration(
             image: DecorationImage(
                 colorFilter: ColorFilter.mode(Colors.black12, BlendMode.darken),

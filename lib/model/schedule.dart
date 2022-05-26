@@ -1,14 +1,14 @@
 class Schedule {
-  /// 컬럼 - ID.
+  /// 컬럼 - 스케줄 ID.
   static const String columnId = 'id';
 
-  /// 컬럼 - 주차 정보.
-  static const String columnWeek = 'week';
+  /// 컬럼 - 주차 제목.
+  static const String columnWeekTitle = 'week_title';
 
   /// 컬럼 - 활동 종류.
   static const String columnActivityType = 'activity_type';
 
-  /// 컬럼 - 과목.
+  /// 컬럼 - 강좌명.
   static const String columnCourseTitle = 'course_title';
 
   /// 컬럼 - 활동명.
@@ -19,26 +19,33 @@ class Schedule {
 
   /// 컬럼 - 남은시간.
   static const String columnActivityLeftTime = 'activity_lefttime';
-  
-  /// 컬럼 - 상태
+
+  /// 컬럼 - 상태.
   static const String columnActivityState = 'activity_state';
 
   String? id;
   String? activityType;
-  String? week;
+  String? weekTitle;
   String? courseTitle;
   String? activityTitle;
   String? activityDeadLine;
   String? activityLeftTime;
   bool? activityState;
 
-  Schedule(this.id, this.activityType, this.week, this.courseTitle,
-      this.activityTitle, this.activityDeadLine, this.activityLeftTime, this.activityState);
+  Schedule(
+      this.id,
+      this.activityType,
+      this.weekTitle,
+      this.courseTitle,
+      this.activityTitle,
+      this.activityDeadLine,
+      this.activityLeftTime,
+      this.activityState);
 
   Map<String, dynamic> toMap() {
     return {
       columnId: id,
-      columnWeek: week,
+      columnWeekTitle: weekTitle,
       columnActivityType: activityType,
       columnCourseTitle: courseTitle,
       columnActivityTitle: activityTitle,
@@ -52,7 +59,7 @@ class Schedule {
     return Schedule(
         mapData[columnId],
         mapData[columnActivityType],
-        mapData[columnWeek],
+        mapData[columnWeekTitle],
         mapData[columnCourseTitle],
         mapData[columnActivityTitle],
         mapData[columnActivityDeadLine],
@@ -64,7 +71,7 @@ class Schedule {
   String toString() {
     return id! +
         "/" +
-        week! +
+        weekTitle! +
         "/" +
         activityType! +
         "/" +

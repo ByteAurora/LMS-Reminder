@@ -9,35 +9,35 @@ Future<void> main() async {
 
   stopWatch.reset();
   stopWatch.start();
-  await LmsManager().getCourseList();
+  await LmsManager().getCourseListFromLms();
   print('강좌 불러오기: ' + stopWatch.elapsed.inMilliseconds.toString() + "ms");
 
   stopWatch.reset();
   stopWatch.start();
-  await LmsManager().getLectureList();
+  await LmsManager().getWeekListFromLms();
   print('강의 불러오기: ' + stopWatch.elapsed.inMilliseconds.toString() + "ms");
 
   stopWatch.reset();
   stopWatch.start();
-  await LmsManager().getAssignmentList();
+  await LmsManager().getAssignmentListFromLms();
   print('과제 불러오기: ' + stopWatch.elapsed.inMilliseconds.toString() + "ms");
 
   stopWatch.reset();
   stopWatch.start();
-  await LmsManager().getVideoList();
+  await LmsManager().getVideoListFromLms();
   print('영상 불러오기: ' + stopWatch.elapsed.inMilliseconds.toString() + "ms");
 
   stopWatch.reset();
   stopWatch.start();
-  await LmsManager().getNoticeList();
+  await LmsManager().getNoticeListFromLms();
   print('공지불러오기: ' + stopWatch.elapsed.inMilliseconds.toString() + "ms");
 
   for (var course in LmsManager().courseList) {
     print(
-        '[과목] ${course.title}[${course.classNumber}] (교수: ${course.professor})');
-    for (var lecture in course.lectureList) {
-      print('   [주차] ${lecture.week}(${lecture.date})');
-      for (var assignment in lecture.assignmentList) {
+        '[강좌] ${course.title}[${course.classNumber}] (교수: ${course.professor})');
+    for (var week in course.weekList) {
+      print('   [주차] ${week.weekTitle}(${week.date})');
+      for (var assignment in week.assignmentList) {
         print('       [과제] ${assignment.title}');
         print('             - ${assignment.submit ? '제출완료' : '미제출'}');
         print('             - ${assignment.deadLine.toString()}');
@@ -45,7 +45,7 @@ Future<void> main() async {
         print('             - ${assignment.content}');
         print('             - ${assignment.leftTime}');
       }
-      for (var video in lecture.videoList) {
+      for (var video in week.videoList) {
         print('       [영상] ${video.title}');
         print('             - ${video.watch ? '출석' : '결석'}');
         print('             - ${video.enableTime.toString()}');

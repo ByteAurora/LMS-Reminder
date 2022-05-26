@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:lms_reminder/sharedpreferences_key.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class PageSetting extends StatefulWidget {
-  const PageSetting({Key? key}) : super(key: key);
+class ScreenSetting extends StatefulWidget {
+  const ScreenSetting({Key? key}) : super(key: key);
 
   @override
-  State<PageSetting> createState() => _PageSettingState();
+  State<ScreenSetting> createState() => _ScreenSettingState();
 }
 
-class _PageSettingState extends State<PageSetting> {
+class _ScreenSettingState extends State<ScreenSetting> {
   String? version = "1.0.0";
   bool notifyFinishedActivities = false;
   bool notifyAssignmentSwitch = false;
@@ -24,18 +24,18 @@ class _PageSettingState extends State<PageSetting> {
   bool notifyVideo3days = false;
   bool notifyVideo5days = false;
 
-  TextStyle categoryTextStyle = TextStyle(
+  TextStyle categoryTextStyle = const TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.bold,
     color: Colors.grey,
   );
 
-  TextStyle optionTextStyle = TextStyle(
+  TextStyle optionTextStyle = const TextStyle(
     color: Colors.black,
     fontSize: 14,
   );
 
-  TextStyle optionSummaryTextStyle = TextStyle(
+  TextStyle optionSummaryTextStyle = const TextStyle(
     color: Colors.grey,
     fontSize: 14,
   );

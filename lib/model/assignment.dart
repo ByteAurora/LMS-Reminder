@@ -9,12 +9,12 @@ import 'package:lms_reminder/manager/lms_manager.dart';
 import 'package:lms_reminder/model/schedule.dart';
 
 import '../manager/dio_manager.dart';
-import 'lecture.dart';
+import 'week.dart';
 
 /// 과제 정보를 관리하는 클래스.
 class Assignment {
   /// 주차.
-  Lecture? _lecture;
+  Week? _week;
 
   /// 과제 URL.
   String? _url;
@@ -82,8 +82,8 @@ class Assignment {
   }
 
   /// Assignment 생성자.
-  Assignment(Lecture lecture) {
-    _lecture = lecture;
+  Assignment(Week week) {
+    _week = week;
   }
 
   /// 과제 마감까지 남은 시간을 반환하는 함수.
@@ -141,10 +141,10 @@ class Assignment {
     _submit = value;
   }
 
-  Lecture get lecture => _lecture!;
+  Week get week => _week!;
 
-  set lecture(Lecture value) {
-    _lecture = value;
+  set week(Week value) {
+    _week = value;
   }
 
   String get url => _url!;
@@ -161,11 +161,13 @@ class Assignment {
 
   Schedule toSchedule(String leftTime) {
     return Schedule(
-        sha256.convert(utf8.encode(title+leftTime)).toString(),
+        sha256.convert(utf8.encode(title + leftTime)).toString(),
         'assignment',
-        lecture.week,
-        lecture.course.title,
+        week.weekTitle,
+        week.course.title,
         title,
-        DateFormat('yyyy-MM-dd HH:mm').format(deadLine), leftTime, submit);
+        DateFormat('yyyy-MM-dd HH:mm').format(deadLine),
+        leftTime,
+        submit);
   }
 }

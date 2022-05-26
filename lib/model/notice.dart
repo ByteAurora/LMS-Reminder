@@ -1,14 +1,13 @@
 import 'package:dio/dio.dart';
+import 'package:html/dom.dart' as html_dom;
+import 'package:html/parser.dart' as html_parser;
 
 import '../manager/dio_manager.dart';
 import 'course.dart';
 
-import 'package:html/dom.dart' as html_dom;
-import 'package:html/parser.dart' as html_parser;
-
 /// 공지사항 정보를 관리하는 클래스.
 class Notice {
-  /// 과목.
+  /// 강좌.
   Course? _course;
 
   /// 공지사항 url.
@@ -26,8 +25,8 @@ class Notice {
   /// 날짜.
   String? _date;
 
-  /// 전달된 html에서 영상 정보를 추출하여 반환하는 함수.
-  static Future<List<Notice>> praseNoticeFromHtml(
+  /// 전달된 html에서 공지사항 정보를 추출하여 반환하는 함수.
+  static Future<List<Notice>> praseNoticeListFromHtml(
       Course course, String html) async {
     List<Notice> courseNoticeList = List.empty(growable: true);
 

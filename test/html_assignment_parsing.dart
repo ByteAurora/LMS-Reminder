@@ -6,7 +6,7 @@ import 'package:html/parser.dart' as html_parser;
 import 'package:intl/intl.dart';
 import 'package:lms_reminder/model/assignment.dart';
 import 'package:lms_reminder/model/course.dart';
-import 'package:lms_reminder/model/lecture.dart';
+import 'package:lms_reminder/model/week.dart';
 
 /// Html에서 Assignment 관련 정보 파싱 테스트.
 Future<void> main() async {
@@ -18,7 +18,7 @@ Future<void> main() async {
 
   html_dom.Document document = html_parser.parse(htmlContents);
 
-  Assignment assignment = Assignment(Lecture(Course()));
+  Assignment assignment = Assignment(Week(Course()));
 
   assignment.title = document
       .getElementById('region-main')!
