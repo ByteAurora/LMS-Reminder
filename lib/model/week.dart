@@ -98,7 +98,37 @@ class Week {
               .forEach((element2) {
             Video video = Video(week: week);
 
-            String videoInfo = element2
+            String videoInfo = '';
+            if (element2
+                .getElementsByTagName('div')[0]
+                .getElementsByClassName('mod-indent-outer')[0]
+                .getElementsByTagName('div')[1]
+                .getElementsByClassName('activityinstance')[0]
+                .getElementsByTagName('a')
+                .isEmpty) {
+              videoInfo = element2
+                  .getElementsByTagName('div')[0]
+                  .getElementsByClassName('mod-indent-outer')[0]
+                  .getElementsByTagName('div')[1]
+                  .getElementsByClassName('activityinstance')[0]
+                  .getElementsByTagName('div')[0]
+                  .text
+                  .trim()
+                  .replaceAll(' 동영상', '');
+            } else {
+              videoInfo = element2
+                  .getElementsByTagName('div')[0]
+                  .getElementsByClassName('mod-indent-outer')[0]
+                  .getElementsByTagName('div')[1]
+                  .getElementsByClassName('activityinstance')[0]
+                  .getElementsByTagName('a')[0]
+                  .text
+                  .trim()
+                  .replaceAll(' 동영상', '');
+            }
+            video.title = videoInfo;
+
+            videoInfo = element2
                 .getElementsByTagName('div')[0]
                 .getElementsByClassName('mod-indent-outer')[0]
                 .getElementsByTagName('div')[1]

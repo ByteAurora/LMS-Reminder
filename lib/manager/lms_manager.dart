@@ -173,17 +173,28 @@ class LmsManager {
           // 해당 주차에 속한 동영상 리스트이 없을 경우 해당 주차의 동영상 리스트를 빈 리스트로 설정.
           week.videoList = List.empty(growable: true);
         } else {
-          // 해당 주차에 속한 동영상 리스트이 있을 경우
-          for (var video in week.videoList) {
-            // 주차에 미리 저장되어있던 video 객체에 온라인 출석부에서 가져온 Video 값 대입.
-            video.title = videos.elementAt(week.videoList.indexOf(video)).title;
-            video.totalWatchTime =
-                videos.elementAt(week.videoList.indexOf(video)).totalWatchTime;
-            video.requiredWatchTime = videos
-                .elementAt(week.videoList.indexOf(video))
-                .requiredWatchTime;
-            video.done = videos.elementAt(week.videoList.indexOf(video)).done;
+          List<Video> attendanceVideos = List.empty(growable: true);
+          for(var video in week.videoList) {
+            for(var checkVideo in videos){
+              if(video.title == checkVideo.title){
+                attendanceVideos.add(video);
+              }
+            }
           }
+
+          // 해당 주차에 속한 동영상 리스트이 있을 경우
+          for (var video in attendanceVideos) {
+            // 주차에 미리 저장되어있던 video 객체에 온라인 출석부에서 가져온 Video 값 대입.
+            video.title = videos.elementAt(attendanceVideos.indexOf(video)).title;
+            video.totalWatchTime =
+                videos.elementAt(attendanceVideos.indexOf(video)).totalWatchTime;
+            video.requiredWatchTime = videos
+                .elementAt(attendanceVideos.indexOf(video))
+                .requiredWatchTime;
+            video.done = videos.elementAt(attendanceVideos.indexOf(video)).done;
+          }
+
+          week.videoList = attendanceVideos;
         }
       }
     }
