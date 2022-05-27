@@ -37,3 +37,5 @@ LMS 크롤링을 통해 현재 제출되지 않은 과제를 확인할 수 있�
 - [awesome_notifications](https://pub.dev/packages/awesome_notifications) 0.6.21
 - [shimmer](https://pub.dev/packages/shimmer) 2.0.0
 - [slide_countdown](https://pub.dev/packages/slide_countdown) 0.2.4
+- [device_info_plus](https://pub.dev/packages/device_info_plus) 3.2.3
+- [url_launcher](https://pub.dev/packages/url_launcher) 6.1.2
