@@ -262,8 +262,7 @@ class LmsManager {
 
       if (activity1LeftTime == '마감' && activity2LeftTime == '마감') {
         return int.parse((activity2).week.title.replaceAll('주차', ''))
-            .compareTo(
-                int.parse((activity1).week.title.replaceAll('주차', '')));
+            .compareTo(int.parse((activity1).week.title.replaceAll('주차', '')));
       }
 
       if (activity1LeftTime != '마감' && activity2LeftTime != '마감') {
@@ -288,23 +287,19 @@ class LmsManager {
         for (var assignment in week.assignmentList) {
           if (assignment.deadLine
               .isAfter(currentTime.add(const Duration(hours: 6)))) {
-            beforeDeadLineActivityList
-                .add(assignment.toSchedule('6시간'));
+            beforeDeadLineActivityList.add(assignment.toSchedule('6시간'));
           }
           if (assignment.deadLine
               .isAfter(currentTime.add(const Duration(days: 1)))) {
-            beforeDeadLineActivityList
-                .add(assignment.toSchedule('1일'));
+            beforeDeadLineActivityList.add(assignment.toSchedule('1일'));
           }
           if (assignment.deadLine
               .isAfter(currentTime.add(const Duration(days: 3)))) {
-            beforeDeadLineActivityList
-                .add(assignment.toSchedule('3일'));
+            beforeDeadLineActivityList.add(assignment.toSchedule('3일'));
           }
           if (assignment.deadLine
               .isAfter(currentTime.add(const Duration(days: 5)))) {
-            beforeDeadLineActivityList
-                .add(assignment.toSchedule('5일'));
+            beforeDeadLineActivityList.add(assignment.toSchedule('5일'));
           }
         }
 

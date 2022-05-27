@@ -62,9 +62,15 @@ class _ScreenMainState extends State<ScreenMain>
       ),
       body: TabBarView(
         children: <Widget>[
-          TabPageNotFinished(notifyParent: refresh,),
-          TabPageFinished(notifyParent: refresh,),
-          TabPageNotice(notifyParent: refresh,),
+          TabPageNotFinished(
+            notifyParent: refresh,
+          ),
+          TabPageFinished(
+            notifyParent: refresh,
+          ),
+          TabPageNotice(
+            notifyParent: refresh,
+          ),
         ],
         controller: tabController,
       ),

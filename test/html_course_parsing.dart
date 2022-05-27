@@ -22,7 +22,6 @@ Future<void> main() async {
       .getElementsByClassName('my-course-lists coursemos-layout-0')[0]
       .getElementsByClassName('course_label_re_02')
       .forEach((element) {
-
     Course course = Course();
 
     // 강좌 URL 추출

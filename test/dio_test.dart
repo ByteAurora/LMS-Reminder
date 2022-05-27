@@ -54,7 +54,7 @@ Future<void> main() async {
         print('             - ${video.totalWatchTime}');
       }
     }
-    for(var notice in course.noticeList){
+    for (var notice in course.noticeList) {
       print('       [공지] ${notice.title}');
       print('              ${notice.author}');
     }

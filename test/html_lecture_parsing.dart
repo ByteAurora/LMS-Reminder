@@ -50,8 +50,13 @@ Future<void> main() async {
               .getElementsByTagName('div')[1]
               .getElementsByClassName('activityinstance')[0];
 
-          assignment.title = assignmentElement.getElementsByTagName('a')[0].getElementsByClassName('instancename')[0].text;
-          assignment.url = assignmentElement.innerHtml.substring(assignmentElement.innerHtml.indexOf("href=") + 6, assignmentElement.innerHtml.indexOf("\">"));
+          assignment.title = assignmentElement
+              .getElementsByTagName('a')[0]
+              .getElementsByClassName('instancename')[0]
+              .text;
+          assignment.url = assignmentElement.innerHtml.substring(
+              assignmentElement.innerHtml.indexOf("href=") + 6,
+              assignmentElement.innerHtml.indexOf("\">"));
 
           print(assignment.title + " / " + assignment.url);
         });

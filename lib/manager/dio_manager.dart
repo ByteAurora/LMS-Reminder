@@ -62,8 +62,8 @@ class DioManager {
   }
 
   /// 전달된 url로부터 파일을 다운로드하는 함수.
-  Future downloadFileFromUrl(String url, File file, VoidCallback ifDownloadSuccessful,
-      VoidCallback ifDownloadFails) async {
+  Future downloadFileFromUrl(String url, File file,
+      VoidCallback ifDownloadSuccessful, VoidCallback ifDownloadFails) async {
     try {
       Response response = await DioManager().httpGet(
         options: Options(

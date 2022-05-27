@@ -37,7 +37,8 @@ class _TabPageNotice extends State<TabPageNotice> {
                       children: [
                         Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.only(left: 16, top: 14.0, bottom: 14.0, right: 16),
+                            padding: const EdgeInsets.only(
+                                left: 16, top: 14.0, bottom: 14.0, right: 16),
                             child: Row(
                               children: [
                                 Expanded(
@@ -52,7 +53,7 @@ class _TabPageNotice extends State<TabPageNotice> {
                                               padding: const EdgeInsets.only(
                                                   right: 8.0),
                                               child: Shimmer.fromColors(
-                                                //제목 
+                                                //제목
                                                 baseColor: Colors.grey.shade400,
                                                 highlightColor:
                                                     Colors.grey.shade300,

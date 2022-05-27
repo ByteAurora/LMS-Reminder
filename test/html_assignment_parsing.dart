@@ -50,11 +50,20 @@ Future<void> main() async {
             .getElementsByTagName('td')[0]
             .text
             .contains("마감까지 남은 기한")) {
-          assignment.leftTime = element2.text.replaceAll("마감까지 남은 기한", "").trim();
+          assignment.leftTime =
+              element2.text.replaceAll("마감까지 남은 기한", "").trim();
         }
       });
     }
   });
 
-  print(assignment.title + "/" + assignment.content + "/" + assignment.deadLine.toString() + "/" + assignment.leftTime + "/" + assignment.done.toString());
+  print(assignment.title +
+      "/" +
+      assignment.content +
+      "/" +
+      assignment.deadLine.toString() +
+      "/" +
+      assignment.leftTime +
+      "/" +
+      assignment.done.toString());
 }
