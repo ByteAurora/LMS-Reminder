@@ -94,6 +94,7 @@ Widget getActivityListview(List<dynamic> activityList) {
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
                             ),
+                            overflow: TextOverflow.ellipsis,
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 14),
@@ -281,19 +282,22 @@ Widget getActivityListview(List<dynamic> activityList) {
                           children: [
                             Row(
                               children: [
-                                Text(
-                                  courseTitle,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
+                                Flexible(
+                                  child: Text(
+                                    courseTitle,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                                 Text(
                                   " [" + weekTitle + "]",
                                   style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                  ),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      overflow: TextOverflow.visible),
                                 ),
                               ],
                             ),
@@ -315,33 +319,36 @@ Widget getActivityListview(List<dynamic> activityList) {
                           ],
                         ),
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: leftTimeCircleColor,
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(64),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 1,
-                              blurRadius: 4,
-                              offset: const Offset(4, 4),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: leftTimeCircleColor,
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(64),
                             ),
-                          ],
-                        ),
-                        child: Center(
-                          child: Text(
-                            leftTime,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20.0,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 1,
+                                blurRadius: 4,
+                                offset: const Offset(4, 4),
+                              ),
+                            ],
+                          ),
+                          child: Center(
+                            child: Text(
+                              leftTime,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.0,
+                              ),
                             ),
                           ),
+                          width: 64,
+                          height: 64,
                         ),
-                        width: 64,
-                        height: 64,
                       ),
                     ],
                   ),
