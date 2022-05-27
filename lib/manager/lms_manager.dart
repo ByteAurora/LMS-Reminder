@@ -174,10 +174,14 @@ class LmsManager {
           week.videoList = List.empty(growable: true);
         } else {
           List<Video> attendanceVideos = List.empty(growable: true);
+          List<Video> tempVideos = List.from(videos);
+
           for(var video in week.videoList) {
-            for(var checkVideo in videos){
+            for(var checkVideo in tempVideos){
               if(video.title == checkVideo.title){
                 attendanceVideos.add(video);
+                tempVideos.remove(checkVideo);
+                break;
               }
             }
           }
