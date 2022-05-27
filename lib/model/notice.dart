@@ -32,13 +32,16 @@ class Notice {
 
     html_dom.Document document = html_parser.parse(html);
 
-    document
+    for (var noticeElement in document
         .getElementById('ubboard_list_form')!
         .getElementsByTagName('table')[0]
         .getElementsByTagName('tbody')[0]
-        .getElementsByTagName('tr')
-        .forEach((noticeElement) async {
+        .getElementsByTagName('tr')) {
       Notice notice = Notice(course);
+
+      if (noticeElement.getElementsByTagName('td').length == 1) {
+        return courseNoticeList;
+      }
 
       String temp = noticeElement.getElementsByTagName('td')[1].innerHtml;
       notice.url = temp
@@ -64,7 +67,7 @@ class Notice {
           .replaceAll('<p></p>', '');
 
       courseNoticeList.add(notice);
-    });
+    }
 
     return courseNoticeList;
   }
