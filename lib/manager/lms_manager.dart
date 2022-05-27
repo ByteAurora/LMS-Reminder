@@ -390,12 +390,6 @@ class LmsManager {
     prefs.setString(keyLastUpdateTime,
         DateFormat('yyyy-MM-dd hh:mm:ss').format(DateTime.now()));
 
-    // WorkManager 추가 전 초기화.
-    await Workmanager().initialize(
-      callbackDispatcher,
-      isInDebugMode: false,
-    );
-
     // 이전에 설정된 모든 알림 제거 - 사용자가 바뀌었을 경우도 있기 때문에 WorkManager의 replace만으로는 해결 불가.
     // 추후 WorkManager에 사용자 ID값도 전달하여 ID가 달라졌을 경우에만 취소하도록 구현 필요.
     Workmanager().cancelByTag('activity_notification');
