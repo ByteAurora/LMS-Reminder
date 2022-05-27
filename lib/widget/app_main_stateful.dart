@@ -46,6 +46,7 @@ class _AppMainStatefulState extends State<AppMainStateful>
       theme: ThemeData(
         fontFamily: 'Noto Sans KR',
         primarySwatch: widget.primarySwatchColor!,
+        scaffoldBackgroundColor: Colors.white,
       ),
 
       // 화면 이동을 위한 route.

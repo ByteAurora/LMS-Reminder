@@ -43,11 +43,11 @@ class _ScreenMainState extends State<ScreenMain>
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        backgroundColor: const Color.fromARGB(255, 250, 250, 250),
+        backgroundColor: const Color.fromARGB(255, 183, 33, 45),
         title: Text(
           widget.appBarTitle!,
           style: const TextStyle(
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
         actions: <Widget>[
@@ -58,7 +58,7 @@ class _ScreenMainState extends State<ScreenMain>
             },
             icon: const Icon(
               Icons.settings,
-              color: Colors.black,
+              color: Colors.white,
             ),
           ),
         ],
