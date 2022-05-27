@@ -13,6 +13,7 @@ class ScreenSetting extends StatefulWidget {
 
 class _ScreenSettingState extends State<ScreenSetting> {
   String? version = "1.0.0";
+  String? lastUpdateTime = "";
   bool notifyFinishedActivities = false;
   bool notifyAssignmentSwitch = false;
   bool notifyAssignment6HourSwitch = false;
@@ -54,6 +55,7 @@ class _ScreenSettingState extends State<ScreenSetting> {
   _loadSetting() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
+      lastUpdateTime = (prefs.getString(keyLastUpdateTime));
       notifyFinishedActivities =
           (prefs.getBool(keyNotifyFinishedActivities) ?? false);
       notifyAssignmentSwitch = (prefs.getBool(keyNotifyAssignment) ?? false);
@@ -391,6 +393,26 @@ class _ScreenSettingState extends State<ScreenSetting> {
                         });
                       }),
                 ],
+              ),
+              // 구분선.
+              Divider(thickness: 1, height: 0.5, color: Colors.grey.shade300),
+
+              // 카테고리 - 알림 - 마지막 업데이트.
+              InkWell(
+                onTap: () {},
+                child: Row(
+                  children: [
+                    Padding(
+                      padding:
+                      const EdgeInsets.only(top: 16, bottom: 16, left: 16),
+                      child: Text(
+                        "마지막 업데이트" +
+                            lastUpdateTime!,
+                        style: optionTextStyle,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

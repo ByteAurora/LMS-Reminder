@@ -42,3 +42,6 @@ const keyTutorialShowed = 'KEY_TUTORIAL_SHOWED';
 
 /// Notification 아이디 값 (int)
 const keyNotificationId = 'KEY_NOTIFICATION_ID';
+
+/// 마지막 업데이트 시간
+const keyLastUpdateTime = 'KEY_LAST_UPDATE_TIME';

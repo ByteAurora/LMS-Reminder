@@ -16,101 +16,117 @@ void callbackDispatcher() {
       case 'update_activities':
         // 활동 목록 업데이트 작업일 경우.
         final prefs = await SharedPreferences.getInstance();
+        prefs.setString(keyLastUpdateTime,
+            DateFormat('yyyy-MM-dd hh:mm:ss').format(DateTime.now()));
+
         String? userId = prefs.getString(keyUserId);
         String? userPw = prefs.getString(keyUserPw);
 
-        if (userId != null && userId != '' && userPw != null && userPw != '') {
-          // 로그인 성공한 사용자 데이터가 있을 경우.
+        if (!(await LmsManager().checkLoginState())) {
+          if (userId != null &&
+              userId != '' &&
+              userPw != null &&
+              userPw != '') {
+            // 로그인 성공한 사용자 데이터가 있을 경우.
 
-          if (await LmsManager().login(userId, userPw)) {
-            // 데이터 업데이트 Notification 표시.
-            AwesomeNotifications().createNotification(
-                content: NotificationContent(
-                    id: 0,
-                    channelKey: 'update_activities',
-                    wakeUpScreen: false,
-                    summary: '업데이트',
-                    title: 'LMS에서 과제와 동영상을 확인하고 있습니다',
-                    backgroundColor: Colors.redAccent,
-                    notificationLayout: NotificationLayout.ProgressBar,
-                    autoDismissible: true));
+            if (await LmsManager().login(userId, userPw)) {
+              // 데이터 업데이트 Notification 표시.
+              AwesomeNotifications().createNotification(
+                  content: NotificationContent(
+                      id: 0,
+                      channelKey: 'update_activities',
+                      wakeUpScreen: false,
+                      summary: '업데이트',
+                      title: 'LMS에서 과제와 동영상을 확인하고 있습니다',
+                      backgroundColor: Colors.redAccent,
+                      notificationLayout: NotificationLayout.ProgressBar,
+                      autoDismissible: true));
 
-            // LMS에서 데이터 불러오기.
-            await LmsManager().reloadAllDataFromLms();
+              // LMS에서 데이터 불러오기.
+              await LmsManager().reloadAllDataFromLms();
 
-            // WorkManager 추가 전 초기화.
-            await Workmanager().initialize(
-              callbackDispatcher,
-              isInDebugMode: false,
-            );
+              // WorkManager 추가 전 초기화.
+              await Workmanager().initialize(
+                callbackDispatcher,
+                isInDebugMode: false,
+              );
 
-            // 이전에 설정된 모든 알림 제거 - 사용자가 바뀌었을 경우도 있기 때문에 WorkManager의 replace만으로는 해결 불가.
-            // 추후 WorkManager에 사용자 ID값도 전달하여 ID가 달라졌을 경우에만 취소하도록 구현 필요.
-            Workmanager().cancelByTag('activity_notification');
+              // 이전에 설정된 모든 알림 제거 - 사용자가 바뀌었을 경우도 있기 때문에 WorkManager의 replace만으로는 해결 불가.
+              // 추후 WorkManager에 사용자 ID값도 전달하여 ID가 달라졌을 경우에만 취소하도록 구현 필요.
+              Workmanager().cancelByTag('activity_notification');
 
-            DateTime currentTime = DateTime.now();
+              DateTime currentTime = DateTime.now();
 
-            for (var schedule in LmsManager().getBeforeDeadLineActivityList()) {
-              DateTime deadLine = DateFormat('yyyy-MM-dd HH:mm')
-                  .parse(schedule.activityDeadLine!);
-              DateTime? scheduleDate;
+              for (var schedule
+                  in LmsManager().getBeforeDeadLineActivityList()) {
+                DateTime deadLine = DateFormat('yyyy-MM-dd HH:mm')
+                    .parse(schedule.activityDeadLine!);
+                DateTime? scheduleDate;
 
-              if (schedule.activityLeftTime == '6시간') {
-                scheduleDate = deadLine.subtract(const Duration(hours: 6));
-              } else if (schedule.activityLeftTime == '1일') {
-                scheduleDate = deadLine.subtract(const Duration(days: 1));
-              } else if (schedule.activityLeftTime == '3일') {
-                scheduleDate = deadLine.subtract(const Duration(days: 3));
-              } else if (schedule.activityLeftTime == '5일') {
-                scheduleDate = deadLine.subtract(const Duration(days: 5));
+                if (schedule.activityLeftTime == '6시간') {
+                  scheduleDate = deadLine.subtract(const Duration(hours: 6));
+                } else if (schedule.activityLeftTime == '1일') {
+                  scheduleDate = deadLine.subtract(const Duration(days: 1));
+                } else if (schedule.activityLeftTime == '3일') {
+                  scheduleDate = deadLine.subtract(const Duration(days: 3));
+                } else if (schedule.activityLeftTime == '5일') {
+                  scheduleDate = deadLine.subtract(const Duration(days: 5));
+                }
+
+                print(
+                    '마감시간: ${schedule.activityDeadLine}, ${schedule.activityLeftTime} 전: ${DateFormat('yyyy-MM-dd HH:mm').format(scheduleDate!)}');
+                print(
+                    '현재시간: ${DateFormat('yyyy-MM-dd HH:mm').format(currentTime)}, 앞으로 ${scheduleDate.difference(currentTime).toString()} 시간 뒤에 알림');
+                print(
+                    '[${schedule.courseTitle}] "${schedule.activityTitle}" 예약됨: ' +
+                        DateFormat('yyyy-MM-dd HH:mm').format(currentTime
+                            .add(scheduleDate.difference(currentTime))));
+
+                Workmanager().registerOneOffTask(schedule.id!, schedule.id!,
+                    tag: 'activity_notification',
+                    existingWorkPolicy: ExistingWorkPolicy.replace,
+                    initialDelay: scheduleDate.difference(currentTime),
+                    inputData: schedule.toMap());
               }
 
-              print(
-                  '마감시간: ${schedule.activityDeadLine}, ${schedule.activityLeftTime} 전: ${DateFormat('yyyy-MM-dd HH:mm').format(scheduleDate!)}');
-              print(
-                  '현재시간: ${DateFormat('yyyy-MM-dd HH:mm').format(currentTime)}, 앞으로 ${scheduleDate.difference(currentTime).toString()} 시간 뒤에 알림');
-              print(
-                  '[${schedule.courseTitle}] "${schedule.activityTitle}" 예약됨: ' +
-                      DateFormat('yyyy-MM-dd HH:mm').format(currentTime
-                          .add(scheduleDate.difference(currentTime))));
+              AwesomeNotifications().createNotification(
+                  content: NotificationContent(
+                      id: 0,
+                      channelKey: 'update_activities',
+                      wakeUpScreen: false,
+                      summary: '업데이트',
+                      title: 'LMS 데이터 업데이트 완료',
+                      backgroundColor: Colors.redAccent,
+                      notificationLayout: NotificationLayout.Default));
 
-              Workmanager().registerOneOffTask(schedule.id!, schedule.id!,
-                  tag: 'activity_notification',
-                  existingWorkPolicy: ExistingWorkPolicy.replace,
-                  initialDelay: scheduleDate.difference(currentTime),
-                  inputData: schedule.toMap());
+              // 데이터 업데이트 Notification 제거
+              // AwesomeNotifications()
+              //     .dismissNotificationsByChannelKey('update_activities');
+            } else {
+              // 로그인 실패 Notification 표시
+              AwesomeNotifications().createNotification(
+                  content: NotificationContent(
+                      id: 0,
+                      channelKey: 'update_activities',
+                      wakeUpScreen: true,
+                      summary: '업데이트 실패',
+                      title: 'LMS에 로그인할 수 없습니다',
+                      body: '아이디와 비밀번호를 확인해주세요',
+                      backgroundColor: Colors.redAccent,
+                      notificationLayout: NotificationLayout.ProgressBar,
+                      autoDismissible: true));
             }
-
-            AwesomeNotifications().createNotification(
-                content: NotificationContent(
-                    id: 0,
-                    channelKey: 'update_activities',
-                    wakeUpScreen: false,
-                    summary: '업데이트',
-                    title: 'LMS 데이터 업데이트 완료',
-                    backgroundColor: Colors.redAccent,
-                    notificationLayout: NotificationLayout.Default));
-
-            // 데이터 업데이트 Notification 제거
-            // AwesomeNotifications()
-            //     .dismissNotificationsByChannelKey('update_activities');
           } else {
-            // 로그인 실패 Notification 표시
-            AwesomeNotifications().createNotification(
-                content: NotificationContent(
-                    id: 0,
-                    channelKey: 'update_activities',
-                    wakeUpScreen: true,
-                    summary: '업데이트 실패',
-                    title: 'LMS에 로그인할 수 없습니다',
-                    body: '아이디와 비밀번호를 확인해주세요',
-                    backgroundColor: Colors.redAccent,
-                    notificationLayout: NotificationLayout.ProgressBar,
-                    autoDismissible: true));
+            print('자동로그인 비활성화');
           }
-        } else {
-          print('자동로그인 비활성화');
         }
+
+        Workmanager().registerOneOffTask(
+          'update_activities',
+          'update_activities',
+          existingWorkPolicy: ExistingWorkPolicy.replace,
+          initialDelay: const Duration(hours: 4),
+        );
         break;
       default:
         // Notification 아이디 구분을 위해 SharedPreferences에 마지막 ID값 불러오기 후 증가된 값 저장.
@@ -241,6 +257,7 @@ void main() async {
     prefs.setString(keyUserPw, '');
     prefs.setBool(keyTutorialShowed, false);
     prefs.setInt(keyNotificationId, 0);
+    prefs.setString(keyLastUpdateTime, '업데이트 내역 없음');
   }
 
   // WorkManager 초기화
@@ -249,12 +266,11 @@ void main() async {
     isInDebugMode: false,
   );
 
-  Workmanager().registerPeriodicTask(
+  Workmanager().registerOneOffTask(
     'update_activities',
     'update_activities',
     existingWorkPolicy: ExistingWorkPolicy.keep,
-    initialDelay: const Duration(seconds: 0),
-    frequency: const Duration(hours: 4),
+    initialDelay: const Duration(hours: 4),
   );
 
   // Awesome Notification 초기화
@@ -278,7 +294,7 @@ void main() async {
       ],
       debug: true);
 
-  runApp(AppMainStateful(
+  runApp(const AppMainStateful(
     applicationName: 'LMS 리마인더',
     appBarTitle: 'LMS 리마인더',
     showDebugLabel: false,

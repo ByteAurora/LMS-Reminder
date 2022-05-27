@@ -1,14 +1,20 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lms_reminder/manager/dio_manager.dart';
 import 'package:lms_reminder/model/assignment.dart';
 import 'package:lms_reminder/model/course.dart';
 import 'package:lms_reminder/model/schedule.dart';
 import 'package:lms_reminder/model/week.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workmanager/workmanager.dart';
 
+import '../main.dart';
 import '../model/activity.dart';
 import '../model/notice.dart';
 import '../model/video.dart';
+import '../sharedpreferences_key.dart';
 
 /// LMS에 로그인 및 강좌, 주차, 공지사항, 과제, 동영상 리스트를 불러오는 역할을 담당하는 Manager 클래스.
 class LmsManager {
@@ -176,9 +182,9 @@ class LmsManager {
           List<Video> attendanceVideos = List.empty(growable: true);
           List<Video> tempVideos = List.from(videos);
 
-          for(var video in week.videoList) {
-            for(var checkVideo in tempVideos){
-              if(video.title == checkVideo.title){
+          for (var video in week.videoList) {
+            for (var checkVideo in tempVideos) {
+              if (video.title == checkVideo.title) {
                 attendanceVideos.add(video);
                 tempVideos.remove(checkVideo);
                 break;
@@ -189,9 +195,11 @@ class LmsManager {
           // 해당 주차에 속한 동영상 리스트이 있을 경우
           for (var video in attendanceVideos) {
             // 주차에 미리 저장되어있던 video 객체에 온라인 출석부에서 가져온 Video 값 대입.
-            video.title = videos.elementAt(attendanceVideos.indexOf(video)).title;
-            video.totalWatchTime =
-                videos.elementAt(attendanceVideos.indexOf(video)).totalWatchTime;
+            video.title =
+                videos.elementAt(attendanceVideos.indexOf(video)).title;
+            video.totalWatchTime = videos
+                .elementAt(attendanceVideos.indexOf(video))
+                .totalWatchTime;
             video.requiredWatchTime = videos
                 .elementAt(attendanceVideos.indexOf(video))
                 .requiredWatchTime;
@@ -244,7 +252,7 @@ class LmsManager {
   /// 제출 과제 및 시청 동영상을 반환하는 함수. (미제출, 미시청한 활동이라도 마감일이 지났을 경우 함께 반환)
   Future<List<dynamic>> getFinishedActivityList() async {
     if (!await checkLoginState()) {}
-
+    
     // 제출된 과제 및 시청한 동영상 리스트.
     List<dynamic> finishedActivityList = List.empty(growable: true);
 
@@ -269,7 +277,7 @@ class LmsManager {
         }
       }
     }
-
+    
     // 활동들을 현재로부터 마감일까지 남은 시간을 비교하여 정렬해주는 부분. 이미 마감된 활동들은 주차를 기준으로 정렬.
     finishedActivityList.sort((activity1, activity2) {
       String activity1LeftTime = (activity1 as Activity).getLeftTime();
@@ -280,7 +288,7 @@ class LmsManager {
             .compareTo(int.parse((activity1).week.title.replaceAll('주차', '')));
       }
 
-      if (activity1LeftTime != '마감' && activity2LeftTime != '마감') {
+      if (activity1LeftTime.contains('D-') && activity2LeftTime.contains('D-')) {
         return int.parse(activity1LeftTime.replaceAll('D-', ''))
             .compareTo(int.parse(activity2LeftTime.replaceAll('D-', '')));
       }
@@ -364,9 +372,71 @@ class LmsManager {
   /// 모든 강좌, 주차, 공지사항, 과제, 동영상 데이터를 LMS로부터 업데이트하는 함수.
   Future reloadAllDataFromLms() async {
     await getCourseListFromLms();
+    print('Course loaded');
     await getWeekListFromLms();
+    print('Week loaded');
     await getNoticeListFromLms();
+    print('Notice loaded');
     await getAssignmentListFromLms();
+    print('Assignment loaded');
     await getVideoListFromLms();
+    print('Video loaded');
+    updateSchedule();
+  }
+
+  Future updateSchedule() async {
+    // 활동 목록 업데이트 작업일 경우.
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString(keyLastUpdateTime,
+        DateFormat('yyyy-MM-dd hh:mm:ss').format(DateTime.now()));
+
+    // WorkManager 추가 전 초기화.
+    await Workmanager().initialize(
+      callbackDispatcher,
+      isInDebugMode: false,
+    );
+
+    // 이전에 설정된 모든 알림 제거 - 사용자가 바뀌었을 경우도 있기 때문에 WorkManager의 replace만으로는 해결 불가.
+    // 추후 WorkManager에 사용자 ID값도 전달하여 ID가 달라졌을 경우에만 취소하도록 구현 필요.
+    Workmanager().cancelByTag('activity_notification');
+
+    DateTime currentTime = DateTime.now();
+
+    for (var schedule in LmsManager().getBeforeDeadLineActivityList()) {
+      DateTime deadLine =
+          DateFormat('yyyy-MM-dd HH:mm').parse(schedule.activityDeadLine!);
+      DateTime? scheduleDate;
+
+      if (schedule.activityLeftTime == '6시간') {
+        scheduleDate = deadLine.subtract(const Duration(hours: 6));
+      } else if (schedule.activityLeftTime == '1일') {
+        scheduleDate = deadLine.subtract(const Duration(days: 1));
+      } else if (schedule.activityLeftTime == '3일') {
+        scheduleDate = deadLine.subtract(const Duration(days: 3));
+      } else if (schedule.activityLeftTime == '5일') {
+        scheduleDate = deadLine.subtract(const Duration(days: 5));
+      }
+
+      Workmanager().registerOneOffTask(schedule.id!, schedule.id!,
+          tag: 'activity_notification',
+          existingWorkPolicy: ExistingWorkPolicy.replace,
+          initialDelay: scheduleDate!.difference(currentTime),
+          inputData: schedule.toMap());
+
+      print(
+          '마감시간: ${schedule.activityDeadLine}, ${schedule.activityLeftTime} 전: ${DateFormat('yyyy-MM-dd HH:mm').format(scheduleDate!)}');
+      print(
+          '현재시간: ${DateFormat('yyyy-MM-dd HH:mm').format(currentTime)}, 앞으로 ${scheduleDate.difference(currentTime).toString()} 시간 뒤에 알림');
+      print('[${schedule.courseTitle}] "${schedule.activityTitle}" 예약됨: ' +
+          DateFormat('yyyy-MM-dd HH:mm')
+              .format(currentTime.add(scheduleDate.difference(currentTime))));
+    }
+
+    Workmanager().registerOneOffTask(
+      'update_activities',
+      'update_activities',
+      existingWorkPolicy: ExistingWorkPolicy.replace,
+      initialDelay: const Duration(hours: 4),
+    );
   }
 }
