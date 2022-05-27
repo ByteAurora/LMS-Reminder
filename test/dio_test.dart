@@ -4,7 +4,7 @@ Future<void> main() async {
   var stopWatch = Stopwatch();
 
   stopWatch.start();
-  print(await LmsManager().login('20181179', 'dudwls1234'));
+  print(await LmsManager().login('학번', '비밀번호'));
   print('로그인: ' + stopWatch.elapsed.inMilliseconds.toString() + "ms");
 
   stopWatch.reset();

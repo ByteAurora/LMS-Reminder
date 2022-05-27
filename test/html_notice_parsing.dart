@@ -5,7 +5,7 @@ import 'package:lms_reminder/manager/dio_manager.dart';
 import 'package:lms_reminder/manager/lms_manager.dart';
 
 Future<void> main() async {
-  await LmsManager().login('20181179', 'dudwls1234');
+  await LmsManager().login('학번', '비밀번호');
   // await LmsManager().refreshAllData();
 
   // for (var course in LmsManager().courseList) {
