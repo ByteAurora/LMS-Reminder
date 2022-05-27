@@ -66,6 +66,7 @@ class Assignment extends Activity {
           }
         });
       }
+      _content ??= '';
     });
   }
 
