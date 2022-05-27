@@ -49,12 +49,13 @@ class Video extends Activity {
           video.title = tdList[1].text.trim();
           video.requiredWatchTime = tdList[2].text.trim();
           video.done = tdList[4].text.contains('O');
-          video.totalWatchTime = tdList[3]
-              .innerHtml
-              .substring(0, tdList[3].innerHtml.indexOf('<'))
-              .trim();
-          if (video.totalWatchTime == '-') {
+          if (tdList[3].text.contains('-')) {
             video.totalWatchTime = '미시청';
+          } else {
+            video.totalWatchTime = tdList[3]
+                .innerHtml
+                .substring(0, tdList[3].innerHtml.indexOf('<'))
+                .trim();
           }
 
           weekVideoList!.add(video);
@@ -70,13 +71,13 @@ class Video extends Activity {
         video.title = tdList[0].text.trim();
         video.requiredWatchTime = tdList[1].text.trim();
         video.done = tdList[3].text.contains('O');
-        video.totalWatchTime = tdList[2]
-            .innerHtml
-            .substring(0, tdList[2].innerHtml.indexOf('<'))
-            .trim();
-
-        if (video.totalWatchTime == '-') {
+        if(tdList[2].text.contains('-')){
           video.totalWatchTime = '미시청';
+        } else {
+          video.totalWatchTime = tdList[2]
+              .innerHtml
+              .substring(0, tdList[2].innerHtml.indexOf('<'))
+              .trim();
         }
 
         weekVideoList!.add(video);
