@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lms_reminder/sharedpreferences_key.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// 설정 화면 위젯.
 class ScreenSetting extends StatefulWidget {
   const ScreenSetting({Key? key}) : super(key: key);
 
@@ -24,17 +25,20 @@ class _ScreenSettingState extends State<ScreenSetting> {
   bool notifyVideo3days = false;
   bool notifyVideo5days = false;
 
+  /// 설정 카테고리 텍스트 스타일.
   TextStyle categoryTextStyle = const TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.bold,
     color: Colors.grey,
   );
 
+  /// 설정 텍스트 스타일.
   TextStyle optionTextStyle = const TextStyle(
     color: Colors.black,
     fontSize: 14,
   );
 
+  /// 설정 하위 텍스트 스타일.
   TextStyle optionSummaryTextStyle = const TextStyle(
     color: Colors.grey,
     fontSize: 14,
@@ -46,6 +50,7 @@ class _ScreenSettingState extends State<ScreenSetting> {
     _loadSetting();
   }
 
+  /// SharedPreferences로부터 설정 데이터를 불러오는 함수.
   _loadSetting() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -80,6 +85,7 @@ class _ScreenSettingState extends State<ScreenSetting> {
       ),
       body: ListView(
         children: <Widget>[
+          // 카테고리 - 일반.
           Padding(
             padding: const EdgeInsets.only(
               left: 16.0,
@@ -88,6 +94,7 @@ class _ScreenSettingState extends State<ScreenSetting> {
             ),
             child: Text("일반", style: categoryTextStyle),
           ),
+          // 카테고리 - 일반 - 버전 표시.
           InkWell(
             onTap: () {},
             child: Row(
@@ -99,19 +106,23 @@ class _ScreenSettingState extends State<ScreenSetting> {
                 Padding(
                   padding: const EdgeInsets.only(top: 16, bottom: 16, left: 8),
                   child: Text(
-                    "버전 : " + version!,
+                    "버전 " + version!,
                     style: optionTextStyle,
                   ),
                 ),
               ],
             ),
           ),
+
+          // 카테고리 - 알림.
           Padding(
             padding: const EdgeInsets.only(left: 16.0, top: 24.0, bottom: 8.0),
             child: Text("알림", style: categoryTextStyle),
           ),
+          // 알림 - 세부 설정.
           Column(
             children: <Widget>[
+              // 알림 - 완료한 활동 알림.
               SwitchListTile(
                   title: Text(
                     "완료한 활동 알림",
@@ -131,7 +142,10 @@ class _ScreenSettingState extends State<ScreenSetting> {
                           prefs.getBool(keyNotifyFinishedActivities)!;
                     });
                   }),
+              // 구분선
               Divider(thickness: 1, height: 0.5, color: Colors.grey.shade300),
+
+              // 알림 - 과제 알림.
               SwitchListTile(
                   title: Text(
                     "과제 알림",
@@ -165,13 +179,17 @@ class _ScreenSettingState extends State<ScreenSetting> {
                       }
                     });
                   }),
+              // 구분선.
               Divider(thickness: 1, height: 0.5, color: Colors.grey.shade300),
+
+              // 알림 - 과제 알림주기.
               ExpansionTile(
                 title: Text(
                   "과제 알림주기",
                   style: optionTextStyle,
                 ),
                 children: [
+                  // 알림 - 과제 알림주기 - 6시간 전.
                   SwitchListTile(
                       title: Text(
                         "6시간 전",
@@ -190,6 +208,8 @@ class _ScreenSettingState extends State<ScreenSetting> {
                           }
                         });
                       }),
+
+                  // 알림 - 과제 알림주기 - 1일 전.
                   SwitchListTile(
                       title: Text(
                         "1일 전",
@@ -207,6 +227,8 @@ class _ScreenSettingState extends State<ScreenSetting> {
                           }
                         });
                       }),
+
+                  // 알림 - 과제 알림주기 - 3일 전.
                   SwitchListTile(
                       title: Text(
                         "3일 전",
@@ -225,6 +247,8 @@ class _ScreenSettingState extends State<ScreenSetting> {
                           }
                         });
                       }),
+
+                  // 알림 - 과제 알림주기 - 5일 전.
                   SwitchListTile(
                       title: Text(
                         "5일 전",
@@ -245,7 +269,10 @@ class _ScreenSettingState extends State<ScreenSetting> {
                       }),
                 ],
               ),
+              // 구분선.
               Divider(thickness: 1, height: 0.5, color: Colors.grey.shade300),
+
+              // 알림 - 동영상 알림.
               SwitchListTile(
                   title: Text(
                     "동영상 알림",
@@ -278,13 +305,17 @@ class _ScreenSettingState extends State<ScreenSetting> {
                       }
                     });
                   }),
+              // 구분선.
               Divider(thickness: 1, height: 0.5, color: Colors.grey.shade300),
+
+              // 알림 - 동영상 알림주기.
               ExpansionTile(
                 title: Text(
                   "동영상 알림주기",
                   style: optionTextStyle,
                 ),
                 children: [
+                  // 알림 - 동영상 알림주기 - 6시간 전.
                   SwitchListTile(
                       title: Text(
                         "6시간 전",
@@ -302,6 +333,8 @@ class _ScreenSettingState extends State<ScreenSetting> {
                           }
                         });
                       }),
+
+                  // 알림 - 동영상 알림주기 - 1일 전.
                   SwitchListTile(
                       title: Text(
                         "1일 전",
@@ -319,6 +352,8 @@ class _ScreenSettingState extends State<ScreenSetting> {
                           }
                         });
                       }),
+
+                  // 알림 - 동영상 알림주기 - 3일 전.
                   SwitchListTile(
                       title: Text(
                         "3일 전",
@@ -336,6 +371,8 @@ class _ScreenSettingState extends State<ScreenSetting> {
                           }
                         });
                       }),
+
+                  // 알림 - 동영상 알림주기 - 5일 전.
                   SwitchListTile(
                       title: Text(
                         "5일 전",
@@ -357,6 +394,8 @@ class _ScreenSettingState extends State<ScreenSetting> {
               ),
             ],
           ),
+
+          // 카테고리 - 사용자.
           Padding(
             padding: const EdgeInsets.only(
               left: 16.0,
@@ -365,8 +404,10 @@ class _ScreenSettingState extends State<ScreenSetting> {
             ),
             child: Text("사용자", style: categoryTextStyle),
           ),
+          // 사용자 - 로그아웃.
           InkWell(
             onTap: () async {
+              // 로그아웃 확인용 다이얼로그 표시.
               showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -385,6 +426,7 @@ class _ScreenSettingState extends State<ScreenSetting> {
                         ),
                         InkWell(
                           onTap: () async {
+                            // 로그아웃 시 저장된 사용자 아이디와 비밀번호 제거.
                             final prefs = await SharedPreferences.getInstance();
                             prefs.remove(keyUserId);
                             prefs.remove(keyUserPw);

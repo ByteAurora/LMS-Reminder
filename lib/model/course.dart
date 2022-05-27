@@ -4,7 +4,7 @@ import 'package:html/parser.dart' as html_parser;
 import 'notice.dart';
 import 'week.dart';
 
-/// 강좌 정보를 관리하는 클래스.
+/// 강좌 클래스.
 class Course {
   /// 강좌명.
   String? _title;

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:lms_reminder/manager/lms_manager.dart';
+import 'package:lms_reminder/widget/snackbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../sharedpreferences_key.dart';
 
+/// 로그인 화면 위젯.
 class ScreenLogin extends StatefulWidget {
   const ScreenLogin({Key? key}) : super(key: key);
 
@@ -13,12 +15,11 @@ class ScreenLogin extends StatefulWidget {
 
 class _ScreenLoginState extends State<ScreenLogin>
     with SingleTickerProviderStateMixin {
-  ScrollController?
-      _scrollController; // 스크롤컨트롤러 : 후에 키보드창이떴을때, 스크롤을 위로해줘서 유저경험(UX)를 향상시키기 위함.
-  double? _deviceWidth,
-      _deviceHeight; //사용자의 화면크기 비율을 정하기 위해, 사용자 화면 크기를 가져오면 변수.
+  /// 스크롤컨트롤러 : 후에 키보드 창이 떴을때, 스크롤을 위로해줘서 유저경험(UX)를 향상시키기 위함.
+  ScrollController? _scrollController;
 
-  // 애니메이션을 설정한 Controller
+  /// 사용자의 화면크기 비율을 정하기 위해, 사용자 화면 크기를 가져오면 변수.
+  double? _deviceWidth, _deviceHeight;
 
   @override
   void initState() {
@@ -32,11 +33,11 @@ class _ScreenLoginState extends State<ScreenLogin>
     if (str == "up") {
       //화면 위로 올리기
       _scrollController!.animateTo(120.0,
-          duration: Duration(milliseconds: 500), curve: Curves.ease);
+          duration: const Duration(milliseconds: 500), curve: Curves.ease);
     } else if (str == "down") {
       // 화면 아래로 내리기
       _scrollController!.animateTo(-120.0,
-          duration: Duration(milliseconds: 500), curve: Curves.ease);
+          duration: const Duration(milliseconds: 500), curve: Curves.ease);
     }
   }
 
@@ -53,11 +54,11 @@ class _ScreenLoginState extends State<ScreenLogin>
     super.didChangeDependencies();
   }
 
-  ///id 컨트롤
+  /// id 컨트롤.
   TextEditingController userID = TextEditingController();
   String? keepID = '';
 
-  ///pw 컨트롤
+  /// pw 컨트롤.
   TextEditingController password = TextEditingController();
   String? keepPW = '';
 
@@ -68,7 +69,7 @@ class _ScreenLoginState extends State<ScreenLogin>
       body: Container(
         height: _deviceHeight,
         width: _deviceWidth,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
               colorFilter: ColorFilter.mode(Colors.black12, BlendMode.darken),
               fit: BoxFit.fitHeight,
@@ -82,7 +83,7 @@ class _ScreenLoginState extends State<ScreenLogin>
               crossAxisAlignment: CrossAxisAlignment.center, //좌우 정렬 왼쪽으로
               children: <Widget>[
                 //로고 이미지 컨테이너
-                Container(
+                SizedBox(
                   //비율이 2로 설정( 로고 이미지부분)
 
                   height: _deviceHeight! / 5 * 2, //화면 비율을 2:3으로 하기 위함.
@@ -105,7 +106,7 @@ class _ScreenLoginState extends State<ScreenLogin>
                               height: 150,
                             ),
                           ),
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             //그림자를 넣는 속성
                             borderRadius: BorderRadius.all(
                               Radius.circular(30),
@@ -130,145 +131,129 @@ class _ScreenLoginState extends State<ScreenLogin>
                     ],
                   ),
                 ),
-                Container(
+                SizedBox(
                   height: _deviceHeight! / 5 * 4,
                   child: Container(
-                      // 로고이미지 컨테이터외
-                      // 로그인, 아이디,비밀번호 textfield와 text, 버튼 위젯을 담는 컨테이너
+                    // 로고이미지 컨테이터외
+                    // 로그인, 아이디,비밀번호 textfield와 text, 버튼 위젯을 담는 컨테이너
 
-                      decoration: BoxDecoration(
-                        //윗 모서리를 둥굴게 설정
-                        color: Colors.white,
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(30), //모서리 둥글게
-                        ),
-                        boxShadow: [
-                          //그림자설정
-                          BoxShadow(
-                            color: Colors.grey[500]!,
-                            offset: Offset(-2.0, -4.0),
-                            blurRadius: 15.0,
-                            spreadRadius: 1.0,
-                          ),
-                        ],
+                    decoration: BoxDecoration(
+                      //윗 모서리를 둥굴게 설정
+                      color: Colors.white,
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(30), //모서리 둥글게
                       ),
-                      //로그인아이디와 비밀번호,
-                      padding: EdgeInsets.all(40),
-                      child: Column(
-                          // 중앙정렬을 위한 컬럼
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(
-                                // 왼쪽정렬을 위해 사이즈박스를 넣음(텍스트필드 크기의 기본값은 wrap.contents이므로
+                      boxShadow: [
+                        //그림자설정
+                        BoxShadow(
+                          color: Colors.grey[500]!,
+                          offset: const Offset(-2.0, -4.0),
+                          blurRadius: 15.0,
+                          spreadRadius: 1.0,
+                        ),
+                      ],
+                    ),
+                    //로그인아이디와 비밀번호,
+                    padding: const EdgeInsets.all(40),
+                    child: Column(
+                      // 중앙정렬을 위한 컬럼
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(
+                            // 왼쪽정렬을 위해 사이즈박스를 넣음(텍스트필드 크기의 기본값은 wrap.contents이므로
 
-                                child: Text(
-                              "로그인",
+                            child: Text(
+                          "로그인",
+                          style: TextStyle(
+                            fontSize: 30.0,
+                            fontWeight: FontWeight.w700,
+                          ),
+                          textAlign: TextAlign.center,
+                        )),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        const Text("아이디"),
+                        TextField(
+                          controller: userID,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            fillColor: Colors.grey,
+                            hintText: "아이디",
+                          ),
+                        ),
+                        const SizedBox(height: 10.0), //여백넣기
+                        const Text("비밀번호"),
+                        TextField(
+                          obscureText: true,
+                          controller: password,
+                          onTap: () {
+                            // 비밀번호 클릭시 스크롤을 올려서 입력중인 비밀번호 텍스트필드가 가려지는거 방지
+                            //scrollTo("up");
+                          },
+                          onSubmitted: (str) {
+                            scrollTo("down");
+                          },
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            fillColor: Colors.grey,
+                            //labelText: 'Password',
+                            hintText: "비밀번호",
+                          ),
+                        ),
+
+                        //버튼을 담을 컨테이너
+
+                        Container(
+                          margin: const EdgeInsets.only(top: 40),
+                          alignment: Alignment.center,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              scrollTo("down");
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              //입력된 값이 비어있지 않으면
+                              if (userID.text.isNotEmpty &&
+                                  password.text.isNotEmpty) {
+                                //로그인 후 id와 password 값을 저장
+                                if ((await LmsManager()
+                                    .login(userID.text, password.text))) {
+                                  prefs.setString(keyUserId, userID.text);
+                                  prefs.setString(keyUserPw, password.text);
+                                  ScaffoldMessenger.of(context)
+                                      .hideCurrentSnackBar();
+                                  Navigator.popAndPushNamed(context, '/main');
+                                } else {
+                                  showSnackBar(context, '로그인 실패', 2);
+                                }
+                              } else {
+                                showSnackBar(context, '정보를 입력해주세요', 2);
+                              }
+                            },
+                            child: const Text(
+                              '로그인',
                               style: TextStyle(
-                                fontSize: 30.0,
-                                fontWeight: FontWeight.w700,
-                              ),
-                              textAlign: TextAlign.center,
-                            )),
-                            SizedBox(
-                              height: 30,
-                            ),
-                            Text("아이디"),
-                            TextField(
-                              controller: userID,
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                fillColor: Colors.grey,
-                                hintText: "아이디",
+                                fontSize: 25,
                               ),
                             ),
-                            SizedBox(height: 10.0), //여백넣기
-                            Text("비밀번호"),
-                            TextField(
-                              obscureText: true,
-                              controller: password,
-                              onTap: () {
-                                // 비밀번호 클릭시 스크롤을 올려서 입력중인 비밀번호 텍스트필드가 가려지는거 방지
-                                //scrollTo("up");
-                              },
-                              onSubmitted: (str) {
-                                scrollTo("down");
-                              },
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                fillColor: Colors.grey,
-                                //labelText: 'Password',
-                                hintText: "비밀번호",
-                              ),
-                            ),
-
-                            //버튼을 담을 컨테이너
-
-                            Container(
-                              margin: EdgeInsets.only(top: 40),
-                              alignment: Alignment.center,
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  scrollTo("down");
-                                  SharedPreferences prefs =
-                                      await SharedPreferences.getInstance();
-                                  //입력된 값이 비어있지 않으면
-                                  if (userID.text.isNotEmpty &&
-                                      password.text.isNotEmpty) {
-                                    //로그인 후 id와 password 값을 저장
-                                    if ((await LmsManager()
-                                        .login(userID.text, password.text))) {
-                                      prefs.setString(keyUserId, userID.text);
-                                      prefs.setString(keyUserPw, password.text);
-                                      ScaffoldMessenger.of(context)
-                                          .hideCurrentSnackBar();
-                                      Navigator.popAndPushNamed(
-                                          context, '/main');
-                                    } else {
-                                      showSnackBar('로그인 실패', 2);
-                                    }
-                                  } else {
-                                    showSnackBar('정보를 입력해주세요', 2);
-                                  }
-                                },
-                                child: Text(
-                                  '로그인',
-                                  style: TextStyle(
-                                    fontSize: 25,
-                                  ),
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                    primary:
-                                        Color.fromARGB(0xff, 0xB7, 0x21, 0x2D),
-                                    minimumSize: Size(200, 50),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(12))),
-                              ),
-                            ),
-                          ])),
+                            style: ElevatedButton.styleFrom(
+                                primary: const Color.fromARGB(
+                                    0xff, 0xB7, 0x21, 0x2D),
+                                minimumSize: const Size(200, 50),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12))),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
         ),
       ),
-    );
-  }
-
-  void showSnackBar(String text, int second,
-      {String? actionText, Function()? onPressed}) {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-          content: Text(text),
-          duration: Duration(seconds: second),
-          action: (actionText != null && onPressed != null)
-              ? SnackBarAction(
-                  label: actionText,
-                  onPressed: onPressed,
-                )
-              : null),
     );
   }
 }

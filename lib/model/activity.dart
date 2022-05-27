@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:lms_reminder/model/schedule.dart';
 import 'package:lms_reminder/model/week.dart';
 
+/// 활동 클래스.
 class Activity {
   Week? _week;
   String? _type;

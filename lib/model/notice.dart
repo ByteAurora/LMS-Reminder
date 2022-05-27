@@ -5,7 +5,7 @@ import 'package:html/parser.dart' as html_parser;
 import '../manager/dio_manager.dart';
 import 'course.dart';
 
-/// 공지사항 정보를 관리하는 클래스.
+/// 공지사항 클래스.
 class Notice {
   /// 강좌.
   Course? _course;
@@ -25,7 +25,7 @@ class Notice {
   /// 날짜.
   String? _date;
 
-  /// 전달된 html에서 공지사항 정보를 추출하여 반환하는 함수.
+  /// 전달된 html에서 공지사항 목록을 추출하여 반환하는 함수.
   static Future<List<Notice>> praseNoticeListFromHtml(
       Course course, String html) async {
     List<Notice> courseNoticeList = List.empty(growable: true);

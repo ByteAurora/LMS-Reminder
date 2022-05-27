@@ -1,3 +1,4 @@
+/// 알림 등록에 사용될 스케줄 클래스.
 class Schedule {
   /// 컬럼 - 스케줄 ID.
   static const String columnId = 'id';
@@ -32,8 +33,7 @@ class Schedule {
   String? activityLeftTime;
   bool? activityState;
 
-  Schedule(
-      this.id,
+  Schedule(this.id,
       this.activityType,
       this.weekTitle,
       this.courseTitle,

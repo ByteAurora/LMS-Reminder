@@ -4,7 +4,7 @@ import 'package:lms_reminder/model/activity.dart';
 
 import 'week.dart';
 
-/// 동영상 강의 정보를 관리하는 클래스.
+/// 동영상 클래스.
 class Video extends Activity {
   /// 출석인정 요구시간.
   String? _requiredWatchTime;
@@ -18,7 +18,7 @@ class Video extends Activity {
   /// 활성화 시간.
   DateTime? _enableTime;
 
-  /// 전달된 html에서 동영상 정보를 추출하여 반환하는 함수.
+  /// 전달된 html에서 동영상 목록을 추출하여 반환하는 함수.
   static List<List<Video>> parseVideoListFromHtml(String html) {
     List<List<Video>> courseVideoList = List.empty(growable: true);
 

@@ -35,7 +35,7 @@ class _ScreenTutorialState extends State<ScreenTutorial> {
     return IntroductionScreen(
       pages: [
         PageViewModel(
-          // 튜토리얼 첫번쨰 페이지.
+          // 튜토리얼 첫번째 페이지.
           title: " .",
           body: "LMS 리마인더로 수강중인 강좌의 강의 및 과제를 쉽게 확인해보세요",
           image: Image.asset("resource/image/image_tutorial_01.png",
@@ -43,7 +43,7 @@ class _ScreenTutorialState extends State<ScreenTutorial> {
           decoration: pageDecoration,
         ),
         PageViewModel(
-          // 튜토리얼 두번쨰 페이지.
+          // 튜토리얼 두번째 페이지.
           title: ".",
           body: "아직 시청하지 않은 강의나 제출하지 않은 과제가 있으면 LMS 리마인더가 알려줍니다",
           image: Image.asset("resource/image/image_tutorial_02.png",
@@ -51,7 +51,7 @@ class _ScreenTutorialState extends State<ScreenTutorial> {
           decoration: pageDecoration,
         ),
         PageViewModel(
-          // 튜토리얼 세번쨰 페이지.
+          // 튜토리얼 세번째 페이지.
           title: ".",
           body: "수강중인 강좌의 중요한 공지사항을 확인해보세요",
           image: Image.asset("resource/image/image_tutorial_03.png",
@@ -65,12 +65,12 @@ class _ScreenTutorialState extends State<ScreenTutorial> {
       skip: const Text("건너뛰기",
           style: TextStyle(fontWeight: FontWeight.w600, color: Colors.grey)),
       onSkip: () {
-        //튜토리얼 스킵.
+        // 튜토리얼 건너뛰기 버튼을 눌렀을 경우.
         tutorialGraduate();
         Navigator.popAndPushNamed(context, '/login');
       },
       onDone: () {
-        //튜토리얼 완료
+        // 튜토리얼 완료버튼을 눌렀을 경우.
         tutorialGraduate();
         Navigator.popAndPushNamed(context, '/login');
       },

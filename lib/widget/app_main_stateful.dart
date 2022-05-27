@@ -19,7 +19,7 @@ class AppMainStateful extends StatefulWidget {
   // 기본 색상
   final MaterialColor? primarySwatchColor;
 
-  AppMainStateful({
+  const AppMainStateful({
     Key? key,
     required this.appBarTitle,
     required this.applicationName,

@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:lms_reminder/widget/snackbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../manager/lms_manager.dart';
 import '../sharedpreferences_key.dart';
 
+/// 인트로 화면 위젯.
 class ScreenIntro extends StatefulWidget {
   const ScreenIntro({Key? key}) : super(key: key);
 
@@ -14,15 +16,13 @@ class ScreenIntro extends StatefulWidget {
 }
 
 class _ScreenIntroState extends State<ScreenIntro> {
-  String? userID;
-  String? password;
-  double? _deviceWidth,
-      _deviceHeight; // 사용자의 화면크기 비율을 정하기 위해, 사용자 화면 크기를 저장하는 변수.
+  /// 사용자의 화면크기 비율을 정하기 위해, 사용자 화면 크기를 저장하는 변수.
+  double? _deviceWidth, _deviceHeight;
 
   Future<void> initIntro() async {
     final prefs = await SharedPreferences.getInstance();
-    userID = prefs.getString(keyUserId);
-    password = prefs.getString(keyUserPw);
+    String? userID = prefs.getString(keyUserId);
+    String? password = prefs.getString(keyUserPw);
     bool? tutorialShowed = prefs.getBool(keyTutorialShowed);
 
     if (!tutorialShowed!) {
@@ -38,8 +38,7 @@ class _ScreenIntroState extends State<ScreenIntro> {
           Navigator.popAndPushNamed(context, '/main'); // 자동로그인후 메인으로 이동.
         } else {
           // 저장된 ID/PW로 로그인이 실패할 경우.
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("로그인 실패"))); // 로그인 실패 팝업.
+          showSnackBar(context, "자동 로그인 실패", 2); // 로그인 실패 팝업.
           Navigator.popAndPushNamed(context, '/login'); // 로그인 페이지로 이동.
         }
       } else {
@@ -98,7 +97,7 @@ class _ScreenIntroState extends State<ScreenIntro> {
                       height: 150,
                     ),
                   ),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     //그림자를 넣는 속성
                     borderRadius: BorderRadius.all(
                       Radius.circular(30),

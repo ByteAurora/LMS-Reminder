@@ -5,6 +5,7 @@ import 'package:lms_reminder/widget/tabpage_notice.dart';
 
 import '../manager/lms_manager.dart';
 
+/// 메인 화면 위젯.
 class ScreenMain extends StatefulWidget {
   final String? appBarTitle;
 
@@ -16,6 +17,7 @@ class ScreenMain extends StatefulWidget {
 
 class _ScreenMainState extends State<ScreenMain>
     with SingleTickerProviderStateMixin {
+  /// 미완료, 완료, 공지사항 탭을 위한 컨트롤러.
   TabController? tabController;
 
   @override
@@ -49,6 +51,7 @@ class _ScreenMainState extends State<ScreenMain>
           ),
         ),
         actions: <Widget>[
+          // 설정 버튼
           IconButton(
             onPressed: () {
               Navigator.pushNamed(context, '/main/setting');
@@ -62,12 +65,15 @@ class _ScreenMainState extends State<ScreenMain>
       ),
       body: TabBarView(
         children: <Widget>[
+          // 미완료 목록 탭 페이지.
           TabPageNotFinished(
             notifyParent: refresh,
           ),
+          // 완료 목록 탭 페이지.
           TabPageFinished(
             notifyParent: refresh,
           ),
+          // 공지사항 목록 탭 페이지.
           TabPageNotice(
             notifyParent: refresh,
           ),
@@ -85,6 +91,7 @@ class _ScreenMainState extends State<ScreenMain>
                 setState(() {});
               },
               tabs: <Tab>[
+                // 미완료 목록 탭.
                 Tab(
                   icon: tabController!.index == 0
                       ? const Icon(Icons.assignment_late)
@@ -92,6 +99,7 @@ class _ScreenMainState extends State<ScreenMain>
                   text: tabController!.index == 0 ? null : '미완료',
                   iconMargin: const EdgeInsets.only(bottom: 4),
                 ),
+                // 완료 목록 탭.
                 Tab(
                   icon: tabController!.index == 1
                       ? const Icon(Icons.assignment_turned_in)
@@ -99,6 +107,7 @@ class _ScreenMainState extends State<ScreenMain>
                   text: tabController!.index == 1 ? null : '완료',
                   iconMargin: const EdgeInsets.only(bottom: 4),
                 ),
+                // 공지사항 목록 탭.
                 Tab(
                   icon: tabController!.index == 2
                       ? const Icon(Icons.circle_notifications)
@@ -118,11 +127,13 @@ class _ScreenMainState extends State<ScreenMain>
     );
   }
 
+  /// 데이터 초기화.
   Future initializeData() async {
     await LmsManager().reloadAllDataFromLms();
     refresh();
   }
 
+  /// 위젯 갱신.
   refresh() {
     setState(() {});
   }

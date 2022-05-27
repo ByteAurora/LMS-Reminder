@@ -3,7 +3,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:html/dom.dart' as html_dom;
 import 'package:lms_reminder/manager/lms_manager.dart';
 import 'package:lms_reminder/model/notice.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:lms_reminder/widget/widget_shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../manager/lms_manager.dart';
@@ -28,81 +28,7 @@ class _TabPageNotice extends State<TabPageNotice> {
           future: LmsManager().getNoticeList(),
           builder: (context, snapshot) {
             if (snapshot.hasData == false) {
-              return ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: 12,
-                itemBuilder: (context, index) {
-                  return Card(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                left: 16, top: 14.0, bottom: 14.0, right: 16),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 8.0),
-                                              child: Shimmer.fromColors(
-                                                //제목
-                                                baseColor: Colors.grey.shade400,
-                                                highlightColor:
-                                                    Colors.grey.shade300,
-                                                child: Container(
-                                                  height: 22,
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 4.0),
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    right: 96.0),
-                                                child: Shimmer.fromColors(
-                                                  //부제목
-                                                  baseColor:
-                                                      Colors.grey.shade400,
-                                                  highlightColor:
-                                                      Colors.grey.shade300,
-                                                  child: Container(
-                                                    height: 18,
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              );
+              return getShimmerNotice();
             } else {
               List<dynamic> todoList = (snapshot.data as List<dynamic>);
               if (todoList.isEmpty) {
@@ -173,6 +99,7 @@ class _TabPageNotice extends State<TabPageNotice> {
     );
   }
 
+  /// 모든 데이터 초기화 및 부모 위젯 업데이트. (다른 탭 페이지들도 업데이트 하기 위함)
   Future<void> _refreshAllData() async {
     await LmsManager().reloadAllDataFromLms();
     widget.notifyParent();

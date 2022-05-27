@@ -8,7 +8,7 @@ import '../manager/dio_manager.dart';
 import 'activity.dart';
 import 'week.dart';
 
-/// 과제 정보를 관리하는 클래스.
+/// 과제 클래스.
 class Assignment extends Activity {
   /// 과제 URL.
   String? _url;
