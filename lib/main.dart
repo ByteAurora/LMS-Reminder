@@ -17,7 +17,7 @@ void callbackDispatcher() {
         // 활동 목록 업데이트 작업일 경우.
         final prefs = await SharedPreferences.getInstance();
         prefs.setString(keyLastUpdateTime,
-            DateFormat('yyyy-MM-dd hh:mm:ss').format(DateTime.now()));
+            DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()));
 
         String? userId = prefs.getString(keyUserId);
         String? userPw = prefs.getString(keyUserPw);
@@ -120,13 +120,6 @@ void callbackDispatcher() {
             print('자동로그인 비활성화');
           }
         }
-
-        Workmanager().registerOneOffTask(
-          'update_activities',
-          'update_activities',
-          existingWorkPolicy: ExistingWorkPolicy.replace,
-          initialDelay: const Duration(hours: 4),
-        );
         break;
       default:
         // Notification 아이디 구분을 위해 SharedPreferences에 마지막 ID값 불러오기 후 증가된 값 저장.
@@ -266,11 +259,12 @@ void main() async {
     isInDebugMode: false,
   );
 
-  Workmanager().registerOneOffTask(
+  Workmanager().registerPeriodicTask(
     'update_activities',
     'update_activities',
     existingWorkPolicy: ExistingWorkPolicy.keep,
-    initialDelay: const Duration(hours: 4),
+    initialDelay: const Duration(hours: 0),
+    frequency: const Duration(hours: 4),
   );
 
   // Awesome Notification 초기화
