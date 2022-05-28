@@ -219,7 +219,7 @@ void callbackDispatcher() {
                         ? (schedule.activityState! ? '(제출완료)' : '(미제출)')
                         : (schedule.activityState! ? '(시청완료)' : '(미시청)')),
                 backgroundColor: Colors.redAccent,
-                notificationLayout: NotificationLayout.Default,
+                notificationLayout: NotificationLayout.Inbox,
                 category: NotificationCategory.Reminder));
         break;
     }
@@ -274,6 +274,7 @@ void main() async {
         NotificationChannel(
             channelKey: 'update_activities',
             channelName: 'LMS 활동 목록 업데이트',
+            groupKey: 'basic_channel_group',
             channelDescription: 'LMS에서 과제와 동영상 업데이트 중 보내는 알림',
             defaultColor: const Color(0xFF9D50DD),
             ledColor: Colors.white,
@@ -286,7 +287,7 @@ void main() async {
             ledColor: Colors.white,
             importance: NotificationImportance.High),
       ],
-      debug: true);
+      debug: false);
 
   runApp(const AppMainStateful(
     applicationName: 'LMS 리마인더',

@@ -418,7 +418,7 @@ class LmsManager {
           inputData: schedule.toMap());
 
       print(
-          '마감시간: ${schedule.activityDeadLine}, ${schedule.activityLeftTime} 전: ${DateFormat('yyyy-MM-dd HH:mm').format(scheduleDate!)}');
+          '마감시간: ${schedule.activityDeadLine}, ${schedule.activityLeftTime} 전: ${DateFormat('yyyy-MM-dd HH:mm').format(scheduleDate)}');
       print(
           '현재시간: ${DateFormat('yyyy-MM-dd HH:mm').format(currentTime)}, 앞으로 ${scheduleDate.difference(currentTime).toString()} 시간 뒤에 알림');
       print('[${schedule.courseTitle}] "${schedule.activityTitle}" 예약됨: ' +
