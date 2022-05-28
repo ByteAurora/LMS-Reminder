@@ -264,7 +264,7 @@ void main() async {
     'update_activities',
     existingWorkPolicy: ExistingWorkPolicy.keep,
     initialDelay: const Duration(hours: 0),
-    frequency: const Duration(hours: 4),
+    frequency: const Duration(minutes: 15),
   );
 
   // Awesome Notification 초기화
