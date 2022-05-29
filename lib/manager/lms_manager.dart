@@ -429,7 +429,7 @@ class LmsManager {
     Workmanager().registerPeriodicTask(
       'update_activities',
       'update_activities',
-      existingWorkPolicy: ExistingWorkPolicy.keep,
+      existingWorkPolicy: ExistingWorkPolicy.replace,
       initialDelay: const Duration(hours: 0),
       frequency: const Duration(minutes: 15),
     );
