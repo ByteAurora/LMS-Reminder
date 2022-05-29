@@ -3,6 +3,9 @@ class Schedule {
   /// 컬럼 - 스케줄 ID.
   static const String columnId = 'id';
 
+  /// 컬럼 - Notification ID.
+  static const String columnNotificationId = 'notification_id';
+
   /// 컬럼 - 주차 제목.
   static const String columnWeekTitle = 'week_title';
 
@@ -25,6 +28,7 @@ class Schedule {
   static const String columnActivityState = 'activity_state';
 
   String? id;
+  int? notificationId;
   String? activityType;
   String? weekTitle;
   String? courseTitle;
@@ -34,6 +38,7 @@ class Schedule {
   bool? activityState;
 
   Schedule(this.id,
+      this.notificationId,
       this.activityType,
       this.weekTitle,
       this.courseTitle,
@@ -45,6 +50,7 @@ class Schedule {
   Map<String, dynamic> toMap() {
     return {
       columnId: id,
+      columnNotificationId: notificationId,
       columnWeekTitle: weekTitle,
       columnActivityType: activityType,
       columnCourseTitle: courseTitle,
@@ -58,6 +64,7 @@ class Schedule {
   static Schedule fromMap(Map<String, dynamic> mapData) {
     return Schedule(
         mapData[columnId],
+        mapData[columnNotificationId],
         mapData[columnActivityType],
         mapData[columnWeekTitle],
         mapData[columnCourseTitle],

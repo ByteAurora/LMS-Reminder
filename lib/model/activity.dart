@@ -4,6 +4,8 @@ import 'package:crypto/crypto.dart';
 import 'package:intl/intl.dart';
 import 'package:lms_reminder/model/schedule.dart';
 import 'package:lms_reminder/model/week.dart';
+import 'package:lms_reminder/sharedpreferences_key.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// 활동 클래스.
 class Activity {
@@ -74,9 +76,17 @@ class Activity {
     return 'D-' + result;
   }
 
-  Schedule toSchedule(String leftTime) {
+  Future<Schedule> toSchedule(String leftTime) async {
+    final prefs = await SharedPreferences.getInstance();
+    int notificationId = prefs.getInt(keyNotificationId)!;
+    if(notificationId > 10000) {
+      prefs.setInt(keyNotificationId, 0);
+    } else{
+      prefs.setInt(keyNotificationId, notificationId + 1);
+    }
     return Schedule(
         sha256.convert(utf8.encode(title + leftTime)).toString(),
+        notificationId,
         type,
         week.title,
         week.course.title,

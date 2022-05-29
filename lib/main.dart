@@ -62,7 +62,7 @@ void callbackDispatcher() {
                 DateTime currentTime = DateTime.now();
 
                 for (var schedule
-                in LmsManager().getBeforeDeadLineActivityList()) {
+                in await LmsManager().getBeforeDeadLineActivityList()) {
                   DateTime deadLine = DateFormat('yyyy-MM-dd HH:mm')
                       .parse(schedule.activityDeadLine!);
                   DateTime? scheduleDate;
@@ -214,14 +214,11 @@ void callbackDispatcher() {
           }
         }
 
-        int id = prefs.getInt(keyNotificationId)! + 1;
-        prefs.setInt(keyNotificationId, id);
-
         print('[알림 실행]' + schedule.toString());
         // Notificaion 표시
         AwesomeNotifications().createNotification(
             content: NotificationContent(
-                id: pid,
+                id: schedule.notificationId!,
                 channelKey: 'alert_lefttime',
                 wakeUpScreen: true,
                 autoDismissible: false,

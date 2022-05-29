@@ -300,7 +300,7 @@ class LmsManager {
   }
 
   /// 마감일이 지나지 않은 항목들을 반환하는 함수. (알림 설정이 필요한 활동 리스트이 필요할 때 사용)
-  List<Schedule> getBeforeDeadLineActivityList() {
+  Future<List<Schedule>> getBeforeDeadLineActivityList() async {
     List<Schedule> beforeDeadLineActivityList = List.empty(growable: true);
 
     DateTime currentTime = DateTime.now();
@@ -310,38 +310,38 @@ class LmsManager {
         for (var assignment in week.assignmentList) {
           if (assignment.deadLine
               .isAfter(currentTime.add(const Duration(hours: 6)))) {
-            beforeDeadLineActivityList.add(assignment.toSchedule('6시간'));
+            beforeDeadLineActivityList.add(await assignment.toSchedule('6시간'));
           }
           if (assignment.deadLine
               .isAfter(currentTime.add(const Duration(days: 1)))) {
-            beforeDeadLineActivityList.add(assignment.toSchedule('1일'));
+            beforeDeadLineActivityList.add(await assignment.toSchedule('1일'));
           }
           if (assignment.deadLine
               .isAfter(currentTime.add(const Duration(days: 3)))) {
-            beforeDeadLineActivityList.add(assignment.toSchedule('3일'));
+            beforeDeadLineActivityList.add(await assignment.toSchedule('3일'));
           }
           if (assignment.deadLine
               .isAfter(currentTime.add(const Duration(days: 5)))) {
-            beforeDeadLineActivityList.add(assignment.toSchedule('5일'));
+            beforeDeadLineActivityList.add(await assignment.toSchedule('5일'));
           }
         }
 
         for (var video in week.videoList) {
           if (video.deadLine
               .isAfter(currentTime.add(const Duration(hours: 6)))) {
-            beforeDeadLineActivityList.add(video.toSchedule('6시간'));
+            beforeDeadLineActivityList.add(await video.toSchedule('6시간'));
           }
           if (video.deadLine
               .isAfter(currentTime.add(const Duration(days: 1)))) {
-            beforeDeadLineActivityList.add(video.toSchedule('1일'));
+            beforeDeadLineActivityList.add(await video.toSchedule('1일'));
           }
           if (video.deadLine
               .isAfter(currentTime.add(const Duration(days: 3)))) {
-            beforeDeadLineActivityList.add(video.toSchedule('3일'));
+            beforeDeadLineActivityList.add(await video.toSchedule('3일'));
           }
           if (video.deadLine
               .isAfter(currentTime.add(const Duration(days: 5)))) {
-            beforeDeadLineActivityList.add(video.toSchedule('5일'));
+            beforeDeadLineActivityList.add(await video.toSchedule('5일'));
           }
         }
       }
@@ -396,7 +396,7 @@ class LmsManager {
 
     DateTime currentTime = DateTime.now();
 
-    for (var schedule in LmsManager().getBeforeDeadLineActivityList()) {
+    for (var schedule in await LmsManager().getBeforeDeadLineActivityList()) {
       DateTime deadLine =
           DateFormat('yyyy-MM-dd HH:mm').parse(schedule.activityDeadLine!);
       DateTime? scheduleDate;
