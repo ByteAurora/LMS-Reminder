@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -33,74 +34,90 @@ void callbackDispatcher() {
 
             if (await LmsManager().login(userId, userPw)) {
               // 데이터 업데이트 Notification 표시.
-              AwesomeNotifications().createNotification(
-                  content: NotificationContent(
-                      id: 0,
-                      channelKey: 'update_activities',
-                      wakeUpScreen: false,
-                      summary: '업데이트',
-                      title: 'LMS에서 과제와 동영상을 확인하고 있습니다',
-                      backgroundColor: Colors.redAccent,
-                      notificationLayout: NotificationLayout.ProgressBar,
-                      autoDismissible: true));
+              try {
+                AwesomeNotifications().createNotification(
+                    content: NotificationContent(
+                        id: 0,
+                        channelKey: 'update_activities',
+                        wakeUpScreen: false,
+                        summary: '업데이트',
+                        title: 'LMS에서 과제와 동영상을 확인하고 있습니다',
+                        backgroundColor: Colors.redAccent,
+                        notificationLayout: NotificationLayout.ProgressBar,
+                        autoDismissible: true));
 
-              // LMS에서 데이터 불러오기.
-              await LmsManager().reloadAllDataFromLms();
+                // LMS에서 데이터 불러오기.
+                await LmsManager().reloadAllDataFromLms();
 
-              // WorkManager 추가 전 초기화.
-              await Workmanager().initialize(
-                callbackDispatcher,
-                isInDebugMode: false,
-              );
+                // WorkManager 추가 전 초기화.
+                await Workmanager().initialize(
+                  callbackDispatcher,
+                  isInDebugMode: false,
+                );
 
-              // 이전에 설정된 모든 알림 제거 - 사용자가 바뀌었을 경우도 있기 때문에 WorkManager의 replace만으로는 해결 불가.
-              // 추후 WorkManager에 사용자 ID값도 전달하여 ID가 달라졌을 경우에만 취소하도록 구현 필요.
-              Workmanager().cancelByTag('activity_notification');
+                // 이전에 설정된 모든 알림 제거 - 사용자가 바뀌었을 경우도 있기 때문에 WorkManager의 replace만으로는 해결 불가.
+                // 추후 WorkManager에 사용자 ID값도 전달하여 ID가 달라졌을 경우에만 취소하도록 구현 필요.
+                Workmanager().cancelByTag('activity_notification');
 
-              DateTime currentTime = DateTime.now();
+                DateTime currentTime = DateTime.now();
 
-              for (var schedule
-                  in LmsManager().getBeforeDeadLineActivityList()) {
-                DateTime deadLine = DateFormat('yyyy-MM-dd HH:mm')
-                    .parse(schedule.activityDeadLine!);
-                DateTime? scheduleDate;
+                for (var schedule
+                in LmsManager().getBeforeDeadLineActivityList()) {
+                  DateTime deadLine = DateFormat('yyyy-MM-dd HH:mm')
+                      .parse(schedule.activityDeadLine!);
+                  DateTime? scheduleDate;
 
-                if (schedule.activityLeftTime == '6시간') {
-                  scheduleDate = deadLine.subtract(const Duration(hours: 6));
-                } else if (schedule.activityLeftTime == '1일') {
-                  scheduleDate = deadLine.subtract(const Duration(days: 1));
-                } else if (schedule.activityLeftTime == '3일') {
-                  scheduleDate = deadLine.subtract(const Duration(days: 3));
-                } else if (schedule.activityLeftTime == '5일') {
-                  scheduleDate = deadLine.subtract(const Duration(days: 5));
+                  if (schedule.activityLeftTime == '6시간') {
+                    scheduleDate = deadLine.subtract(const Duration(hours: 6));
+                  } else if (schedule.activityLeftTime == '1일') {
+                    scheduleDate = deadLine.subtract(const Duration(days: 1));
+                  } else if (schedule.activityLeftTime == '3일') {
+                    scheduleDate = deadLine.subtract(const Duration(days: 3));
+                  } else if (schedule.activityLeftTime == '5일') {
+                    scheduleDate = deadLine.subtract(const Duration(days: 5));
+                  }
+
+                  print(
+                      '마감시간: ${schedule.activityDeadLine}, ${schedule
+                          .activityLeftTime} 전: ${DateFormat('yyyy-MM-dd HH:mm')
+                          .format(scheduleDate!)}');
+                  print(
+                      '현재시간: ${DateFormat('yyyy-MM-dd HH:mm').format(
+                          currentTime)}, 앞으로 ${scheduleDate.difference(
+                          currentTime).toString()} 시간 뒤에 알림');
+                  print(
+                      '[${schedule.courseTitle}] "${schedule
+                          .activityTitle}" 예약됨: ' +
+                          DateFormat('yyyy-MM-dd HH:mm').format(currentTime
+                              .add(scheduleDate.difference(currentTime))));
+
+                  Workmanager().registerOneOffTask(schedule.id!, schedule.id!,
+                      tag: 'activity_notification',
+                      existingWorkPolicy: ExistingWorkPolicy.replace,
+                      initialDelay: scheduleDate.difference(currentTime),
+                      inputData: schedule.toMap());
                 }
-
-                print(
-                    '마감시간: ${schedule.activityDeadLine}, ${schedule.activityLeftTime} 전: ${DateFormat('yyyy-MM-dd HH:mm').format(scheduleDate!)}');
-                print(
-                    '현재시간: ${DateFormat('yyyy-MM-dd HH:mm').format(currentTime)}, 앞으로 ${scheduleDate.difference(currentTime).toString()} 시간 뒤에 알림');
-                print(
-                    '[${schedule.courseTitle}] "${schedule.activityTitle}" 예약됨: ' +
-                        DateFormat('yyyy-MM-dd HH:mm').format(currentTime
-                            .add(scheduleDate.difference(currentTime))));
-
-                Workmanager().registerOneOffTask(schedule.id!, schedule.id!,
-                    tag: 'activity_notification',
-                    existingWorkPolicy: ExistingWorkPolicy.replace,
-                    initialDelay: scheduleDate.difference(currentTime),
-                    inputData: schedule.toMap());
+                AwesomeNotifications().createNotification(
+                    content: NotificationContent(
+                        id: 0,
+                        channelKey: 'update_activities',
+                        wakeUpScreen: false,
+                        summary: '업데이트',
+                        title: 'LMS 데이터 업데이트 완료',
+                        backgroundColor: Colors.redAccent,
+                        notificationLayout: NotificationLayout.Inbox));
+              } catch (e) {
+                AwesomeNotifications().createNotification(
+                    content: NotificationContent(
+                        id: 0,
+                        channelKey: 'update_activities',
+                        wakeUpScreen: true,
+                        summary: '업데이트 실패',
+                        title: 'LMS 데이터 업데이트 중 오류가 발생했습니다. 나중에 다시 시도해주세요.',
+                        backgroundColor: Colors.redAccent,
+                        notificationLayout: NotificationLayout.Inbox,
+                        autoDismissible: true));
               }
-
-              AwesomeNotifications().createNotification(
-                  content: NotificationContent(
-                      id: 0,
-                      channelKey: 'update_activities',
-                      wakeUpScreen: false,
-                      summary: '업데이트',
-                      title: 'LMS 데이터 업데이트 완료',
-                      backgroundColor: Colors.redAccent,
-                      notificationLayout: NotificationLayout.Inbox));
-
               // 데이터 업데이트 Notification 제거
               // AwesomeNotifications()
               //     .dismissNotificationsByChannelKey('update_activities');
@@ -115,7 +132,7 @@ void callbackDispatcher() {
                       title: 'LMS에 로그인할 수 없습니다',
                       body: '아이디와 비밀번호를 확인해주세요',
                       backgroundColor: Colors.redAccent,
-                      notificationLayout: NotificationLayout.ProgressBar,
+                      notificationLayout: NotificationLayout.Inbox,
                       autoDismissible: true));
             }
           } else {
