@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -97,7 +99,7 @@ void callbackDispatcher() {
                       summary: '업데이트',
                       title: 'LMS 데이터 업데이트 완료',
                       backgroundColor: Colors.redAccent,
-                      notificationLayout: NotificationLayout.Default));
+                      notificationLayout: NotificationLayout.Inbox));
 
               // 데이터 업데이트 Notification 제거
               // AwesomeNotifications()
@@ -202,7 +204,7 @@ void callbackDispatcher() {
         // Notificaion 표시
         AwesomeNotifications().createNotification(
             content: NotificationContent(
-                id: id,
+                id: pid,
                 channelKey: 'alert_lefttime',
                 wakeUpScreen: true,
                 autoDismissible: false,
