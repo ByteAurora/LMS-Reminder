@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:lms_reminder/manager/lms_manager.dart';
 import 'package:lms_reminder/sharedpreferences_key.dart';
 import 'package:lms_reminder/widget/app_main_stateful.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -19,8 +20,6 @@ void callbackDispatcher() {
       case 'update_activities':
         // 활동 목록 업데이트 작업일 경우.
         final prefs = await SharedPreferences.getInstance();
-        prefs.setString(keyLastUpdateTime,
-            DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()));
 
         String? userId = prefs.getString(keyUserId);
         String? userPw = prefs.getString(keyUserPw);
@@ -104,6 +103,7 @@ void callbackDispatcher() {
                         wakeUpScreen: false,
                         summary: '업데이트',
                         title: 'LMS 데이터 업데이트 완료',
+                        autoDismissible: true,
                         backgroundColor: Colors.redAccent,
                         notificationLayout: NotificationLayout.Inbox));
               } catch (e) {
@@ -113,7 +113,7 @@ void callbackDispatcher() {
                         channelKey: 'update_activities',
                         wakeUpScreen: true,
                         summary: '업데이트 실패',
-                        title: 'LMS 데이터 업데이트 중 오류가 발생했습니다. 나중에 다시 시도해주세요.',
+                        title: 'LMS 데이터 업데이트 중 오류가 발생했습니다. 나중에 다시 시도해주세요.\n ${e.toString()}',
                         backgroundColor: Colors.redAccent,
                         notificationLayout: NotificationLayout.Inbox,
                         autoDismissible: true));
@@ -121,6 +121,9 @@ void callbackDispatcher() {
               // 데이터 업데이트 Notification 제거
               // AwesomeNotifications()
               //     .dismissNotificationsByChannelKey('update_activities');
+
+              prefs.setString(keyLastUpdateTime,
+                  DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()));
             } else {
               // 로그인 실패 Notification 표시
               AwesomeNotifications().createNotification(
@@ -221,7 +224,7 @@ void callbackDispatcher() {
                 id: schedule.notificationId!,
                 channelKey: 'alert_lefttime',
                 wakeUpScreen: true,
-                autoDismissible: false,
+                autoDismissible: true,
                 summary:
                     (schedule.courseTitle! + ' [' + schedule.weekTitle! + ']'),
                 title: (schedule.activityType == 'assignment'
@@ -267,43 +270,43 @@ void main() async {
     prefs.setBool(keyTutorialShowed, false);
     prefs.setInt(keyNotificationId, 0);
     prefs.setString(keyLastUpdateTime, '업데이트 내역 없음');
+
+    // Awesome Notification 초기화
+    AwesomeNotifications().initialize(
+        null,
+        [
+          NotificationChannel(
+              channelKey: 'update_activities',
+              channelName: 'LMS 활동 목록 업데이트',
+              groupKey: 'basic_channel_group',
+              channelDescription: 'LMS에서 과제와 동영상 업데이트 중 보내는 알림',
+              defaultColor: const Color(0xFF9D50DD),
+              ledColor: Colors.white,
+              importance: NotificationImportance.Low),
+          NotificationChannel(
+              channelKey: 'alert_lefttime',
+              channelName: '마감 전 알림',
+              channelDescription: '과제나 동영상 마감 전 띄워주는 알림',
+              defaultColor: const Color(0xFF9D50DD),
+              ledColor: Colors.white,
+              importance: NotificationImportance.High),
+        ],
+        debug: false);
+
+    // WorkManager 초기화
+    await Workmanager().initialize(
+      callbackDispatcher,
+      isInDebugMode: false,
+    );
+
+    Workmanager().registerPeriodicTask(
+      'update_activities',
+      'update_activities',
+      existingWorkPolicy: ExistingWorkPolicy.keep,
+      initialDelay: const Duration(minutes: 15),
+      frequency: const Duration(minutes: 15),
+    );
   }
-
-  // WorkManager 초기화
-  await Workmanager().initialize(
-    callbackDispatcher,
-    isInDebugMode: false,
-  );
-
-  Workmanager().registerPeriodicTask(
-    'update_activities',
-    'update_activities',
-    existingWorkPolicy: ExistingWorkPolicy.keep,
-    initialDelay: const Duration(hours: 0),
-    frequency: const Duration(minutes: 15),
-  );
-
-  // Awesome Notification 초기화
-  AwesomeNotifications().initialize(
-      null,
-      [
-        NotificationChannel(
-            channelKey: 'update_activities',
-            channelName: 'LMS 활동 목록 업데이트',
-            groupKey: 'basic_channel_group',
-            channelDescription: 'LMS에서 과제와 동영상 업데이트 중 보내는 알림',
-            defaultColor: const Color(0xFF9D50DD),
-            ledColor: Colors.white,
-            importance: NotificationImportance.Low),
-        NotificationChannel(
-            channelKey: 'alert_lefttime',
-            channelName: '마감 전 알림',
-            channelDescription: '과제나 동영상 마감 전 띄워주는 알림',
-            defaultColor: const Color(0xFF9D50DD),
-            ledColor: Colors.white,
-            importance: NotificationImportance.High),
-      ],
-      debug: false);
 
   runApp(const AppMainStateful(
     applicationName: 'LMS 리마인더',
