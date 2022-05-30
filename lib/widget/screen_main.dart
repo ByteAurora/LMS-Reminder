@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lms_reminder/widget/tabpage_finished.dart';
 import 'package:lms_reminder/widget/tabpage_notfinished.dart';
 import 'package:lms_reminder/widget/tabpage_notice.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../manager/lms_manager.dart';
 
@@ -29,6 +30,34 @@ class _ScreenMainState extends State<ScreenMain>
     tabController!.addListener(() {
       setState(() {});
     });
+
+    checkPermissions();
+  }
+
+  Future<void> checkPermissions() async {
+    if (await Permission.ignoreBatteryOptimizations.isDenied) {
+      if (await Permission.ignoreBatteryOptimizations.isPermanentlyDenied) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('권한 요청'),
+                content: const Text(
+                    "보다 정확한 알림 수신을 위해 배터리 관련 권한이 필요합니다. 설정으로 이동하여 배터리 옵션을 제한없음으로 설정해주세요."),
+                actions: [
+                  TextButton(onPressed: () {}, child: const Text('취소')),
+                  TextButton(
+                      onPressed: () {
+                        openAppSettings();
+                      },
+                      child: const Text('설정')),
+                ],
+              );
+            });
+      } else {
+        await Permission.ignoreBatteryOptimizations.request();
+      }
+    }
   }
 
   @override
