@@ -430,8 +430,8 @@ class LmsManager {
         'update_activities',
         'update_activities',
         existingWorkPolicy: ExistingWorkPolicy.replace,
-        initialDelay: const Duration(minutes: 15),
-        frequency: const Duration(minutes: 15),
+        initialDelay: const Duration(hours: 4),
+        frequency: const Duration(hours: 4),
       );
     } catch (e) {
       print(e.toString());
