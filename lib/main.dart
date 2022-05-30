@@ -1,13 +1,9 @@
-import 'dart:ffi';
-import 'dart:io';
-
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lms_reminder/manager/lms_manager.dart';
 import 'package:lms_reminder/sharedpreferences_key.dart';
 import 'package:lms_reminder/widget/app_main_stateful.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -61,7 +57,7 @@ void callbackDispatcher() {
                 DateTime currentTime = DateTime.now();
 
                 for (var schedule
-                in await LmsManager().getBeforeDeadLineActivityList()) {
+                    in await LmsManager().getBeforeDeadLineActivityList()) {
                   DateTime deadLine = DateFormat('yyyy-MM-dd HH:mm')
                       .parse(schedule.activityDeadLine!);
                   DateTime? scheduleDate;
@@ -77,16 +73,11 @@ void callbackDispatcher() {
                   }
 
                   print(
-                      '마감시간: ${schedule.activityDeadLine}, ${schedule
-                          .activityLeftTime} 전: ${DateFormat('yyyy-MM-dd HH:mm')
-                          .format(scheduleDate!)}');
+                      '마감시간: ${schedule.activityDeadLine}, ${schedule.activityLeftTime} 전: ${DateFormat('yyyy-MM-dd HH:mm').format(scheduleDate!)}');
                   print(
-                      '현재시간: ${DateFormat('yyyy-MM-dd HH:mm').format(
-                          currentTime)}, 앞으로 ${scheduleDate.difference(
-                          currentTime).toString()} 시간 뒤에 알림');
+                      '현재시간: ${DateFormat('yyyy-MM-dd HH:mm').format(currentTime)}, 앞으로 ${scheduleDate.difference(currentTime).toString()} 시간 뒤에 알림');
                   print(
-                      '[${schedule.courseTitle}] "${schedule
-                          .activityTitle}" 예약됨: ' +
+                      '[${schedule.courseTitle}] "${schedule.activityTitle}" 예약됨: ' +
                           DateFormat('yyyy-MM-dd HH:mm').format(currentTime
                               .add(scheduleDate.difference(currentTime))));
 
@@ -113,7 +104,8 @@ void callbackDispatcher() {
                         channelKey: 'update_activities',
                         wakeUpScreen: true,
                         summary: '업데이트 실패',
-                        title: 'LMS 데이터 업데이트 중 오류가 발생했습니다. 나중에 다시 시도해주세요.\n ${e.toString()}',
+                        title:
+                            'LMS 데이터 업데이트 중 오류가 발생했습니다. 나중에 다시 시도해주세요.\n ${e.toString()}',
                         backgroundColor: Colors.redAccent,
                         notificationLayout: NotificationLayout.Inbox,
                         autoDismissible: true));

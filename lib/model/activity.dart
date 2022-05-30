@@ -79,9 +79,9 @@ class Activity {
   Future<Schedule> toSchedule(String leftTime) async {
     final prefs = await SharedPreferences.getInstance();
     int notificationId = prefs.getInt(keyNotificationId)!;
-    if(notificationId > 10000) {
+    if (notificationId > 10000) {
       prefs.setInt(keyNotificationId, 0);
-    } else{
+    } else {
       prefs.setInt(keyNotificationId, notificationId + 1);
     }
     return Schedule(

@@ -46,9 +46,11 @@ class _ScreenMainState extends State<ScreenMain>
                     "보다 정확한 알림 수신을 위해 배터리 설정을 제한없음 또는 최적화 하지 않음으로 설정해주세요."),
                 contentPadding: const EdgeInsets.all(8.0),
                 actions: [
-                  TextButton(onPressed: () {
-                    Navigator.pop(context);
-                  }, child: const Text('취소')),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('취소')),
                   TextButton(
                       onPressed: () {
                         openAppSettings();

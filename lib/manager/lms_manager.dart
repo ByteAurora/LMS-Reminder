@@ -1,6 +1,4 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lms_reminder/manager/dio_manager.dart';
 import 'package:lms_reminder/model/assignment.dart';
@@ -10,7 +8,6 @@ import 'package:lms_reminder/model/week.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
 
-import '../main.dart';
 import '../model/activity.dart';
 import '../model/notice.dart';
 import '../model/video.dart';
@@ -252,7 +249,7 @@ class LmsManager {
   /// 제출 과제 및 시청 동영상을 반환하는 함수. (미제출, 미시청한 활동이라도 마감일이 지났을 경우 함께 반환)
   Future<List<dynamic>> getFinishedActivityList() async {
     if (!await checkLoginState()) {}
-    
+
     // 제출된 과제 및 시청한 동영상 리스트.
     List<dynamic> finishedActivityList = List.empty(growable: true);
 
@@ -277,7 +274,7 @@ class LmsManager {
         }
       }
     }
-    
+
     // 활동들을 현재로부터 마감일까지 남은 시간을 비교하여 정렬해주는 부분. 이미 마감된 활동들은 주차를 기준으로 정렬.
     finishedActivityList.sort((activity1, activity2) {
       String activity1LeftTime = (activity1 as Activity).getLeftTime();
@@ -288,7 +285,8 @@ class LmsManager {
             .compareTo(int.parse((activity1).week.title.replaceAll('주차', '')));
       }
 
-      if (activity1LeftTime.contains('D-') && activity2LeftTime.contains('D-')) {
+      if (activity1LeftTime.contains('D-') &&
+          activity2LeftTime.contains('D-')) {
         return int.parse(activity1LeftTime.replaceAll('D-', ''))
             .compareTo(int.parse(activity2LeftTime.replaceAll('D-', '')));
       }
@@ -397,7 +395,7 @@ class LmsManager {
 
       for (var schedule in await LmsManager().getBeforeDeadLineActivityList()) {
         DateTime deadLine =
-        DateFormat('yyyy-MM-dd HH:mm').parse(schedule.activityDeadLine!);
+            DateFormat('yyyy-MM-dd HH:mm').parse(schedule.activityDeadLine!);
         DateTime? scheduleDate;
 
         if (schedule.activityLeftTime == '6시간') {
@@ -417,13 +415,9 @@ class LmsManager {
             inputData: schedule.toMap());
 
         print(
-            '마감시간: ${schedule.activityDeadLine}, ${schedule
-                .activityLeftTime} 전: ${DateFormat('yyyy-MM-dd HH:mm').format(
-                scheduleDate)}');
+            '마감시간: ${schedule.activityDeadLine}, ${schedule.activityLeftTime} 전: ${DateFormat('yyyy-MM-dd HH:mm').format(scheduleDate)}');
         print(
-            '현재시간: ${DateFormat('yyyy-MM-dd HH:mm').format(
-                currentTime)}, 앞으로 ${scheduleDate.difference(currentTime)
-                .toString()} 시간 뒤에 알림');
+            '현재시간: ${DateFormat('yyyy-MM-dd HH:mm').format(currentTime)}, 앞으로 ${scheduleDate.difference(currentTime).toString()} 시간 뒤에 알림');
         print('[${schedule.courseTitle}] "${schedule.activityTitle}" 예약됨: ' +
             DateFormat('yyyy-MM-dd HH:mm')
                 .format(currentTime.add(scheduleDate.difference(currentTime))));

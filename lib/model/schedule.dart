@@ -37,7 +37,8 @@ class Schedule {
   String? activityLeftTime;
   bool? activityState;
 
-  Schedule(this.id,
+  Schedule(
+      this.id,
       this.notificationId,
       this.activityType,
       this.weekTitle,

@@ -404,10 +404,9 @@ class _ScreenSettingState extends State<ScreenSetting> {
                   children: [
                     Padding(
                       padding:
-                      const EdgeInsets.only(top: 16, bottom: 16, left: 16),
+                          const EdgeInsets.only(top: 16, bottom: 16, left: 16),
                       child: Text(
-                        "마지막 업데이트: " +
-                            lastUpdateTime!,
+                        "마지막 업데이트: " + lastUpdateTime!,
                         style: optionTextStyle,
                       ),
                     ),
