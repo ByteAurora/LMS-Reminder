@@ -43,12 +43,16 @@ class _ScreenMainState extends State<ScreenMain>
               return AlertDialog(
                 title: const Text('권한 요청'),
                 content: const Text(
-                    "보다 정확한 알림 수신을 위해 배터리 관련 권한이 필요합니다. 설정으로 이동하여 배터리 옵션을 제한없음으로 설정해주세요."),
+                    "보다 정확한 알림 수신을 위해 배터리 설정을 제한없음 또는 최적화 하지 않음으로 설정해주세요."),
+                contentPadding: const EdgeInsets.all(8.0),
                 actions: [
-                  TextButton(onPressed: () {}, child: const Text('취소')),
+                  TextButton(onPressed: () {
+                    Navigator.pop(context);
+                  }, child: const Text('취소')),
                   TextButton(
                       onPressed: () {
                         openAppSettings();
+                        Navigator.pop(context);
                       },
                       child: const Text('설정')),
                 ],
