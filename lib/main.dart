@@ -20,7 +20,6 @@ void callbackDispatcher() {
         String? userId = prefs.getString(keyUserId);
         String? userPw = prefs.getString(keyUserPw);
 
-        if (!(await LmsManager().checkLoginState())) {
           if (userId != null &&
               userId != '' &&
               userPw != null &&
@@ -133,7 +132,6 @@ void callbackDispatcher() {
           } else {
             print('자동로그인 비활성화');
           }
-        }
         break;
       default:
         // Notification 아이디 구분을 위해 SharedPreferences에 마지막 ID값 불러오기 후 증가된 값 저장.
@@ -295,8 +293,7 @@ void main() async {
       'update_activities',
       'update_activities',
       existingWorkPolicy: ExistingWorkPolicy.keep,
-      initialDelay: const Duration(hours: 4),
-      frequency: const Duration(hours: 4),
+      frequency: const Duration(minutes: 15),
     );
   }
 
