@@ -293,7 +293,7 @@ void main() async {
       'update_activities',
       'update_activities',
       existingWorkPolicy: ExistingWorkPolicy.keep,
-      frequency: const Duration(minutes: 15),
+      frequency: const Duration(hours: 4),
     );
   }
 
