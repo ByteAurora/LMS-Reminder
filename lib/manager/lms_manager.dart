@@ -408,7 +408,7 @@ class LmsManager {
           scheduleDate = deadLine.subtract(const Duration(days: 5));
         }
 
-        Workmanager().registerOneOffTask(schedule.id!, schedule.id!,
+        await Workmanager().registerOneOffTask(schedule.id!, schedule.id!,
             tag: 'activity_notification',
             existingWorkPolicy: ExistingWorkPolicy.replace,
             initialDelay: scheduleDate!.difference(currentTime),
@@ -425,14 +425,6 @@ class LmsManager {
 
       prefs.setString(keyLastUpdateTime,
           DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()));
-
-      Workmanager().registerPeriodicTask(
-        'update_activities',
-        'update_activities',
-        existingWorkPolicy: ExistingWorkPolicy.replace,
-        initialDelay: const Duration(hours: 4),
-        frequency: const Duration(hours: 4),
-      );
     } catch (e) {
       print(e.toString());
     }
