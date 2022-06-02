@@ -79,7 +79,7 @@ class _ScreenSettingState extends State<ScreenSetting> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 250, 250, 250),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         foregroundColor: Colors.black,
         elevation: 0,
         title: const Text('설정'),
