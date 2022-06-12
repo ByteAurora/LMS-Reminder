@@ -12,6 +12,17 @@ LMS 크롤링을 통해 현재 제출되지 않은 과제를 확인할 수 있�
   
 </p>
 
+# 시연영상
+<p align="center">
+<video width="100%" height="100%" controls="controls">
+  <source src="https://github.com/ILoveGameCoding/LMS-Reminder/blob/master/sample/video/LMS%20%EB%A6%AC%EB%A7%88%EC%9D%B8%EB%8D%94%20-%20%EC%8B%9C%EC%97%B0%20%EC%98%81%EC%83%81.mp4" type="video/mp4">
+</video>
+시연영상<br><br>
+<img src = "https://github.com/ILoveGameCoding/LMS-Reminder/blob/master/sample/image/LMS%20%EB%A6%AC%EB%A7%88%EC%9D%B8%EB%8D%94%20-%20%EB%B0%B1%EA%B7%B8%EB%9D%BC%EC%9A%B4%EB%93%9C%20%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8.gif">
+<img src = "https://github.com/ILoveGameCoding/LMS-Reminder/blob/master/sample/image/LMS%20%EB%A6%AC%EB%A7%88%EC%9D%B8%EB%8D%94%20-%20%EC%95%8C%EB%A6%BC%20%EC%88%98%EC%8B%A0.gif"><br>
+백그라운드 업데이트 & 마감 전 알림
+</p>
+
 # 개발환경
 
 - IDE: Android Studio Chipmunk | 2021.1.2
